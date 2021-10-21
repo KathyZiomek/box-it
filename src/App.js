@@ -2,12 +2,14 @@ import { Route, Switch } from "react-router-dom";
 import CreateTask from "./pages/CreateTask";
 import CreateCategory from "./pages/CreateCategory";
 import TaskList from "./pages/TaskList";
+import TasksNavigation from "./components/layout/TasksNavigation";
 
 function App() {
   return (
     //localhost:3000/
     //box-it.com/
     <div>
+      <TasksNavigation />
       <Switch>
         <Route path="/create-category">
           <CreateCategory />
@@ -15,8 +17,8 @@ function App() {
         <Route path="/create-task">
           <CreateTask />
         </Route>
-        <Route path="/">
-          <TaskList category="Economics" task="Test 1" />
+        <Route path="/task-list">
+          <TaskList />
         </Route>
       </Switch>
 
