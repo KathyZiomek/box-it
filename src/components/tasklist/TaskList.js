@@ -8,7 +8,7 @@ function TaskList(props) {
           key={tasks.id}
           id={tasks.id}
           category={tasks.category}
-          tasks={tasks.tasks}
+          tasks={tasks.task}
         />
       ))}
     </ul>
