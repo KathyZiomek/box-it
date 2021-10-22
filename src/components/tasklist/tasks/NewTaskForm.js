@@ -1,25 +1,32 @@
-import { useState, useRef } from "react";
-import Success from "../../ui/Success";
+import { /*useState,*/ useRef } from "react";
+// import Success from "../../ui/Success";
 import Card from "../../ui/Card";
 
-function NewTaskForm() {
-  const [newTask, setNewTask] = useState(false);
+function NewTaskForm(props) {
+  // const [newTask, setNewTask] = useState(false);
   const taskInputRef = useRef();
   const categoryInputRef = useRef();
 
-  function newTaskHandler() {
-    setNewTask(true);
-  }
+  // function newTaskHandler() {
+  //   setNewTask(true);
+  // }
 
-  function closeSuccessMessage() {
-    setNewTask(false);
-  }
+  // function closeSuccessMessage() {
+  //   setNewTask(false);
+  // }
 
   function submitHandler(event) {
     event.preventDefault();
 
     const enteredTask = taskInputRef.current.value;
-    const enteredCategory = taskInputRef.current.value;
+    const enteredCategory = categoryInputRef.current.value;
+
+    const taskData = {
+      category: enteredCategory,
+      task: enteredTask,
+    };
+
+    props.onAddTask(taskData);
   }
 
   return (
@@ -32,7 +39,7 @@ function NewTaskForm() {
             required
             id="taskName"
             placeholder="Enter task name here..."
-            onClick={closeSuccessMessage}
+            // onClick={closeSuccessMessage}
             ref={taskInputRef}
           />
         </div>
@@ -43,12 +50,12 @@ function NewTaskForm() {
             required
             id="categoryName"
             placeholder="Enter category name here..."
-            onClick={closeSuccessMessage}
+            // onClick={closeSuccessMessage}
             ref={categoryInputRef}
           />
         </div>
         <div>
-          <button onClick={newTaskHandler}>Add New Task</button>
+          <button /*onClick={newTaskHandler}*/>Add New Task</button>
         </div>
       </form>
 
