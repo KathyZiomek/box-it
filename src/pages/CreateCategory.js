@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Success from "../components/Success";
+import Success from "../components/ui/Success";
 
-function CreateCategory() {
+function CreateCategoryPage() {
   const [newCategory, setNewCategory] = useState(false);
 
   function newCategoryHandler() {
@@ -17,7 +17,7 @@ function CreateCategory() {
       <h1>Create a Category</h1>
       <div>
         <hr />
-        <label for="categoryName">Category Name</label>
+        <label htmlFor="categoryName">Category Name</label>
         <br />
         <input
           type="text"
@@ -33,4 +33,4 @@ function CreateCategory() {
   );
 }
 
-export default CreateCategory;
+export default CreateCategoryPage;

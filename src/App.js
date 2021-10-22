@@ -1,15 +1,12 @@
 import { Route, Switch } from "react-router-dom";
 import CreateTask from "./pages/CreateTask";
 import CreateCategory from "./pages/CreateCategory";
-import TaskList from "./pages/TaskList";
-import TasksNavigation from "./components/layout/TasksNavigation";
+import TaskList from "./pages/AllTasks";
+import Layout from "./components/layout/Layout";
 
 function App() {
   return (
-    //localhost:3000/
-    //box-it.com/
-    <div>
-      <TasksNavigation />
+    <Layout>
       <Switch>
         <Route path="/create-category">
           <CreateCategory />
@@ -17,16 +14,11 @@ function App() {
         <Route path="/create-task">
           <CreateTask />
         </Route>
-        <Route path="/task-list">
+        <Route path="/">
           <TaskList />
         </Route>
       </Switch>
-
-      {/* <CreateCategory />
-      <CreateTask />
-      <TaskList category="Economics" task="Test 1" />
-      <TaskList category="French" task="Pages 100-150" /> */}
-    </div>
+    </Layout>
   );
 }
 

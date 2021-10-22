@@ -1,35 +1,14 @@
-import { useState } from "react";
-import Success from "../components/Success";
+import NewTaskForm from "../components/tasklist/tasks/NewTaskForm";
 
-function Task() {
-  const [newTask, setNewTask] = useState(false);
-
-  function newTaskHandler() {
-    setNewTask(true);
-  }
-
-  function closeSuccessMessage() {
-    setNewTask(false);
-  }
-
+function CreateTaskPage() {
   return (
     <div>
       <h1>Create a Task</h1>
+      <hr />
       <div>
-        <hr />
-        <label for="taskName">Task Name</label>
-        <br />
-        <input
-          type="text"
-          id="taskName"
-          placeholder="Enter task name here..."
-          onClick={closeSuccessMessage}
-        />
-        <br />
-        <button onClick={newTaskHandler}>Submit</button>
-        {newTask && <Success onClick={closeSuccessMessage} />}
+        <NewTaskForm />
       </div>
     </div>
   );
 }
-export default Task;
+export default CreateTaskPage;
