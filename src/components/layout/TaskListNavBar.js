@@ -1,6 +1,11 @@
+/*NOTE: The file that handles the navigation bar for the Tasklist Pages
+uses react routing*/
+
+/*TODO: add better styling, add the rest of the pages */
+
 import { Link } from "react-router-dom";
 
-function TasksNavigation() {
+function TaskListNavBar() {
   return (
     <header>
       <div>Box It</div>
@@ -21,4 +26,4 @@ function TasksNavigation() {
   );
 }
 
-export default TasksNavigation;
+export default TaskListNavBar;

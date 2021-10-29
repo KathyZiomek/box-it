@@ -1,8 +1,13 @@
-import NewTaskForm from "../components/tasklist/tasks/NewTaskForm";
+/**This file contains the component that outputs the page with the create a task form */
+
+// import { useState, useEffect } from "react";
+
+import NewTaskForm from "../components/tasklist/forms/NewTaskForm";
 
 function CreateTaskPage() {
+  /*send submitted new task data to firebase */
   function addTaskHandler(taskData) {
-    fetch("https://box-it-b5c6c-default-rtdb.firebaseio.com/tasklist.json", {
+    fetch("https://box-it-b5c6c-default-rtdb.firebaseio.com/categories.json", {
       method: "POST",
       body: JSON.stringify(taskData),
       headers: {
