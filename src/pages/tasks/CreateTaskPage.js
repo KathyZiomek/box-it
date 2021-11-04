@@ -2,7 +2,7 @@
 
 // import { useState, useEffect } from "react";
 
-import NewTaskForm from "../components/tasklist/forms/NewTaskForm";
+import NewTaskForm from "../../features/tasklist/forms/NewTaskForm";
 
 function CreateTaskPage() {
   /*send submitted new task data to firebase */

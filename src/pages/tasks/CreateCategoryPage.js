@@ -1,6 +1,6 @@
 /**This file contains the component that outputs the page with the create a category form */
 
-import NewCategoryForm from "../components/tasklist/forms/NewCategoryForm";
+import NewCategoryForm from "../../features/tasklist/forms/NewCategoryForm";
 
 function CreateCategoryPage() {
   /*send submitted new category data to firebase */

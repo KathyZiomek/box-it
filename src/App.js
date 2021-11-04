@@ -5,23 +5,23 @@
 /**TODO: add a user settings page */
 
 import { Route, Switch } from "react-router-dom";
-import CreateTask from "./pages/CreateTaskPage";
-import CreateCategory from "./pages/CreateCategoryPage";
-import TaskList from "./pages/AllTasksPage";
-import Layout from "./components/layout/Layout";
+import Layout from "./features/layout/Layout";
+import CreateCategoryPage from "./pages/tasks/CreateCategoryPage";
+import CreateTaskPage from "./pages/tasks/CreateTaskPage";
+import AllTasksPage from "./pages/tasks/AllTasksPage";
 
 function App() {
   return (
     <Layout>
       <Switch>
         <Route path="/create-category">
-          <CreateCategory />
+          <CreateCategoryPage />
         </Route>
         <Route path="/create-task">
-          <CreateTask />
+          <CreateTaskPage />
         </Route>
         <Route path="/">
-          <TaskList />
+          <AllTasksPage />
         </Route>
       </Switch>
     </Layout>

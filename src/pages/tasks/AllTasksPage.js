@@ -1,7 +1,7 @@
 /**This file contains the AllTasksPage component which outputs all existing tasks */
 
 import { useState, useEffect } from "react";
-import TaskList from "../components/tasklist/TaskList";
+import TaskList from "../../features/tasklist/TaskList";
 
 function AllTasksPage() {
   const [tasklist, setTasklist] = useState();
