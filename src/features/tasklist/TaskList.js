@@ -6,7 +6,7 @@ import Category from "./categories/Category";
 import CardTasklist from "../ui/CardTasklist";
 
 /**Receives props from AllTasks.js page */
-function TaskList(props) {
+const TaskList = (props) => {
   return (
     <ul>
       {/* maps the information from firebase to a new array that contains all of the category information */}
@@ -33,6 +33,6 @@ function TaskList(props) {
       ))}
     </ul>
   );
-}
+};
 
 export default TaskList;

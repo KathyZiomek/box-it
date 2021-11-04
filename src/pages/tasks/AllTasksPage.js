@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import TaskList from "../../features/tasklist/TaskList";
 
-function AllTasksPage() {
+const AllTasksPage = () => {
   const [tasklist, setTasklist] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [httpError, setHttpError] = useState();
@@ -76,6 +76,6 @@ function AllTasksPage() {
       <TaskList tasks={tasklist} />
     </div>
   );
-}
+};
 
 export default AllTasksPage;

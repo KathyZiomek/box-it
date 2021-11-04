@@ -4,7 +4,7 @@
 
 import NewTaskForm from "../../features/tasklist/forms/NewTaskForm";
 
-function CreateTaskPage() {
+const CreateTaskPage = () => {
   /*send submitted new task data to firebase */
   function addTaskHandler(taskData) {
     fetch("https://box-it-b5c6c-default-rtdb.firebaseio.com/categories.json", {
@@ -25,5 +25,5 @@ function CreateTaskPage() {
       </div>
     </div>
   );
-}
+};
 export default CreateTaskPage;

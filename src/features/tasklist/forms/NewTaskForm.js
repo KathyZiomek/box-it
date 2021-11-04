@@ -6,7 +6,7 @@ import Card from "../../ui/Card";
 import CategoryDropDown from "./CategoryDropDown";
 
 /**Accepts props from CreateTask.js */
-function NewTaskForm(props) {
+const NewTaskForm = (props) => {
   // const [newTask, setNewTask] = useState(false);
 
   /**Setting refs for the inputs */
@@ -92,7 +92,7 @@ function NewTaskForm(props) {
   /**TODO: add data validation for new task information */
   /**TODO: add an option for a blank category/no category selected (which is valid) */
   /**TODO: change the way that new tasks are submitted so that they are added to the correct category on firebase */
-  function submitHandler(event) {
+  const submitHandler = (event) => {
     /**Avoid the default response from the browser */
     event.preventDefault();
 
@@ -108,7 +108,7 @@ function NewTaskForm(props) {
 
     /**sending the taskData up to CreateTask.js page so it can be sent to firebase */
     props.onAddTask(taskData);
-  }
+  };
 
   /**TODO: add responsiveness that communicates to the user when they successfully/unsuccessfully submit new task data*/
 
@@ -146,6 +146,6 @@ function NewTaskForm(props) {
       {/* {newTask && <Success onClick={closeSuccessMessage} />} */}
     </Card>
   );
-}
+};
 
 export default NewTaskForm;

@@ -2,7 +2,7 @@
 
 import NewCategoryForm from "../../features/tasklist/forms/NewCategoryForm";
 
-function CreateCategoryPage() {
+const CreateCategoryPage = () => {
   /*send submitted new category data to firebase */
   function addCategoryHandler(categoryData) {
     fetch("https://box-it-b5c6c-default-rtdb.firebaseio.com/categories.json", {
@@ -20,6 +20,6 @@ function CreateCategoryPage() {
       <NewCategoryForm onAddCategory={addCategoryHandler} />
     </div>
   );
-}
+};
 
 export default CreateCategoryPage;

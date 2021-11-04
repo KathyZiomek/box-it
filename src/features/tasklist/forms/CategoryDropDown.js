@@ -2,7 +2,7 @@
 
 import { Fragment } from "react";
 
-function CategoryDropDown(props) {
+const CategoryDropDown = (props) => {
   return (
     <Fragment>
       {/* TODO: add a blank/no category option to the dropdown */}
@@ -11,6 +11,6 @@ function CategoryDropDown(props) {
       </option>
     </Fragment>
   );
-}
+};
 
 export default CategoryDropDown;

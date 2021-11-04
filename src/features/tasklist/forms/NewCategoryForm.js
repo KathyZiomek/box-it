@@ -5,7 +5,7 @@ import Success from "../../ui/Success";
 import Card from "../../ui/Card";
 
 /**Accepts props from CreateCategory.js */
-function NewCategoryForm(props) {
+const NewCategoryForm = (props) => {
   const [newCategory, setNewCategory] = useState(false);
 
   /**Setting refs for the inputs */
@@ -13,17 +13,17 @@ function NewCategoryForm(props) {
   const typeInputRef = useRef();
   const colorInputRef = useRef();
 
-  function newCategoryHandler() {
+  const newCategoryHandler = () => {
     setNewCategory(true);
-  }
+  };
 
-  function closeSuccessMessage() {
+  const closeSuccessMessage = () => {
     setNewCategory(false);
-  }
+  };
 
   /**Function that handles when the submit button is clicked */
   /**TODO: add data validation for new category information */
-  function submitHandler(event) {
+  const submitHandler = (event) => {
     /**Avoid the default response from the browser */
     event.preventDefault();
 
@@ -45,7 +45,7 @@ function NewCategoryForm(props) {
 
     /**sending the taskData up to CreateCategory.js page so it can be sent to firebase */
     props.onAddCategory(categoryData);
-  }
+  };
 
   return (
     <Card>
@@ -95,6 +95,6 @@ function NewCategoryForm(props) {
       {newCategory && <Success onClick={closeSuccessMessage} />}
     </Card>
   );
-}
+};
 
 export default NewCategoryForm;

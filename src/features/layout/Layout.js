@@ -5,13 +5,13 @@
 import classes from "./Layout.module.css";
 import TaskListNavBar from "./TaskListNavBar";
 
-function Layout(props) {
+const Layout = (props) => {
   return (
     <div>
       <TaskListNavBar />
       <main className={classes.main}>{props.children}</main>
     </div>
   );
-}
+};
 
 export default Layout;

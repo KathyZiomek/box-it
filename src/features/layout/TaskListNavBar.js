@@ -5,7 +5,7 @@ uses react routing*/
 
 import { Link } from "react-router-dom";
 
-function TaskListNavBar() {
+const TaskListNavBar = () => {
   return (
     <header>
       <div>Box It</div>
@@ -24,6 +24,6 @@ function TaskListNavBar() {
       </nav>
     </header>
   );
-}
+};
 
 export default TaskListNavBar;
