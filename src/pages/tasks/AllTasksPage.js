@@ -8,10 +8,6 @@ const AllTasksPage = () => {
   // const [isLoading, setIsLoading] = useState(true);
   // const [httpError, setHttpError] = useState();
 
-  // /**TODO: add a case where the user has no existing tasks or categories*/
-  // /**TODO: add a case where the user has tasks but no categories */
-  // /**TODO: add a case where the user has categories but no tasks */
-
   // // const [loadedTasks, setLoadedTasks] = useState([]);
 
   // useEffect(() => {
@@ -79,3 +75,7 @@ const AllTasksPage = () => {
 };
 
 export default AllTasksPage;
+
+// /**TODO: add a case where the user has no existing tasks or categories*/
+// /**TODO: add a case where the user has tasks but no categories */
+// /**TODO: add a case where the user has categories but no tasks */

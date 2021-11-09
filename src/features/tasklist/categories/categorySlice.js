@@ -15,21 +15,21 @@ const initialState = [];
 //   {
 //     id: 0,
 //     name: "LAMP",
-//     // color: "green",
+//     color: "green",
 
-//     // type: "testType",
-//     // tasklist: [{ id: 0, duedate: "testDate", name: "Test 1" }],
+//     type: "testType",
+//     tasklist: [{ id: 0, duedate: "testDate", name: "Test 1" }],
 //   },
 //   {
 //     id: 1,
 //     name: "Economics",
-//     // color: "red",
+//     color: "red",
 
-//     // type: "testType",
-//     // tasklist: [
-//     //   { id: 0, duedate: "testDate", name: "Test 2" },
-//     //   { id: 1, duedate: "testDate", name: "Test 3" },
-//     // ],
+//     type: "testType",
+//     tasklist: [
+//       { id: 0, duedate: "testDate", name: "Test 2" },
+//       { id: 1, duedate: "testDate", name: "Test 3" },
+//     ],
 //   },
 // ];
 
@@ -56,11 +56,27 @@ export default function categoriesReducer(state = initialState, action) {
           //use an auto-incrementing numeric ID for this example
           id: nextCategory(state),
           name: action.payload,
+          // tasklist: [{ id: 0, name: "Test 1" }],
           // color: action.payload,
           // type: action.payload,
           // tasklist: [{ id: 0, duedate: "testDate", name: "Test 1" }],
         },
       ];
+    }
+    case "tasklist/addTasklistToCategory": {
+      const { tasklist, categoryId } = action.payload;
+      return state.map((category) => {
+        if (category.id !== categoryId) {
+          return category;
+        }
+        return {
+          ...category,
+          tasklist,
+        };
+      });
+    }
+    case "tasklist/categoryDeleted": {
+      return state.filter((category) => category.id !== action.payload);
     }
 
     default:

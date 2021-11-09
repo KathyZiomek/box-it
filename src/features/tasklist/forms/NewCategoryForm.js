@@ -25,7 +25,7 @@ const NewCategoryForm = () => {
     const enteredCategory = categoryInputRef.current.value;
 
     const trimmedCategory = enteredCategory.trim();
-    //If the user pressed the enter key
+    //If the user pressed the button
     if (trimmedCategory) {
       //dispatch the "category added" action with this text
       dispatch({ type: "tasklist/categoryAdded", payload: trimmedCategory });
