@@ -6,10 +6,10 @@
 
 import { Route, Switch } from "react-router-dom";
 import Layout from "./features/layout/Layout";
-import TaskList from "./features/tasklist/TaskList";
+//import TaskList from "./features/tasklist/TaskList";
 import CreateCategoryPage from "./pages/tasks/CreateCategoryPage";
 import CreateTaskPage from "./pages/tasks/CreateTaskPage";
-// import AllTasksPage from "./pages/tasks/AllTasksPage";
+import AllTasksPage from "./pages/tasks/AllTasksPage";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
           <CreateTaskPage />
         </Route>
         <Route path="/">
-          <TaskList />
+          <AllTasksPage />
         </Route>
       </Switch>
     </Layout>

@@ -5,7 +5,7 @@ export async function client(endpoint, { body, ...customConfig } = {}) {
   const headers = { "Content-Type": "application/json" };
 
   const config = {
-    method: body ? "POST" : "GET",
+    method: body ? "PUT" : "GET",
     ...customConfig,
     headers: {
       ...headers,
@@ -34,6 +34,6 @@ client.get = function (endpoint, customConfig = {}) {
   return client(endpoint, { ...customConfig, method: "GET" });
 };
 
-client.post = function (endpoint, body, customConfig = {}) {
+client.put = function (endpoint, body, customConfig = {}) {
   return client(endpoint, { ...customConfig, body });
 };

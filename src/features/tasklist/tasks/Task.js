@@ -36,3 +36,4 @@ export default Task;
 
 /**TODO: add extra task information (due date, priority, on-going) that outputs when clicking on the task*/
 /**TODO: add functionality to the task to allow it to be clicked and dismissed/deleted from Firebase */
+/**TODO: update the styling for the component */

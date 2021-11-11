@@ -34,39 +34,8 @@ const TaskList = () => {
   });
 
   return <ul>{renderedTaskListItems}</ul>;
-
-  //commenting out old code - will need to substitute this code with Redux
-
-  //   return (
-  //     <ul>
-  //       {/* maps the information from firebase to a new array that contains all of the category information */}
-  //
-  //       {props.tasks.map((category) => (
-  //         <CardTasklist key={category.id} id={category.id}>
-  //           <Category
-  //             key={category.id}
-  //             id={category.id}
-  //             category={category.name}
-  //           />
-  //           <ul>
-  //             {/* nested map that loops through the tasklist data from firebase within each category */}
-  //
-  //             {category.tasklist.map((taskItem, indexItem) => (
-  //               <Task
-  //                 key={category.id + "-" + indexItem}
-  //                 id={category.id + "-" + indexItem}
-  //                 task={taskItem.name}
-  //               />
-  //             ))}
-  //           </ul>
-  //         </CardTasklist>
-  //       ))}
-  //     </ul>
-  //   );
-  // };
 };
 export default TaskList;
 
-//TODO: add logic to output the correct task items under the correct category
 // /* TODO: add extra tasklist information (due date, priority level, on-going)
 /*/TODO: add extra category information (type, color)*/

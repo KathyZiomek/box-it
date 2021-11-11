@@ -2,14 +2,16 @@
 
 import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
-import Card from "../../ui/Card";
+
+import { saveNewCategory } from "../categories/categorySlice";
 
 const NewCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
   const dispatch = useDispatch();
 
+  //identify the last ID value
+
   //listen for the enter key
-  //TODO: change this behaviour (listening for the enter key) to listening for the submit button click
   const handleChange = (e) => setNewCategory(e.target.value);
 
   // /**Setting refs for the inputs */
@@ -23,35 +25,36 @@ const NewCategoryForm = () => {
 
     // /**get the refs for entered values */
     const enteredCategory = categoryInputRef.current.value;
+    console.log(enteredCategory);
 
     const trimmedCategory = enteredCategory.trim();
     //If the user pressed the button
     if (trimmedCategory) {
-      //dispatch the "category added" action with this text
-      dispatch({ type: "tasklist/categoryAdded", payload: trimmedCategory });
+      console.log(trimmedCategory);
+      // Create the thunk function and immediately dispatch it
+      dispatch(saveNewCategory(trimmedCategory));
       //and clear out the text input
       setNewCategory("");
     }
   };
 
   return (
-    <Card>
-      <form onSubmit={submitHandler}>
-        <hr />
-        <label htmlFor="categoryName">Category Name</label>
-        <br />
-        <input
-          type="text"
-          id="categoryName"
-          placeholder="Enter category name here..."
-          value={newCategory}
-          onChange={handleChange}
-          ref={categoryInputRef}
-        />
-        <br />
-        <button>Submit</button>
-      </form>
-    </Card>
+    <form onSubmit={submitHandler}>
+      <hr />
+      <label htmlFor="categoryName">Category Name</label>
+      <br />
+      <input
+        type="text"
+        id="categoryName"
+        placeholder="Enter category name here..."
+        value={newCategory}
+        onChange={handleChange}
+        ref={categoryInputRef}
+        required
+      />
+      <br />
+      <button>Submit</button>
+    </form>
   );
 };
 
