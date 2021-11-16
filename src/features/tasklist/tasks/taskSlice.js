@@ -2,26 +2,12 @@ import { client } from "../../../api/client";
 
 const initialState = [];
 
-// function nextTask(tasks) {
-//   const maxId = tasks.reduce((maxId, task) => Math.max(task.id, maxId), -1);
-//   return maxId + 1;
-// }
-
 //use the initialState as a default value
 export default function tasksReducer(state = initialState, action) {
   switch (action.type) {
     case "tasklist/taskAdded": {
       return [...state, action.payload];
     }
-    // case "tasklist/taskAdded": {
-    //   return [
-    //     ...state,
-    //     {
-    //       id: nextTask(state),
-    //       name: action.payload,
-    //     },
-    //   ];
-    // }
     // case "tasklist/updateTaskCategory": {
     //   const { category, taskId } = action.payload;
     //   return state.map((task) => {
@@ -35,9 +21,9 @@ export default function tasksReducer(state = initialState, action) {
     //     };
     //   });
     // }
-    // case "tasklist/taskDeleted": {
-    //   return state.filter((task) => task.id !== action.payload);
-    // }
+    case "tasklist/taskDeleted": {
+      return state.filter((task) => task.id !== action.payload);
+    }
     case "tasklist/tasksLoaded": {
       return action.payload;
     }
