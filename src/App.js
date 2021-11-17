@@ -3,10 +3,9 @@
 /**TODO: add a home page */
 /**TODO: add a nav bar */
 /**TODO: add a user settings page */
-
+import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Layout from "./features/layout/Layout";
-//import TaskList from "./features/tasklist/TaskList";
 import CreateCategoryPage from "./pages/tasks/CreateCategoryPage";
 import CreateTaskPage from "./pages/tasks/CreateTaskPage";
 import AllTasksPage from "./pages/tasks/AllTasksPage";
