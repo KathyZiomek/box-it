@@ -7,12 +7,11 @@ import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 
 import store from "./store";
-
 import { fetchCategories } from "./features/tasklist/categories/categorySlice";
 import { fetchTasks } from "./features/tasklist/tasks/taskSlice";
 
-store.dispatch(fetchCategories);
-store.dispatch(fetchTasks);
+store.dispatch(fetchCategories());
+store.dispatch(fetchTasks());
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,5 +1,6 @@
 /**This file contains the component for the New Category Form that creates the form on CreateCategory.js */
 
+import React from "react";
 import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 
@@ -25,17 +26,13 @@ const NewCategoryForm = () => {
 
     // /**get the refs for entered values */
     const enteredCategory = categoryInputRef.current.value;
-    console.log(enteredCategory);
 
     const trimmedCategory = enteredCategory.trim();
-    //If the user pressed the button
-    if (trimmedCategory) {
-      console.log(trimmedCategory);
-      // Create the thunk function and immediately dispatch it
-      dispatch(saveNewCategory(trimmedCategory));
-      //and clear out the text input
-      setNewCategory("");
-    }
+
+    // Create the thunk function and immediately dispatch it
+    dispatch(saveNewCategory(trimmedCategory));
+    //and clear out the text input
+    setNewCategory("");
   };
 
   return (

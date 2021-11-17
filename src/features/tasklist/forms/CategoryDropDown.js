@@ -4,9 +4,11 @@ import { Fragment } from "react";
 
 import { useSelector /*, useDispatch*/ } from "react-redux";
 
-const selectCategoryById = (state, categoryId) => {
-  return state.categories.find((category) => category.id === categoryId);
-};
+import { selectCategoryById } from "../categories/categorySlice";
+
+// const selectCategoryById = (state, categoryId) => {
+//   return state.categories.find((category) => category.id === categoryId);
+// };
 
 const CategoryDropDown = ({ id }) => {
   //call our `selectCategoryById` with the state _and_ the ID value

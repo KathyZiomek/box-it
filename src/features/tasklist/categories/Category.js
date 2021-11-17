@@ -2,10 +2,7 @@
 
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-
-const selectCategoryById = (state, categoryId) => {
-  return state.categories.find((category) => category.id === categoryId);
-};
+import { categoryDeleted, selectCategoryById } from "./categorySlice";
 
 //Destructure `props.id` since we only need the ID value
 const Category = ({ id }) => {
@@ -16,7 +13,7 @@ const Category = ({ id }) => {
   const dispatch = useDispatch();
 
   const onDelete = () => {
-    dispatch({ type: "tasklist/categoryDeleted", payload: category.id });
+    dispatch(categoryDeleted(category.id));
   };
 
   return (

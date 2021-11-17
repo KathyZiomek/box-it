@@ -2,19 +2,16 @@
 
 import React from "react";
 import { useState, useRef } from "react";
-import { useSelector, shallowEqual, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { saveNewTask } from "../tasks/taskSlice";
-
+import { selectCategoryIds } from "../categories/categorySlice";
 // import Success from "../../ui/Success";
 import CategoryDropDown from "./CategoryDropDown";
 
-const selectCategoryIds = (state) =>
-  state.categories.map((category) => category.id);
-
 const NewTaskForm = () => {
+  const categoryIds = useSelector(selectCategoryIds);
   const [newTask, setNewTask] = useState("");
-  const categoryIds = useSelector(selectCategoryIds, shallowEqual);
   const dispatch = useDispatch();
 
   //create the category drop down
@@ -43,13 +40,10 @@ const NewTaskForm = () => {
     /**Combine the data into a single text object to pass to dispatch */
     const text = { task: trimmedTask, category: trimmedCategory };
 
-    //If the user pressed the button
-    if (trimmedTask) {
-      //dispatch the "category added" action with this text
-      dispatch(saveNewTask(text));
-      //and clear out the text input
-      setNewTask("");
-    }
+    //dispatch the "category added" action with this text
+    dispatch(saveNewTask(text));
+    //and clear out the text input
+    setNewTask("");
   };
 
   return (

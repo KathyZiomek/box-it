@@ -2,20 +2,27 @@
 
 // import { Fragment } from "react";
 import React from "react";
-import { useSelector, shallowEqual } from "react-redux";
-// import Task from "./tasks/Task";
+import { useSelector } from "react-redux";
+
 import Category from "./categories/Category";
 import Task from "./tasks/Task";
 import CardTasklist from "../ui/CardTasklist";
 
-const selectCategoryIds = (state) =>
-  state.categories.map((category) => category.id);
-const selectTaskIds = (state) => state.tasks.map((task) => task.id);
+import { selectCategoryIds } from "./categories/categorySlice";
+import { selectTaskIds } from "./tasks/taskSlice";
 
 const TaskList = () => {
-  const categoryIds = useSelector(selectCategoryIds, shallowEqual);
+  const categoryIds = useSelector(selectCategoryIds);
+  const taskIds = useSelector(selectTaskIds);
+  const loadingStatus = useSelector((state) => state.categories.status);
 
-  const taskIds = useSelector(selectTaskIds, shallowEqual);
+  if (loadingStatus === "loading") {
+    return (
+      <div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   //since `categories` is an array, we can loop over it
   const renderedTaskListItems = categoryIds.map((categoryId) => {
