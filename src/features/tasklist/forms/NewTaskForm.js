@@ -6,12 +6,14 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { saveNewTask } from "../tasks/taskSlice";
 import { selectCategoryIds } from "../categories/categorySlice";
-// import Success from "../../ui/Success";
+import Success from "../../ui/Success";
 import CategoryDropDown from "./CategoryDropDown";
 
 const NewTaskForm = () => {
   const categoryIds = useSelector(selectCategoryIds);
   const [newTask, setNewTask] = useState("");
+  const [status, setStatus] = useState("idle");
+  const [success, setSuccess] = useState("idle");
   const dispatch = useDispatch();
 
   //create the category drop down
@@ -20,13 +22,17 @@ const NewTaskForm = () => {
     return <CategoryDropDown key={categoryId} id={categoryId} />;
   });
 
+  const handleClick = () => {
+    setSuccess("idle");
+  };
+
   const handleChange = (e) => setNewTask(e.target.value);
   /**Setting refs for the inputs */
   const taskInputRef = useRef();
   const categoryInputRef = useRef();
 
   /**Function that handles when the submit button is clicked */
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     /**Avoid the default response from the browser */
     event.preventDefault();
 
@@ -40,11 +46,25 @@ const NewTaskForm = () => {
     /**Combine the data into a single text object to pass to dispatch */
     const text = { task: trimmedTask, category: trimmedCategory };
 
-    //dispatch the "category added" action with this text
-    dispatch(saveNewTask(text));
+    //create and dispatch the thunk function itself
+    setStatus("loading");
+    //wait for the promise returned by saveNewTask
+    await dispatch(saveNewTask(text));
     //and clear out the text input
     setNewTask("");
+    setStatus("idle");
+    //show a success message to the user
+    setSuccess("success");
   };
+
+  let isLoading = status === "loading";
+  let placeholder = isLoading ? "" : "Enter task name here...";
+  let loader = isLoading ? (
+    <div>
+      <p>Submitting...</p>
+    </div>
+  ) : null;
+  let submitted = success === "idle" ? null : <Success />;
 
   return (
     <div>
@@ -53,17 +73,24 @@ const NewTaskForm = () => {
           <label htmlFor="taskName">Task Name</label>
           <input
             type="text"
-            required
             id="taskName"
-            placeholder="Enter task name here..."
+            required
+            placeholder={placeholder}
             ref={taskInputRef}
             value={newTask}
             onChange={handleChange}
+            disabled={isLoading}
+            onClick={handleClick}
           />
         </div>
         <div>
           <label htmlFor="categoryName">Category Name</label>
-          <select required id="categoryName" ref={categoryInputRef}>
+          <select
+            required
+            id="categoryName"
+            ref={categoryInputRef}
+            onClick={handleClick}
+          >
             {renderedCategoryItems}
           </select>
         </div>
@@ -71,6 +98,8 @@ const NewTaskForm = () => {
         <div>
           <button>Add New Task</button>
         </div>
+        {loader}
+        {submitted}
       </form>
     </div>
   );

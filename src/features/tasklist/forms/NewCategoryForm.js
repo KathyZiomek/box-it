@@ -4,13 +4,19 @@ import React from "react";
 import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 
+import Success from "../../ui/Success";
+
 import { saveNewCategory } from "../categories/categorySlice";
 
 const NewCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
+  const [status, setStatus] = useState("idle");
+  const [success, setSuccess] = useState("idle");
   const dispatch = useDispatch();
 
-  //identify the last ID value
+  const handleClick = () => {
+    setSuccess("idle");
+  };
 
   //listen for the enter key
   const handleChange = (e) => setNewCategory(e.target.value);
@@ -20,7 +26,7 @@ const NewCategoryForm = () => {
 
   /**Function that handles when the submit button is clicked */
   /**TODO: add data validation for new category information */
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     /**Avoid the default response from the browser */
     event.preventDefault();
 
@@ -29,11 +35,26 @@ const NewCategoryForm = () => {
 
     const trimmedCategory = enteredCategory.trim();
 
-    // Create the thunk function and immediately dispatch it
-    dispatch(saveNewCategory(trimmedCategory));
+    //create and dispatch the thunk function itself
+    setStatus("loading");
+    //wait for the promise returned by saveNewCategory
+    await dispatch(saveNewCategory(trimmedCategory));
+
     //and clear out the text input
     setNewCategory("");
+    setStatus("idle");
+    //show a success message to the user
+    setSuccess("success");
   };
+
+  let isLoading = status === "loading";
+  let placeholder = isLoading ? "" : "Enter category name here...";
+  let loader = isLoading ? (
+    <div>
+      <p>Submitting...</p>
+    </div>
+  ) : null;
+  let submitted = success === "idle" ? null : <Success />;
 
   return (
     <form onSubmit={submitHandler}>
@@ -43,14 +64,18 @@ const NewCategoryForm = () => {
       <input
         type="text"
         id="categoryName"
-        placeholder="Enter category name here..."
+        required
+        placeholder={placeholder}
         value={newCategory}
         onChange={handleChange}
         ref={categoryInputRef}
-        required
+        disabled={isLoading}
+        onClick={handleClick}
       />
       <br />
       <button>Submit</button>
+      {loader}
+      {submitted}
     </form>
   );
 };
