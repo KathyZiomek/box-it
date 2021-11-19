@@ -1,21 +1,24 @@
 import { createSelector } from "reselect";
 import { client } from "../../../api/client";
 
+import { ObjectLength } from "../../../common/ObjectLength";
+
 const initialState = {
   status: "idle",
-  entities: [],
+  entities: {},
 };
 
 //use the initialState as a default value
 export default function tasksReducer(state = initialState, action) {
   switch (action.type) {
-    case "tasklist/firstTaskAdded": {
-      return { ...state, entities: [action.payload] };
-    }
     case "tasklist/taskAdded": {
+      const task = action.payload;
       return {
-        state,
-        entities: [...state.entities, action.payload],
+        ...state,
+        entities: {
+          ...state.entities,
+          [task.id]: task,
+        },
       };
     }
     // case "tasklist/updateTaskCategory": {
@@ -32,9 +35,11 @@ export default function tasksReducer(state = initialState, action) {
     //   });
     // }
     case "tasklist/taskDeleted": {
+      const newEntities = { ...state.entities };
+      delete newEntities[action.payload];
       return {
         ...state,
-        entities: state.entities.filter((todo) => todo.id !== action.payload),
+        entities: newEntities,
       };
     }
     case "tasklist/tasksLoading": {
@@ -44,10 +49,16 @@ export default function tasksReducer(state = initialState, action) {
       };
     }
     case "tasklist/tasksLoaded": {
+      const newEntities = {};
+      if (action.payload !== null) {
+        action.payload.forEach((task) => {
+          newEntities[task.id] = task;
+        });
+      }
       return {
         ...state,
         status: "idle",
-        entities: action.payload,
+        entities: newEntities,
       };
     }
     default:
@@ -57,11 +68,6 @@ export default function tasksReducer(state = initialState, action) {
 
 export const taskAdded = (task) => ({
   type: "tasklist/taskAdded",
-  payload: task,
-});
-
-export const firstTaskAdded = (task) => ({
-  type: "tasklist/firstTaskAdded",
   payload: task,
 });
 
@@ -85,65 +91,33 @@ export const fetchTasks = () => async (dispatch) => {
   );
   dispatch(tasksLoaded(response));
 };
-// export async function fetchTasks(dispatch, getState) {
-//   const response = await client.get(
-//     "https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks.json"
-//   );
-//   // const stateBefore = getState();
-//   // console.log("Tasks before dispatch: ", stateBefore.tasks.length);
-
-//   dispatch({ type: "tasklist/tasksLoaded", payload: response });
-
-//   // const stateAfter = getState();
-//   // console.log("Tasks after dispatch: ", stateAfter.tasks.length);
-// }
 
 export function saveNewTask(text) {
   return async function saveNewTaskThunk(dispatch, getState) {
     const initialTask = { text };
     //get the number of items currently in categories
     const currentState = getState();
-    if (currentState.tasks.entities === null) {
-      const taskCount = 0;
-      const response = await client.put(
-        `https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks/${taskCount}.json`,
-        {
-          id: taskCount,
-          name: initialTask.text.task,
-          category: initialTask.text.category,
-        }
-      );
-      dispatch(firstTaskAdded(response));
-    } else if (currentState.tasks.entities.length === undefined) {
-      const taskCount = 0;
-      const response = await client.put(
-        `https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks/${taskCount}.json`,
-        {
-          id: taskCount,
-          name: initialTask.text.task,
-          category: initialTask.text.category,
-        }
-      );
-      dispatch(firstTaskAdded(response));
-    } else {
-      const taskCount = currentState.tasks.entities.length;
-      const response = await client.put(
-        `https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks/${taskCount}.json`,
-        {
-          id: taskCount,
-          name: initialTask.text.task,
-          category: initialTask.text.category,
-        }
-      );
-      dispatch(taskAdded(response));
-    }
+    const taskCount = ObjectLength(currentState.tasks.entities);
+    const response = await client.put(
+      `https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks/${taskCount}.json`,
+      {
+        id: taskCount,
+        name: initialTask.text.task,
+        category: initialTask.text.category,
+      }
+    );
+    dispatch(taskAdded(response));
   };
 }
 
-export const selectTasks = (state) => state.tasks.entities;
+const selectTaskEntities = (state) => state.tasks.entities;
+
+export const selectTasks = createSelector(selectTaskEntities, (entities) =>
+  Object.values(entities)
+);
 
 export const selectTaskById = (state, taskId) => {
-  return selectTasks(state).find((task) => task.id === taskId);
+  return selectTaskEntities(state)[taskId];
 };
 
 export const selectTaskIds = createSelector(

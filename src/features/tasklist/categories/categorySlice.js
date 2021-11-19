@@ -1,9 +1,11 @@
 import { createSelector } from "reselect";
 import { client } from "../../../api/client";
 
+import { ObjectLength } from "../../../common/ObjectLength";
+
 const initialState = {
   status: "idle",
-  entities: [],
+  entities: {},
 };
 
 // Use the initialState as a default value
@@ -11,24 +13,23 @@ export default function categoriesReducer(state = initialState, action) {
   // The reducer normally looks at the action type field to decide what happens
   switch (action.type) {
     // // Do something here based on the different types of actions
-    case "tasklist/firstCategoryAdded": {
-      //Return a new categories state array with the new category item at the end
-      return {
-        ...state,
-        entities: [action.payload],
-      };
-    }
     case "tasklist/categoryAdded": {
       //Return a new categories state array with the new category item at the end
+      const category = action.payload;
       return {
         ...state,
-        entities: [...state.entities, action.payload],
+        entities: {
+          ...state.entities,
+          [category.id]: category,
+        },
       };
     }
     case "tasklist/categoryDeleted": {
+      const newEntities = { ...state.entities };
+      delete newEntities[action.payload];
       return {
         ...state,
-        entities: state.entities.filter((todo) => todo.id !== action.payload),
+        entities: newEntities,
       };
     }
     case "tasklist/categoriesLoading": {
@@ -38,10 +39,16 @@ export default function categoriesReducer(state = initialState, action) {
       };
     }
     case "tasklist/categoriesLoaded": {
+      const newEntities = {};
+      if (action.payload !== null) {
+        action.payload.forEach((category) => {
+          newEntities[category.id] = category;
+        });
+      }
       return {
         ...state,
         status: "idle",
-        entities: action.payload,
+        entities: newEntities,
       };
     }
     default:
@@ -52,11 +59,6 @@ export default function categoriesReducer(state = initialState, action) {
 
 export const categoryAdded = (category) => ({
   type: "tasklist/categoryAdded",
-  payload: category,
-});
-
-export const firstCategoryAdded = (category) => ({
-  type: "tasklist/firstCategoryAdded",
   payload: category,
 });
 
@@ -86,35 +88,25 @@ export function saveNewCategory(text) {
     const initialCategory = { text };
     //get the number of items currently in categories
     const currentState = getState();
-    if (currentState.categories.entities === null) {
-      const categoryCount = 0;
-      const response = await client.put(
-        `https://box-it-b5c6c-default-rtdb.firebaseio.com/categories/${categoryCount}.json`,
-        { id: categoryCount, name: initialCategory.text }
-      );
-      dispatch(firstCategoryAdded(response));
-    } else if (currentState.categories.entities.length === undefined) {
-      const categoryCount = 0;
-      const response = await client.put(
-        `https://box-it-b5c6c-default-rtdb.firebaseio.com/categories/${categoryCount}.json`,
-        { id: categoryCount, name: initialCategory.text }
-      );
-      dispatch(firstCategoryAdded(response));
-    } else {
-      const categoryCount = currentState.categories.entities.length;
-      const response = await client.put(
-        `https://box-it-b5c6c-default-rtdb.firebaseio.com/categories/${categoryCount}.json`,
-        { id: categoryCount, name: initialCategory.text }
-      );
-      dispatch(categoryAdded(response));
-    }
+
+    const categoryCount = ObjectLength(currentState.categories.entities);
+    const response = await client.put(
+      `https://box-it-b5c6c-default-rtdb.firebaseio.com/categories/${categoryCount}.json`,
+      { id: categoryCount, name: initialCategory.text }
+    );
+    dispatch(categoryAdded(response));
   };
 }
 
-export const selectCategories = (state) => state.categories.entities;
+export const selectCategoryEntities = (state) => state.categories.entities;
+
+export const selectCategories = createSelector(
+  selectCategoryEntities,
+  (entities) => Object.values(entities)
+);
 
 export const selectCategoryById = (state, categoryId) => {
-  return selectCategories(state).find((category) => category.id === categoryId);
+  return selectCategoryEntities(state)[categoryId];
 };
 
 export const selectCategoryIds = createSelector(
