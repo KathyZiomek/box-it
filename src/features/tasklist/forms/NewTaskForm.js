@@ -42,7 +42,7 @@ const NewTaskForm = () => {
 
     /**Clean the data */
     const trimmedTask = enteredTask.trim();
-    const trimmedCategory = Number(enteredCategory);
+    const trimmedCategory = enteredCategory.trim();
     /**Combine the data into a single text object to pass to dispatch */
     const text = { task: trimmedTask, category: trimmedCategory };
 

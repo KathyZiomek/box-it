@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { categoryDeleted, selectCategoryById } from "./categorySlice";
+import { deleteCategory, selectCategoryById } from "./categorySlice";
 
 //Destructure `props.id` since we only need the ID value
 const Category = ({ id }) => {
@@ -13,7 +13,7 @@ const Category = ({ id }) => {
   const dispatch = useDispatch();
 
   const onDelete = () => {
-    dispatch(categoryDeleted(category.id));
+    dispatch(deleteCategory(category.id));
   };
 
   return (

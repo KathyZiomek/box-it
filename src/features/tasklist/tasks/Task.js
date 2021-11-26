@@ -3,7 +3,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { taskDeleted, selectTaskById } from "./taskSlice";
+import { deleteTask, selectTaskById } from "./taskSlice";
 
 const Task = ({ id, categoryId }) => {
   //call our `selectTaskById` with the state _and_ the ID value
@@ -13,7 +13,7 @@ const Task = ({ id, categoryId }) => {
   const dispatch = useDispatch();
 
   const onDelete = () => {
-    dispatch(taskDeleted(task.id));
+    dispatch(deleteTask(task.id));
   };
 
   if (category === categoryId) {
