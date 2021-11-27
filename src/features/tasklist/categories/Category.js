@@ -1,33 +1,62 @@
 /**This component outputs the category titles in the task list */
 
-import React from "react";
+import { React, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteCategory, selectCategoryById } from "./categorySlice";
+import { deleteTask, selectTasks } from "../tasks/taskSlice";
+import DeleteModal from "../../ui/DeleteModal";
 
 //Destructure `props.id` since we only need the ID value
 const Category = ({ id }) => {
   //call our `selectCategoryById` with the state _and_ the ID value
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const category = useSelector((state) => selectCategoryById(state, id));
   const { name } = category;
+
+  //get all current tasks
+  const allTasks = useSelector((state) => selectTasks(state));
 
   const dispatch = useDispatch();
 
   const onDelete = () => {
+    setIsDeleting(true);
+  };
+
+  const cancelDelete = () => {
+    setIsDeleting(false);
+  };
+
+  const confirmDelete = () => {
+    //if the task is under the category that will be deleted, dispatch that delete action
+    allTasks.forEach((task) => {
+      if (task.category === category.id) {
+        dispatch(deleteTask(task.id));
+      }
+    });
     dispatch(deleteCategory(category.id));
+    setIsDeleting(false);
   };
 
   return (
     <div>
       <h3 id={category.id}>
-        {name} <button onClick={onDelete}>Delete Category</button>
+        {name}
+        <button onClick={onDelete}>Delete Category</button>
       </h3>
+      {isDeleting && (
+        <div>
+          <DeleteModal />
+          <button onClick={confirmDelete}>Confirm</button>
+          <button onClick={cancelDelete}>Cancel</button>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Category;
 
-/**TODO: add the ability to delete an entire category with all tasks */
 /**TODO: add extra information for the category that is shown when you click on the title (type) */
 /**TODO: add styling for the categories */
 
