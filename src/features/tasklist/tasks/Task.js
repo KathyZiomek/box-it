@@ -2,26 +2,47 @@
 
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 
 import { deleteTask, selectTaskById } from "./taskSlice";
 
 const Task = ({ id, categoryId }) => {
+  const [isToggled, setToggled] = useState("false");
+
   //call our `selectTaskById` with the state _and_ the ID value
   const task = useSelector((state) => selectTaskById(state, id));
-  const { name, category } = task;
+  const { name, category, duedate } = task;
 
   const dispatch = useDispatch();
+
+  const handleToggled = () => {
+    if (isToggled === "true") {
+      setToggled("false");
+    } else {
+      setToggled("true");
+    }
+  };
 
   const onDelete = () => {
     dispatch(deleteTask(task.id));
   };
 
+  let duedateComponent = duedate ? <p>Due Date: {duedate}</p> : null;
+
+  let toggle =
+    isToggled === "true" ? (
+      <div>
+        {duedateComponent}
+        <button onClick={onDelete}>Delete Task</button>
+      </div>
+    ) : null;
+
   if (category === categoryId) {
     return (
       <div>
         <li id={task.id}>
-          {name}
-          <button onClick={onDelete}>Delete Task</button>
+          <p onClick={handleToggled}>{name}</p>
+          {toggle}
         </li>
       </div>
     );

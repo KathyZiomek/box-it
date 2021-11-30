@@ -30,6 +30,7 @@ const NewTaskForm = () => {
   /**Setting refs for the inputs */
   const taskInputRef = useRef();
   const categoryInputRef = useRef();
+  const duedateInputRef = useRef();
 
   /**Function that handles when the submit button is clicked */
   const submitHandler = async (event) => {
@@ -39,12 +40,18 @@ const NewTaskForm = () => {
     /**get the refs for entered values */
     const enteredTask = taskInputRef.current.value;
     const enteredCategory = categoryInputRef.current.value;
+    const enteredDuedate = duedateInputRef.current.value;
 
     /**Clean the data */
     const trimmedTask = enteredTask.trim();
     const trimmedCategory = enteredCategory.trim();
+    const trimmedDueDate = enteredDuedate.trim();
     /**Combine the data into a single text object to pass to dispatch */
-    const text = { task: trimmedTask, category: trimmedCategory };
+    const text = {
+      task: trimmedTask,
+      category: trimmedCategory,
+      duedate: trimmedDueDate,
+    };
 
     //create and dispatch the thunk function itself
     setStatus("loading");
@@ -93,6 +100,18 @@ const NewTaskForm = () => {
           >
             {renderedCategoryItems}
           </select>
+        </div>
+        <div>
+          <label htmlFor="duedate">Due Date</label>
+          <input
+            type="date"
+            id="duedate"
+            name="duedate"
+            min="2022-01-01"
+            max="2023-01-01"
+            ref={duedateInputRef}
+            onClick={handleClick}
+          ></input>
         </div>
 
         <div>

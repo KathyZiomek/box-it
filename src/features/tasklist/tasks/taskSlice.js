@@ -32,6 +32,7 @@ export const saveNewTask = createAsyncThunk(
       {
         id: taskId,
         name: initialTask.text.task,
+        duedate: initialTask.text.duedate,
         category: initialTask.text.category,
       }
     );
@@ -59,6 +60,11 @@ const tasksSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
+    // taskToggled(state, action) {
+    //   const taskId = action.payload;
+    //   const task = state.entities[taskId];
+    //   task.completed = !task.completed;
+    // },
     // taskDeleted: tasksAdapter.removeOne,
   },
   extraReducers: (builder) => {
@@ -76,6 +82,8 @@ const tasksSlice = createSlice({
       .addCase(deleteTask.fulfilled, tasksAdapter.removeOne);
   },
 });
+
+// export const { taskToggled } = tasksSlice.actions;
 
 // export const { taskAdded, taskDeleted } = tasksSlice.actions;
 
