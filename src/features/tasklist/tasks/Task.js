@@ -7,7 +7,7 @@ import { useState } from "react";
 import { deleteTask, selectTaskById } from "./taskSlice";
 
 const Task = ({ id, categoryId }) => {
-  const [isToggled, setToggled] = useState("false");
+  const [isToggled, setToggled] = useState(false);
 
   //call our `selectTaskById` with the state _and_ the ID value
   const task = useSelector((state) => selectTaskById(state, id));
@@ -15,33 +15,35 @@ const Task = ({ id, categoryId }) => {
 
   const dispatch = useDispatch();
 
-  const handleToggled = () => {
-    if (isToggled === "true") {
-      setToggled("false");
-    } else {
-      setToggled("true");
-    }
-  };
-
   const onDelete = () => {
     dispatch(deleteTask(task.id));
   };
 
+  const handleToggled = () => {
+    if (isToggled) {
+      setToggled(false);
+    } else {
+      setToggled(true);
+    }
+  };
+
   let duedateComponent = duedate ? <p>Due Date: {duedate}</p> : null;
 
-  let toggle =
-    isToggled === "true" ? (
-      <div>
-        {duedateComponent}
-        <button onClick={onDelete}>Delete Task</button>
-      </div>
-    ) : null;
+  let toggle = isToggled ? (
+    <div>
+      {duedateComponent}
+      <button onClick={onDelete}>Delete Task</button>
+    </div>
+  ) : null;
 
   if (category === categoryId) {
     return (
       <div>
         <li id={task.id}>
-          <p onClick={handleToggled}>{name}</p>
+          <input type="checkbox" id={task.id} name="task" value="" />
+          <label htmlFor={task.id} onClick={handleToggled}>
+            {name}
+          </label>
           {toggle}
         </li>
       </div>

@@ -9,6 +9,7 @@ import DeleteModal from "../../ui/DeleteModal";
 //Destructure `props.id` since we only need the ID value
 const Category = ({ id }) => {
   //call our `selectCategoryById` with the state _and_ the ID value
+  const [isToggled, setToggled] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const category = useSelector((state) => selectCategoryById(state, id));
@@ -38,11 +39,29 @@ const Category = ({ id }) => {
     setIsDeleting(false);
   };
 
+  const handleToggled = () => {
+    if (isToggled) {
+      setToggled(false);
+    } else {
+      if (isDeleting) {
+        return;
+      } else {
+        setToggled(true);
+      }
+    }
+  };
+
+  let toggle = isToggled ? (
+    <div>
+      <button onClick={onDelete}>Delete Category</button>
+    </div>
+  ) : null;
+
   return (
     <div>
-      <h3 id={category.id}>
+      <h3 id={category.id} onClick={handleToggled}>
         {name}
-        <button onClick={onDelete}>Delete Category</button>
+        {toggle}
       </h3>
       {isDeleting && (
         <div>

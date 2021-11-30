@@ -11,6 +11,8 @@ import CardTasklist from "../ui/CardTasklist";
 import { selectCategoryIds } from "./categories/categorySlice";
 import { selectTaskIds } from "./tasks/taskSlice";
 
+import classes from "./TaskList.module.css";
+
 const TaskList = () => {
   const categoryIds = useSelector(selectCategoryIds);
   const taskIds = useSelector(selectTaskIds);
@@ -31,7 +33,7 @@ const TaskList = () => {
     return (
       <CardTasklist key={categoryId} id={categoryId}>
         <Category key={categoryId} id={categoryId} />
-        <ul>
+        <ul className={classes.noBullets}>
           {taskIds.map((taskId) => (
             <Task key={taskId} id={taskId} categoryId={currentCategoryId} />
           ))}
@@ -40,7 +42,7 @@ const TaskList = () => {
     );
   });
 
-  return <ul>{renderedTaskListItems}</ul>;
+  return <ul className={classes.noBullets}>{renderedTaskListItems}</ul>;
 };
 export default TaskList;
 
