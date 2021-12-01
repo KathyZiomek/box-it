@@ -1,17 +1,18 @@
 /**This component outputs a single task list item - receives props from TaskList.js */
-
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 
-import { deleteTask, selectTaskById } from "./taskSlice";
+import { deleteTask, selectTaskById, checkboxToggled } from "./taskSlice";
+
+import { Checkbox } from "primereact/checkbox";
 
 const Task = ({ id, categoryId }) => {
   const [isToggled, setToggled] = useState(false);
 
   //call our `selectTaskById` with the state _and_ the ID value
   const task = useSelector((state) => selectTaskById(state, id));
-  const { name, category, duedate } = task;
+  const { name, category, duedate, completed } = task;
 
   const dispatch = useDispatch();
 
@@ -20,11 +21,18 @@ const Task = ({ id, categoryId }) => {
   };
 
   const handleToggled = () => {
-    if (isToggled) {
-      setToggled(false);
-    } else {
-      setToggled(true);
-    }
+    isToggled ? setToggled(false) : setToggled(true);
+  };
+
+  const handleCheckboxChanged = (event) => {
+    const text = {
+      id: task.id,
+      name,
+      category,
+      duedate,
+      completed: event.checked,
+    };
+    dispatch(checkboxToggled(text));
   };
 
   let duedateComponent = duedate ? <p>Due Date: {duedate}</p> : null;
@@ -38,15 +46,19 @@ const Task = ({ id, categoryId }) => {
 
   if (category === categoryId) {
     return (
-      <div>
-        <li id={task.id}>
-          <input type="checkbox" id={task.id} name="task" value="" />
-          <label htmlFor={task.id} onClick={handleToggled}>
-            {name}
-          </label>
-          {toggle}
-        </li>
-      </div>
+      <li id={task.id} className="p-field-checkbox">
+        <Checkbox
+          inputId={task.id}
+          name="task"
+          value={name}
+          checked={completed}
+          onChange={handleCheckboxChanged}
+        />
+        <label htmlFor={task.id} onClick={handleToggled}>
+          {name}
+        </label>
+        {toggle}
+      </li>
     );
   } else {
     return null;

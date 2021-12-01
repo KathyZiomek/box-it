@@ -4,6 +4,11 @@
 /**TODO: add a nav bar */
 /**TODO: add a user settings page */
 import React from "react";
+
+import "primereact/resources/themes/bootstrap4-light-blue/theme.css"; //theme
+import "primereact/resources/primereact.min.css"; //core css
+import "primeicons/primeicons.css"; //icons
+
 import { Route, Switch } from "react-router-dom";
 import Layout from "./features/layout/Layout";
 import CreateCategoryPage from "./pages/tasks/CreateCategoryPage";

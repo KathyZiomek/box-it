@@ -9,6 +9,11 @@ import { selectCategoryIds } from "../categories/categorySlice";
 import Success from "../../ui/Success";
 import CategoryDropDown from "./CategoryDropDown";
 
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+//TODO: implement Dropdown primereact component
+// import { Dropdown } from "primereact/dropdown";
+
 const NewTaskForm = () => {
   const categoryIds = useSelector(selectCategoryIds);
   const [newTask, setNewTask] = useState("");
@@ -78,7 +83,7 @@ const NewTaskForm = () => {
       <form onSubmit={submitHandler}>
         <div>
           <label htmlFor="taskName">Task Name</label>
-          <input
+          <InputText
             type="text"
             id="taskName"
             required
@@ -115,7 +120,7 @@ const NewTaskForm = () => {
         </div>
 
         <div>
-          <button>Add New Task</button>
+          <Button>Add New Task</Button>
         </div>
         {loader}
         {submitted}

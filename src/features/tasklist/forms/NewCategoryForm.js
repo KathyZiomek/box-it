@@ -8,6 +8,9 @@ import Success from "../../ui/Success";
 
 import { saveNewCategory } from "../categories/categorySlice";
 
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+
 const NewCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
   const [status, setStatus] = useState("idle");
@@ -61,7 +64,7 @@ const NewCategoryForm = () => {
       <hr />
       <label htmlFor="categoryName">Category Name</label>
       <br />
-      <input
+      <InputText
         type="text"
         id="categoryName"
         required
@@ -73,7 +76,7 @@ const NewCategoryForm = () => {
         onClick={handleClick}
       />
       <br />
-      <button>Submit</button>
+      <Button>Submit</Button>
       {loader}
       {submitted}
     </form>

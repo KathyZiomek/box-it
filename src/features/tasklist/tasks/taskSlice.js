@@ -34,6 +34,7 @@ export const saveNewTask = createAsyncThunk(
         name: initialTask.text.task,
         duedate: initialTask.text.duedate,
         category: initialTask.text.category,
+        completed: false,
       }
     );
     return response;
@@ -56,15 +57,39 @@ export const deleteTask = createAsyncThunk(
   }
 );
 
+//TODO: update this function to handle general updates instead of specifically the checkbox
+export const checkboxToggled = createAsyncThunk(
+  "tasks/taskCompleted",
+  async (text) => {
+    const initialTask = { text };
+    const response = await client.put(
+      `https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks/${initialTask.text.id}.json`,
+      {
+        id: initialTask.text.id,
+        name: initialTask.text.name,
+        category: initialTask.text.category,
+        duedate: initialTask.text.duedate,
+        completed: initialTask.text.completed,
+      }
+    );
+    if (response === null) {
+      return initialTask.text;
+    } else {
+      return response;
+    }
+  }
+);
+
 const tasksSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
-    // taskToggled(state, action) {
-    //   const taskId = action.payload;
-    //   const task = state.entities[taskId];
-    //   task.completed = !task.completed;
-    // },
+    completedTasksCleared(state, action) {
+      const completedIds = Object.values(state.entities)
+        .filter((task) => task.completed)
+        .map((task) => task.id);
+      tasksAdapter.removeMany(state, completedIds);
+    },
     // taskDeleted: tasksAdapter.removeOne,
   },
   extraReducers: (builder) => {
@@ -76,14 +101,21 @@ const tasksSlice = createSlice({
         if (action.payload !== null) {
           tasksAdapter.setAll(state, action.payload);
           state.status = "idle";
+        } else {
+          state.status = "idle";
         }
       })
       .addCase(saveNewTask.fulfilled, tasksAdapter.addOne)
-      .addCase(deleteTask.fulfilled, tasksAdapter.removeOne);
+      .addCase(deleteTask.fulfilled, tasksAdapter.removeOne)
+      .addCase(checkboxToggled.fulfilled, (state, action) => {
+        const taskId = action.payload.id;
+        const task = state.entities[taskId];
+        task.completed = !task.completed;
+      });
   },
 });
 
-// export const { taskToggled } = tasksSlice.actions;
+export const { completedTasksCleared } = tasksSlice.actions;
 
 // export const { taskAdded, taskDeleted } = tasksSlice.actions;
 

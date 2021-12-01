@@ -67,6 +67,8 @@ const categoriesSlice = createSlice({
         if (action.payload !== null) {
           categoriesAdapter.setAll(state, action.payload);
           state.status = "idle";
+        } else {
+          state.status = "idle";
         }
       })
       .addCase(saveNewCategory.fulfilled, categoriesAdapter.addOne)
