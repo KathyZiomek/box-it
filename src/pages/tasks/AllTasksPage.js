@@ -2,6 +2,7 @@
 
 import TaskList from "../../features/tasklist/TaskList";
 import Card from "../../features/ui/Card";
+import FilterButtons from "../../features/filters/FilterButtons";
 
 const AllTasksPage = () => {
   return (
@@ -9,12 +10,9 @@ const AllTasksPage = () => {
       <h1>Your Task List</h1>
       <hr />
       <TaskList />
+      <FilterButtons />
     </Card>
   );
 };
 
 export default AllTasksPage;
-
-// /**TODO: add a case where the user has no existing tasks or categories*/
-// /**TODO: add a case where the user has tasks but no categories */
-// /**TODO: add a case where the user has categories but no tasks */

@@ -8,6 +8,8 @@ import { client } from "../../../api/client";
 
 import { uuidv4 } from "../../../common/RandomId";
 
+import { StatusFilters } from "../../filters/filtersSlice";
+
 const tasksAdapter = createEntityAdapter();
 
 const initialState = tasksAdapter.getInitialState({
@@ -90,6 +92,11 @@ const tasksSlice = createSlice({
         .map((task) => task.id);
       tasksAdapter.removeMany(state, completedIds);
     },
+    allTasksCompleted(state, action) {
+      Object.values(state.entities).forEach((task) => {
+        task.completed = true;
+      });
+    },
     // taskDeleted: tasksAdapter.removeOne,
   },
   extraReducers: (builder) => {
@@ -115,7 +122,7 @@ const tasksSlice = createSlice({
   },
 });
 
-export const { completedTasksCleared } = tasksSlice.actions;
+export const { completedTasksCleared, allTasksCompleted } = tasksSlice.actions;
 
 // export const { taskAdded, taskDeleted } = tasksSlice.actions;
 
@@ -132,60 +139,32 @@ export const selectTaskIds = createSelector(
   (tasks) => tasks.map((task) => task.id)
 );
 
-// //use the initialState as a default value
-// export default function tasksReducer(state = initialState, action) {
-//   switch (action.type) {
-//     case "tasklist/taskAdded": {
-//       const task = action.payload;
-//       return {
-//         ...state,
-//         entities: {
-//           ...state.entities,
-//           [task.id]: task,
-//         },
-//       };
-//     }
-//     // case "tasklist/updateTaskCategory": {
-//     //   const { category, taskId } = action.payload;
-//     //   return state.map((task) => {
-//     //     if (task.id !== taskId) {
-//     //       return task;
-//     //     }
+export const selectFilteredTasks = createSelector(
+  //all tasks
+  selectTasks,
+  //all filter values
+  (state) => state.filters,
+  //receive both values
+  (tasks, filters) => {
+    const { status } = filters;
+    const showAllCompletions = status === StatusFilters.All;
+    if (showAllCompletions) {
+      return tasks;
+    }
 
-//     //     return {
-//     //       ...task,
-//     //       category,
-//     //     };
-//     //   });
-//     // }
-//     case "tasklist/taskDeleted": {
-//       const newEntities = { ...state.entities };
-//       delete newEntities[action.payload];
-//       return {
-//         ...state,
-//         entities: newEntities,
-//       };
-//     }
-//     case "tasklist/tasksLoading": {
-//       return {
-//         ...state,
-//         status: "loading",
-//       };
-//     }
-//     case "tasklist/tasksLoaded": {
-//       const newEntities = {};
-//       if (action.payload !== null) {
-//         action.payload.forEach((task) => {
-//           newEntities[task.id] = task;
-//         });
-//       }
-//       return {
-//         ...state,
-//         status: "idle",
-//         entities: newEntities,
-//       };
-//     }
-//     default:
-//       return state;
-//   }
-// }
+    const completedStatus = status === StatusFilters.Completed;
+    //return either active or completed tasks based on filter
+    return tasks.filter((task) => {
+      const statusMatches =
+        showAllCompletions || task.completed === completedStatus;
+      return statusMatches;
+    });
+  }
+);
+
+export const selectFilteredTaskIds = createSelector(
+  //pass our other memoized selector as an input
+  selectFilteredTasks,
+  //get data in the output selector
+  (filteredTasks) => filteredTasks.map((task) => task.id)
+);

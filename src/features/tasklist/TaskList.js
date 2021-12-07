@@ -9,7 +9,7 @@ import Task from "./tasks/Task";
 import CardTasklist from "../ui/CardTasklist";
 
 import { selectCategoryIds } from "./categories/categorySlice";
-import { selectTaskIds } from "./tasks/taskSlice";
+import { selectFilteredTaskIds } from "./tasks/taskSlice";
 
 import classes from "./TaskList.module.css";
 
@@ -17,10 +17,14 @@ import { ProgressSpinner } from "primereact/progressspinner";
 
 const TaskList = () => {
   const categoryIds = useSelector(selectCategoryIds);
-  const taskIds = useSelector(selectTaskIds);
-  const loadingStatus = useSelector((state) => state.categories.status);
+  const taskIds = useSelector(selectFilteredTaskIds);
+  const categoryLoadingStatus = useSelector((state) => state.categories.status);
+  const taskLoadingStatus = useSelector((state) => state.tasks.status);
 
-  if (loadingStatus === "loading") {
+  console.log(categoryLoadingStatus);
+  console.log(taskLoadingStatus);
+
+  if (categoryLoadingStatus === "loading" || taskLoadingStatus === "loading") {
     return (
       <div>
         <ProgressSpinner />
@@ -43,7 +47,11 @@ const TaskList = () => {
       );
     });
     //no tasks or categories
-    if (loadingStatus === "idle" && renderedTaskListItems.length === 0) {
+    if (
+      categoryLoadingStatus === "idle" &&
+      taskLoadingStatus === "idle" &&
+      renderedTaskListItems.length === 0
+    ) {
       return (
         <div>
           <p>You do not appear to have any existing tasks or categories.</p>
@@ -54,6 +62,7 @@ const TaskList = () => {
         </div>
       );
     } else {
+      console.log(renderedTaskListItems);
       //existing tasks and categories
       return <ul className={classes.noBullets}>{renderedTaskListItems}</ul>;
     }

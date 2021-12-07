@@ -4,12 +4,13 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import tasksReducer from "./features/tasklist/tasks/taskSlice";
 import categoriesReducer from "./features/tasklist/categories/categorySlice";
+import filtersReducer from "./features/filters/filtersSlice";
 
 const store = configureStore({
   reducer: {
-    // Define a top-level state field named `categories`, handled by `categoriesReducer`
     categories: categoriesReducer,
     tasks: tasksReducer,
+    filters: filtersReducer,
   },
 });
 
