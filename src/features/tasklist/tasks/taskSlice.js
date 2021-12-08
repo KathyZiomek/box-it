@@ -60,7 +60,7 @@ export const deleteTask = createAsyncThunk(
 );
 
 //TODO: update this function to handle general updates instead of specifically the checkbox
-export const checkboxToggled = createAsyncThunk(
+export const taskCompletedStatusChanged = createAsyncThunk(
   "tasks/taskCompleted",
   async (text) => {
     const initialTask = { text };
@@ -92,11 +92,11 @@ const tasksSlice = createSlice({
         .map((task) => task.id);
       tasksAdapter.removeMany(state, completedIds);
     },
-    allTasksCompleted(state, action) {
-      Object.values(state.entities).forEach((task) => {
-        task.completed = true;
-      });
-    },
+    // allTasksCompleted(state, action) {
+    //   Object.values(state.entities).forEach((task) => {
+    //     task.completed = true;
+    //   });
+    // },
     // taskDeleted: tasksAdapter.removeOne,
   },
   extraReducers: (builder) => {
@@ -114,7 +114,7 @@ const tasksSlice = createSlice({
       })
       .addCase(saveNewTask.fulfilled, tasksAdapter.addOne)
       .addCase(deleteTask.fulfilled, tasksAdapter.removeOne)
-      .addCase(checkboxToggled.fulfilled, (state, action) => {
+      .addCase(taskCompletedStatusChanged.fulfilled, (state, action) => {
         const taskId = action.payload.id;
         const task = state.entities[taskId];
         task.completed = !task.completed;
@@ -122,9 +122,7 @@ const tasksSlice = createSlice({
   },
 });
 
-export const { completedTasksCleared, allTasksCompleted } = tasksSlice.actions;
-
-// export const { taskAdded, taskDeleted } = tasksSlice.actions;
+export const { completedTasksCleared } = tasksSlice.actions;
 
 export default tasksSlice.reducer;
 

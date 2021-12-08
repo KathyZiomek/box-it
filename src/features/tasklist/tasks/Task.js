@@ -3,7 +3,11 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 
-import { deleteTask, selectTaskById, checkboxToggled } from "./taskSlice";
+import {
+  deleteTask,
+  selectTaskById,
+  taskCompletedStatusChanged,
+} from "./taskSlice";
 
 import { Checkbox } from "primereact/checkbox";
 
@@ -32,7 +36,7 @@ const Task = ({ id, categoryId }) => {
       duedate,
       completed: event.checked,
     };
-    dispatch(checkboxToggled(text));
+    dispatch(taskCompletedStatusChanged(text));
   };
 
   let duedateComponent = duedate ? <p>Due Date: {duedate}</p> : null;

@@ -3,9 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { StatusFilters, statusFilterChanged } from "./filtersSlice";
 import {
-  completedTasksCleared,
-  allTasksCompleted,
+  // completedTasksCleared,
+  deleteTask,
+  // allTasksCompleted,
   selectTasks,
+  taskCompletedStatusChanged,
 } from "../tasklist/tasks/taskSlice";
 import { selectCategories } from "../tasklist/categories/categorySlice";
 
@@ -66,7 +68,6 @@ const StatusFilter = ({ value: status, onChange }) => {
           disabled={disabledRadioButton}
           onChange={handleClick}
           checked={checkedButton}
-          // checked={key.toLowerCase() === status}
         />
         <label htmlFor={key}>{key}</label>
       </li>
@@ -88,13 +89,36 @@ const FilterButtons = () => {
     const uncompletedTasks = selectTasks(state).filter(
       (task) => !task.completed
     );
-    return uncompletedTasks.length;
+    return uncompletedTasks;
   });
+  const tasksRemainingCounter = tasksRemaining.length;
 
   const { status } = useSelector((state) => state.filters);
 
-  const onMarkCompletedClicked = () => dispatch(allTasksCompleted());
-  const onClearCompletedClicked = () => dispatch(completedTasksCleared());
+  const onMarkCompletedClicked = () => {
+    //identify tasks that are not currently marked as completed
+    //dispatch the action to update their "completed" value in firebase
+    tasksRemaining.forEach((task) => {
+      let text = {
+        id: task.id,
+        name: task.name,
+        category: task.category,
+        duedate: task.duedate,
+        completed: true,
+      };
+      dispatch(taskCompletedStatusChanged(text));
+    });
+  };
+
+  //get all current tasks
+  const allTasks = useSelector((state) => selectTasks(state));
+  const onClearCompletedClicked = () => {
+    allTasks.forEach((task) => {
+      if (task.completed === true) {
+        dispatch(deleteTask(task.id));
+      }
+    });
+  };
 
   const onStatusChange = (status) => dispatch(statusFilterChanged(status));
 
@@ -108,7 +132,7 @@ const FilterButtons = () => {
       </div>
 
       <div>
-        <RemainingTasks count={tasksRemaining} />
+        <RemainingTasks count={tasksRemainingCounter} />
       </div>
 
       <div>

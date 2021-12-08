@@ -13,6 +13,7 @@ const Category = ({ id }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const category = useSelector((state) => selectCategoryById(state, id));
+
   const { name } = category;
 
   //get all current tasks
