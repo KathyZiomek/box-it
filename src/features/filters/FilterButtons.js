@@ -7,6 +7,7 @@ import {
   allTasksCompleted,
   selectTasks,
 } from "../tasklist/tasks/taskSlice";
+import { selectCategories } from "../tasklist/categories/categorySlice";
 
 import { Button } from "primereact/button";
 import { RadioButton } from "primereact/radiobutton";
@@ -27,7 +28,32 @@ const RemainingTasks = ({ count }) => {
 };
 
 const StatusFilter = ({ value: status, onChange }) => {
+  const dispatch = useDispatch();
+  //identify if there are no existing tasks or categories to disable the radio buttons
+  const categoryCount = useSelector(selectCategories);
+  let disabledRadioButton = categoryCount.length > 0 ? false : true;
+
   const renderedFilters = Object.keys(StatusFilters).map((key) => {
+    let checkedButton = false;
+    if (
+      key.toLowerCase() === status &&
+      status === "all" &&
+      disabledRadioButton
+    ) {
+      checkedButton = true;
+    } else if (key.toLowerCase() === status && !disabledRadioButton) {
+      checkedButton = true;
+    } else if (
+      disabledRadioButton &&
+      key.toLowerCase() !== status &&
+      key.toLowerCase() === "all"
+    ) {
+      checkedButton = true;
+      dispatch(statusFilterChanged(key.toLowerCase()));
+    } else {
+      checkedButton = false;
+    }
+
     const value = StatusFilters[key];
     const handleClick = () => onChange(value);
 
@@ -37,8 +63,10 @@ const StatusFilter = ({ value: status, onChange }) => {
           inputId={key}
           value={key}
           name="status"
+          disabled={disabledRadioButton}
           onChange={handleClick}
-          checked={key.toLowerCase() === status}
+          checked={checkedButton}
+          // checked={key.toLowerCase() === status}
         />
         <label htmlFor={key}>{key}</label>
       </li>

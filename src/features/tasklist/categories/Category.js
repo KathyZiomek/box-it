@@ -3,11 +3,7 @@
 import { React, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteCategory, selectCategoryById } from "./categorySlice";
-import {
-  deleteTask,
-  selectTasks,
-  selectFilteredTasks,
-} from "../tasks/taskSlice";
+import { deleteTask, selectTasks } from "../tasks/taskSlice";
 import DeleteModal from "../../ui/DeleteModal";
 
 //Destructure `props.id` since we only need the ID value
@@ -21,10 +17,6 @@ const Category = ({ id }) => {
 
   //get all current tasks
   const allTasks = useSelector((state) => selectTasks(state));
-  console.log(allTasks);
-
-  //get the current status
-  const filterStatus = useSelector((state) => state.filters.status);
 
   const dispatch = useDispatch();
 
@@ -65,63 +57,43 @@ const Category = ({ id }) => {
     </div>
   ) : null;
 
-  const filteredTasks = useSelector((state) => selectFilteredTasks(state));
-  const filteredCategories = filteredTasks.map((task) => {
-    if (task.category === category.id) {
-      return category.id;
-    } else {
-      return null;
-    }
-  });
-
-  // boolean to keep track of if there are any categories with tasks
-  let validCategory = false;
-  filteredCategories.forEach((category) => {
-    if (category !== null) {
-      validCategory = true;
-    }
-  });
-  console.log(filteredTasks);
-  console.log(filteredCategories);
-
-  if (validCategory) {
-    return (
-      <div>
-        <h3 id={category.id} onClick={handleToggled}>
-          {name}
-          {toggle}
-        </h3>
-        {isDeleting && (
-          <div>
-            <DeleteModal />
-            <button onClick={confirmDelete}>Confirm</button>
-            <button onClick={cancelDelete}>Cancel</button>
-          </div>
-        )}
-      </div>
-    );
-  } else if (filteredCategories.length === 0) {
-    if (filterStatus === "active") {
-      return (
+  return (
+    <div>
+      <h3 id={category.id} onClick={handleToggled}>
+        {name}
+        {toggle}
+      </h3>
+      {isDeleting && (
         <div>
-          <p>There are currently no active tasks.</p>
+          <DeleteModal />
+          <button onClick={confirmDelete}>Confirm</button>
+          <button onClick={cancelDelete}>Cancel</button>
         </div>
-      );
-    } else if (filterStatus === "completed") {
-      return (
-        <div>
-          <p>There are currently no completed tasks.</p>
-        </div>
-      );
-    }
-    return;
-  } else if (filterStatus === "all") {
-    console.log("all active");
-    return null;
-  } else {
-    console.log("test");
-    return null;
-  }
+      )}
+    </div>
+  );
+  // } else if (filteredCategories.length === 0) {
+  //   if (filterStatus === "active") {
+  //     return (
+  //       <div>
+  //         <p>There are currently no active tasks.</p>
+  //       </div>
+  //     );
+  //   } else if (filterStatus === "completed") {
+  //     return (
+  //       <div>
+  //         <p>There are currently no completed tasks.</p>
+  //       </div>
+  //     );
+  //   }
+  //   return;
+  // } else if (filterStatus === "all") {
+  //   console.log("all active");
+  //   return null;
+  // } else {
+  //   console.log("test");
+  //   return null;
+  // }
 };
 
 export default Category;

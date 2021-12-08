@@ -9,20 +9,26 @@ import Task from "./tasks/Task";
 import CardTasklist from "../ui/CardTasklist";
 
 import { selectCategoryIds } from "./categories/categorySlice";
-import { selectFilteredTaskIds } from "./tasks/taskSlice";
+import { selectFilteredTasks } from "./tasks/taskSlice";
 
 import classes from "./TaskList.module.css";
 
 import { ProgressSpinner } from "primereact/progressspinner";
 
+//import tasklist messages
+import {
+  NoCategories,
+  EmptyCategory,
+  NoActiveTasks,
+  NoCompletedTasks,
+} from "./TaskListMessages";
+
 const TaskList = () => {
   const categoryIds = useSelector(selectCategoryIds);
-  const taskIds = useSelector(selectFilteredTaskIds);
+  const filteredTasks = useSelector(selectFilteredTasks);
   const categoryLoadingStatus = useSelector((state) => state.categories.status);
   const taskLoadingStatus = useSelector((state) => state.tasks.status);
-
-  console.log(categoryLoadingStatus);
-  console.log(taskLoadingStatus);
+  const filterStatus = useSelector((state) => state.filters.status);
 
   if (categoryLoadingStatus === "loading" || taskLoadingStatus === "loading") {
     return (
@@ -31,18 +37,54 @@ const TaskList = () => {
       </div>
     );
   } else {
+    /*create a variables to store category ids depending on the current status filter:
+    - all categories regardless of tasks (all)
+    - categories with tasks that match the current filter (active/completed)
+    */
+    let uniqueFilteredCategories = [];
+    if (filterStatus === "all") {
+      uniqueFilteredCategories = categoryIds;
+    } else if (filterStatus === "active") {
+      const filteredCategories = filteredTasks.map((task) => {
+        return task.category;
+      });
+      //remove duplicates from filteredCategories
+      uniqueFilteredCategories = [...new Set(filteredCategories)];
+    } else if (filterStatus === "completed") {
+      const filteredCategories = filteredTasks.map((task) => {
+        return task.category;
+      });
+      //remove duplicates from filteredCategories
+      uniqueFilteredCategories = [...new Set(filteredCategories)];
+    }
+
     //since `categories` is an array, we can loop over it
-    const renderedTaskListItems = categoryIds.map((categoryId) => {
+    const renderedTaskListItems = uniqueFilteredCategories.map((categoryId) => {
       //save the current CategoryId into a variable so it can be passed as a foreign key into the tasks
       const currentCategoryId = categoryId;
+      let noTasksCounter = 0;
+
+      const tasks = filteredTasks.map((task) => {
+        if (task.category === categoryId) {
+          ++noTasksCounter;
+          return (
+            <Task key={task.id} id={task.id} categoryId={currentCategoryId} />
+          );
+        } else {
+          return null;
+        }
+      });
+
+      let renderedTasks =
+        noTasksCounter > 0 ? (
+          <ul className={classes.noBullets}>{tasks}</ul>
+        ) : (
+          <EmptyCategory />
+        );
       return (
         <CardTasklist key={categoryId} id={categoryId}>
           <Category key={categoryId} id={categoryId} />
-          <ul className={classes.noBullets}>
-            {taskIds.map((taskId) => (
-              <Task key={taskId} id={taskId} categoryId={currentCategoryId} />
-            ))}
-          </ul>
+          {renderedTasks}
         </CardTasklist>
       );
     });
@@ -50,19 +92,25 @@ const TaskList = () => {
     if (
       categoryLoadingStatus === "idle" &&
       taskLoadingStatus === "idle" &&
-      renderedTaskListItems.length === 0
+      renderedTaskListItems.length === 0 &&
+      filterStatus === "active"
     ) {
-      return (
-        <div>
-          <p>You do not appear to have any existing tasks or categories.</p>
-          <p>
-            To create some categories to sort your tasks, click on Create a
-            Category in the toolbar on the left.
-          </p>
-        </div>
-      );
+      return <NoActiveTasks />;
+    } else if (
+      categoryLoadingStatus === "idle" &&
+      taskLoadingStatus === "idle" &&
+      renderedTaskListItems.length === 0 &&
+      filterStatus === "completed"
+    ) {
+      return <NoCompletedTasks />;
+    } else if (
+      categoryLoadingStatus === "idle" &&
+      taskLoadingStatus === "idle" &&
+      renderedTaskListItems.length === 0 &&
+      filterStatus === "all"
+    ) {
+      return <NoCategories />;
     } else {
-      console.log(renderedTaskListItems);
       //existing tasks and categories
       return <ul className={classes.noBullets}>{renderedTaskListItems}</ul>;
     }

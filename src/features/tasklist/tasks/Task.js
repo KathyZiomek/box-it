@@ -44,25 +44,25 @@ const Task = ({ id, categoryId }) => {
     </div>
   ) : null;
 
-  if (category === categoryId) {
-    return (
-      <li id={task.id} className="p-field-checkbox">
-        <Checkbox
-          inputId={task.id}
-          name="task"
-          value={name}
-          checked={completed}
-          onChange={handleCheckboxChanged}
-        />
-        <label htmlFor={task.id} onClick={handleToggled}>
-          {name}
-        </label>
-        {toggle}
-      </li>
-    );
-  } else {
-    return null;
-  }
+  // if (category === categoryId) {
+  return (
+    <li id={task.id} className="p-field-checkbox">
+      <Checkbox
+        inputId={task.id}
+        name="task"
+        value={name}
+        checked={completed}
+        onChange={handleCheckboxChanged}
+      />
+      <label htmlFor={task.id} onClick={handleToggled}>
+        {name}
+      </label>
+      {toggle}
+    </li>
+  );
+  // } else {
+  //   return null;
+  // }
 };
 
 export default Task;
