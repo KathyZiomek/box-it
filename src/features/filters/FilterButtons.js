@@ -120,15 +120,21 @@ const FilterButtons = () => {
     });
   };
 
+  let disabledButtons = allTasks.length === 0 ? true : false;
+
   const onStatusChange = (status) => dispatch(statusFilterChanged(status));
 
   return (
     <Card>
       <div>
         <h5>Actions</h5>
-        <Button onClick={onMarkCompletedClicked}>Mark All Completed</Button>
+        <Button onClick={onMarkCompletedClicked} disabled={disabledButtons}>
+          Mark All Completed
+        </Button>
         <br />
-        <Button onClick={onClearCompletedClicked}>Clear Completed</Button>
+        <Button onClick={onClearCompletedClicked} disabled={disabledButtons}>
+          Clear Completed
+        </Button>
       </div>
 
       <div>

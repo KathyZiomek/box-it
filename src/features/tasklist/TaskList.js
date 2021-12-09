@@ -61,15 +61,12 @@ const TaskList = () => {
     //since `categories` is an array, we can loop over it
     const renderedTaskListItems = uniqueFilteredCategories.map((categoryId) => {
       //save the current CategoryId into a variable so it can be passed as a foreign key into the tasks
-      const currentCategoryId = categoryId;
       let noTasksCounter = 0;
 
       const tasks = filteredTasks.map((task) => {
         if (task.category === categoryId) {
           ++noTasksCounter;
-          return (
-            <Task key={task.id} id={task.id} categoryId={currentCategoryId} />
-          );
+          return <Task key={task.id} id={task.id} />;
         } else {
           return null;
         }

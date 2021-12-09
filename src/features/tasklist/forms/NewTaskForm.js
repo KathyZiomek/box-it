@@ -11,6 +11,7 @@ import CategoryDropDown from "./CategoryDropDown";
 
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
+import { ProgressSpinner } from "primereact/progressspinner";
 //TODO: implement Dropdown primereact component
 // import { Dropdown } from "primereact/dropdown";
 
@@ -73,7 +74,7 @@ const NewTaskForm = () => {
   let placeholder = isLoading ? "" : "Enter task name here...";
   let loader = isLoading ? (
     <div>
-      <p>Submitting...</p>
+      <ProgressSpinner />
     </div>
   ) : null;
   let submitted = success === "idle" ? null : <Success />;

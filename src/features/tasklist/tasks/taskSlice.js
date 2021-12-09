@@ -82,16 +82,32 @@ export const taskCompletedStatusChanged = createAsyncThunk(
   }
 );
 
+export const updateTask = createAsyncThunk(
+  "tasks/taskUpdated",
+  async (text) => {
+    const initialTask = { text };
+    const response = await client(
+      `https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks/${initialTask.text.id}.json`,
+      { method: "PATCH", body: initialTask.text }
+    );
+    if (response === null) {
+      return initialTask.text;
+    } else {
+      return response;
+    }
+  }
+);
+
 const tasksSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
-    completedTasksCleared(state, action) {
-      const completedIds = Object.values(state.entities)
-        .filter((task) => task.completed)
-        .map((task) => task.id);
-      tasksAdapter.removeMany(state, completedIds);
-    },
+    // completedTasksCleared(state, action) {
+    //   const completedIds = Object.values(state.entities)
+    //     .filter((task) => task.completed)
+    //     .map((task) => task.id);
+    //   tasksAdapter.removeMany(state, completedIds);
+    // },
     // allTasksCompleted(state, action) {
     //   Object.values(state.entities).forEach((task) => {
     //     task.completed = true;
@@ -114,6 +130,10 @@ const tasksSlice = createSlice({
       })
       .addCase(saveNewTask.fulfilled, tasksAdapter.addOne)
       .addCase(deleteTask.fulfilled, tasksAdapter.removeOne)
+      .addCase(updateTask.fulfilled, (state, { payload }) => {
+        const { id, ...changes } = payload;
+        tasksAdapter.updateOne(state, { id, changes });
+      })
       .addCase(taskCompletedStatusChanged.fulfilled, (state, action) => {
         const taskId = action.payload.id;
         const task = state.entities[taskId];
