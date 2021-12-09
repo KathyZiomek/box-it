@@ -11,12 +11,14 @@ import {
   updateTask,
 } from "./taskSlice";
 
+import CategoryDropDown from "../forms/CategoryDropDown";
+
 import { Checkbox } from "primereact/checkbox";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 
-const Task = ({ id }) => {
+const Task = ({ id, categories }) => {
   //call our `selectTaskById` with the state _and_ the ID value
   const filterStatus = useSelector((state) => state.filters.status);
   const task = useSelector((state) => selectTaskById(state, id));
@@ -33,6 +35,12 @@ const Task = ({ id }) => {
     setToggled(false);
   }
 
+  // create the category drop down
+  // since `categories` is an array, we can loop over it
+  const renderedCategoryItems = categories.map((categoryId) => {
+    return <CategoryDropDown key={categoryId} id={categoryId} />;
+  });
+
   const onDelete = () => {
     dispatch(deleteTask(task.id));
   };
@@ -43,25 +51,38 @@ const Task = ({ id }) => {
   };
 
   const taskInputRef = useRef();
+  const categoryInputRef = useRef();
   const duedateInputRef = useRef();
 
-  const updateHandler = async (event) => {
+  const updateHandler = (event) => {
     event.preventDefault();
 
     const enteredTask = taskInputRef.current.value;
+    const enteredCategory = categoryInputRef.current.value;
     const enteredDuedate = duedateInputRef.current.value;
     const trimmedTask = enteredTask.trim();
+    const trimmedCategory = enteredCategory.trim();
     const trimmedDueDate = enteredDuedate.trim();
 
-    const text = {
-      name: trimmedTask,
-      duedate: trimmedDueDate,
+    let text = {
       id: task.id,
+      ...(trimmedTask !== task.name && { name: trimmedTask }),
+      ...(trimmedDueDate !== task.duedate && { duedate: trimmedDueDate }),
+      ...(trimmedCategory !== task.category && { category: trimmedCategory }),
     };
-    setStatus("loading");
-    await dispatch(updateTask(text));
-    setStatus("idle");
-    setEditing(false);
+
+    if (
+      text.name === undefined &&
+      text.duedate === undefined &&
+      text.category === undefined
+    ) {
+      setEditing(false);
+    } else {
+      setStatus("loading");
+      dispatch(updateTask(text));
+      setStatus("idle");
+      setEditing(false);
+    }
   };
 
   const handleToggled = () => {
@@ -128,6 +149,17 @@ const Task = ({ id }) => {
             max="2023-01-01"
             ref={duedateInputRef}
           ></input>
+        </div>
+        <div>
+          <label htmlFor="categoryName">Category Name</label>
+          <select
+            required
+            id="categoryName"
+            ref={categoryInputRef}
+            defaultValue={task.category}
+          >
+            {renderedCategoryItems}
+          </select>
         </div>
         <div>
           <Button>Update Task</Button>

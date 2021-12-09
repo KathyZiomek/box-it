@@ -73,28 +73,6 @@ const Category = ({ id }) => {
       )}
     </div>
   );
-  // } else if (filteredCategories.length === 0) {
-  //   if (filterStatus === "active") {
-  //     return (
-  //       <div>
-  //         <p>There are currently no active tasks.</p>
-  //       </div>
-  //     );
-  //   } else if (filterStatus === "completed") {
-  //     return (
-  //       <div>
-  //         <p>There are currently no completed tasks.</p>
-  //       </div>
-  //     );
-  //   }
-  //   return;
-  // } else if (filterStatus === "all") {
-  //   console.log("all active");
-  //   return null;
-  // } else {
-  //   console.log("test");
-  //   return null;
-  // }
 };
 
 export default Category;

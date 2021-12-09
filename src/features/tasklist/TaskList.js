@@ -66,7 +66,7 @@ const TaskList = () => {
       const tasks = filteredTasks.map((task) => {
         if (task.category === categoryId) {
           ++noTasksCounter;
-          return <Task key={task.id} id={task.id} />;
+          return <Task key={task.id} id={task.id} categories={categoryIds} />;
         } else {
           return null;
         }
