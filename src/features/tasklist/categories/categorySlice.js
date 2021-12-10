@@ -54,6 +54,22 @@ export const deleteCategory = createAsyncThunk(
   }
 );
 
+export const updateCategory = createAsyncThunk(
+  "categories/categoryUpdated",
+  async (text) => {
+    const initialCategory = { text };
+    const response = await client(
+      `https://box-it-b5c6c-default-rtdb.firebaseio.com/categories/${initialCategory.text.id}.json`,
+      { method: "PATCH", body: initialCategory.text }
+    );
+    if (response === null) {
+      return initialCategory.text;
+    } else {
+      return response;
+    }
+  }
+);
+
 const categoriesSlice = createSlice({
   name: "categories",
   initialState,
@@ -72,7 +88,11 @@ const categoriesSlice = createSlice({
         }
       })
       .addCase(saveNewCategory.fulfilled, categoriesAdapter.addOne)
-      .addCase(deleteCategory.fulfilled, categoriesAdapter.removeOne);
+      .addCase(deleteCategory.fulfilled, categoriesAdapter.removeOne)
+      .addCase(updateCategory.fulfilled, (state, { payload }) => {
+        const { id, ...changes } = payload;
+        categoriesAdapter.updateOne(state, { id, changes });
+      });
   },
 });
 
@@ -90,52 +110,3 @@ export const selectCategoryIds = createSelector(
   // and returns a final result value
   (categories) => categories.map((category) => category.id)
 );
-
-// // Use the initialState as a default value
-// export default function categoriesReducer(state = initialState, action) {
-//   // The reducer normally looks at the action type field to decide what happens
-//   switch (action.type) {
-//     // // Do something here based on the different types of actions
-//     case "tasklist/categoryAdded": {
-//       //Return a new categories state array with the new category item at the end
-//       const category = action.payload;
-//       return {
-//         ...state,
-//         entities: {
-//           ...state.entities,
-//           [category.id]: category,
-//         },
-//       };
-//     }
-//     case "tasklist/categoryDeleted": {
-//       const newEntities = { ...state.entities };
-//       delete newEntities[action.payload];
-//       return {
-//         ...state,
-//         entities: newEntities,
-//       };
-//     }
-//     case "tasklist/categoriesLoading": {
-//       return {
-//         ...state,
-//         status: "loading",
-//       };
-//     }
-//     case "tasklist/categoriesLoaded": {
-//       const newEntities = {};
-//       if (action.payload !== null) {
-//         action.payload.forEach((category) => {
-//           newEntities[category.id] = category;
-//         });
-//       }
-//       return {
-//         ...state,
-//         status: "idle",
-//         entities: newEntities,
-//       };
-//     }
-//     default:
-//       // If this reducer doesn't recognize the action type, or doesn't care about this specific action, return the existing state unchanged
-//       return state;
-//   }
-// }

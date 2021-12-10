@@ -105,8 +105,8 @@ const Task = ({ id, categories }) => {
   let toggle = isToggled ? (
     <div>
       {duedateComponent}
-      <button onClick={onEdit}>Edit Task</button>
-      <button onClick={onDelete}>Delete Task</button>
+      <Button onClick={onEdit}>Edit Task</Button>
+      <Button onClick={onDelete}>Delete Task</Button>
     </div>
   ) : null;
 
@@ -122,8 +122,8 @@ const Task = ({ id, categories }) => {
 
       <label htmlFor={task.id} onClick={handleToggled}>
         {name}
+        {toggle}
       </label>
-      {toggle}
     </li>
   ) : (
     <form onSubmit={updateHandler}>
@@ -180,6 +180,7 @@ const Task = ({ id, categories }) => {
     <div>
       {taskAppearance}
       {loader}
+      <br />
     </div>
   );
 };

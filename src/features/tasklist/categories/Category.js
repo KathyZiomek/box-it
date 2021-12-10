@@ -1,25 +1,39 @@
 /**This component outputs the category titles in the task list */
-
-import { React, useState } from "react";
+import { React, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteCategory, selectCategoryById } from "./categorySlice";
+
+import {
+  deleteCategory,
+  selectCategoryById,
+  updateCategory,
+} from "./categorySlice";
 import { deleteTask, selectTasks } from "../tasks/taskSlice";
+
 import DeleteModal from "../../ui/DeleteModal";
+
+import { InputText } from "primereact/inputtext";
+import { Button } from "primereact/button";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 //Destructure `props.id` since we only need the ID value
 const Category = ({ id }) => {
   //call our `selectCategoryById` with the state _and_ the ID value
-  const [isToggled, setToggled] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const category = useSelector((state) => selectCategoryById(state, id));
-
-  const { name } = category;
-
-  //get all current tasks
+  const filterStatus = useSelector((state) => state.filters.status);
   const allTasks = useSelector((state) => selectTasks(state));
-
+  const category = useSelector((state) => selectCategoryById(state, id));
+  const { name } = category;
+  const [status, setStatus] = useState("idle");
+  const [isToggled, setToggled] = useState(false);
+  const [isEditing, setEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [filter, setFilter] = useState("all");
   const dispatch = useDispatch();
+
+  if (filterStatus !== filter) {
+    setFilter(filterStatus);
+    setEditing(false);
+    setToggled(false);
+  }
 
   const onDelete = () => {
     setIsDeleting(true);
@@ -40,6 +54,34 @@ const Category = ({ id }) => {
     setIsDeleting(false);
   };
 
+  const onEdit = (event) => {
+    event.preventDefault();
+    !isEditing ? setEditing(true) : setEditing(false);
+  };
+
+  const categoryInputRef = useRef();
+
+  const updateHandler = (event) => {
+    event.preventDefault();
+    const enteredCategory = categoryInputRef.current.value;
+
+    const trimmedCategory = enteredCategory.trim();
+
+    let text = {
+      id: category.id,
+      ...(trimmedCategory !== category.name && { name: trimmedCategory }),
+    };
+
+    if (text.name === undefined) {
+      setEditing(false);
+    } else {
+      setStatus("loading");
+      dispatch(updateCategory(text));
+      setStatus("idle");
+      setEditing(false);
+    }
+  };
+
   const handleToggled = () => {
     if (isToggled) {
       setToggled(false);
@@ -54,11 +96,12 @@ const Category = ({ id }) => {
 
   let toggle = isToggled ? (
     <div>
-      <button onClick={onDelete}>Delete Category</button>
+      <Button onClick={onEdit}>Edit Category</Button>
+      <Button onClick={onDelete}>Delete Category</Button>
     </div>
   ) : null;
 
-  return (
+  let categoryAppearance = !isEditing ? (
     <div>
       <h3 id={category.id} onClick={handleToggled}>
         {name}
@@ -67,10 +110,40 @@ const Category = ({ id }) => {
       {isDeleting && (
         <div>
           <DeleteModal />
-          <button onClick={confirmDelete}>Confirm</button>
-          <button onClick={cancelDelete}>Cancel</button>
+          <Button onClick={confirmDelete}>Confirm</Button>
+          <Button onClick={cancelDelete}>Cancel</Button>
         </div>
       )}
+    </div>
+  ) : (
+    <form onSubmit={updateHandler}>
+      <div>
+        <h3 id={category.id}>
+          <InputText
+            id={category.id}
+            defaultValue={name}
+            ref={categoryInputRef}
+          />
+        </h3>
+        <div>
+          <Button>Update Category</Button>
+          <Button onClick={onEdit}>Cancel</Button>
+        </div>
+      </div>
+    </form>
+  );
+
+  let isLoading = status === "loading";
+  let loader = isLoading ? (
+    <div>
+      <ProgressSpinner />
+    </div>
+  ) : null;
+
+  return (
+    <div>
+      {categoryAppearance}
+      {loader}
     </div>
   );
 };
@@ -79,8 +152,3 @@ export default Category;
 
 /**TODO: add extra information for the category that is shown when you click on the title (type) */
 /**TODO: add styling for the categories */
-
-//TODO: add a reducer to handle toggling the category, then uncomment
-// const handleCompletedChange = () => {
-//   dispatch({type: 'categories/categoryToggled', payload: category.id})
-// }
