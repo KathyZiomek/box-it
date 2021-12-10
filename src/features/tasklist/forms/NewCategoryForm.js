@@ -15,39 +15,47 @@ const NewCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
+  const [color, setColor] = useState("#1976D2");
   const dispatch = useDispatch();
 
   const handleClick = () => {
     setSuccess("idle");
   };
 
-  //listen for the enter key
-  const handleChange = (e) => setNewCategory(e.target.value);
+  const handleCategoryChange = (e) => setNewCategory(e.target.value);
 
-  // /**Setting refs for the inputs */
+  const handleColorChange = (e) => {
+    setColor(e.target.value);
+  };
+
   const categoryInputRef = useRef();
+  const colorInputRef = useRef();
 
   /**Function that handles when the submit button is clicked */
   /**TODO: add data validation for new category information */
   const submitHandler = async (event) => {
-    /**Avoid the default response from the browser */
     event.preventDefault();
-
-    // /**get the refs for entered values */
     const enteredCategory = categoryInputRef.current.value;
+    const enteredColor = colorInputRef.current.value;
 
     const trimmedCategory = enteredCategory.trim();
+    const trimmedColor = enteredColor.trim();
 
-    //create and dispatch the thunk function itself
-    setStatus("loading");
-    //wait for the promise returned by saveNewCategory
-    await dispatch(saveNewCategory(trimmedCategory));
+    const text = {
+      name: trimmedCategory,
+      color: trimmedColor,
+    };
 
-    //and clear out the text input
-    setNewCategory("");
-    setStatus("idle");
-    //show a success message to the user
-    setSuccess("success");
+    if (trimmedCategory.length !== 0) {
+      setStatus("loading");
+      await dispatch(saveNewCategory(text));
+      setNewCategory("");
+      setColor("#1976D2");
+      setStatus("idle");
+      setSuccess("success");
+    } else {
+      return;
+    }
   };
 
   let isLoading = status === "loading";
@@ -62,20 +70,31 @@ const NewCategoryForm = () => {
   return (
     <form onSubmit={submitHandler}>
       <hr />
-      <label htmlFor="categoryName">Category Name</label>
-      <br />
-      <InputText
-        type="text"
-        id="categoryName"
-        required
-        placeholder={placeholder}
-        value={newCategory}
-        onChange={handleChange}
-        ref={categoryInputRef}
-        disabled={isLoading}
-        onClick={handleClick}
-      />
-      <br />
+      <div>
+        <label htmlFor="categoryName">Category Name</label>
+        <br />
+        <InputText
+          type="text"
+          id="categoryName"
+          required
+          placeholder={placeholder}
+          value={newCategory}
+          onChange={handleCategoryChange}
+          ref={categoryInputRef}
+          disabled={isLoading}
+          onClick={handleClick}
+        />
+      </div>
+      <div>
+        <label htmlFor="categoryColor">Category Color </label>
+        <input
+          type="color"
+          id="categoryColor"
+          ref={colorInputRef}
+          value={color}
+          onChange={handleColorChange}
+        />
+      </div>
       <Button>Submit</Button>
       {loader}
       {submitted}

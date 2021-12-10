@@ -129,13 +129,13 @@ const Task = ({ id, categories }) => {
     <form onSubmit={updateHandler}>
       <li id={task.id} className="p-field-checkbox">
         <div>
-          <Checkbox
+          {/* <Checkbox
             inputId={task.id}
             name="task"
             value={name}
             checked={completed}
             onChange={handleCheckboxChanged}
-          />
+          /> */}
           <InputText id={task.id} defaultValue={name} ref={taskInputRef} />
         </div>
         <div>
@@ -151,7 +151,7 @@ const Task = ({ id, categories }) => {
           ></input>
         </div>
         <div>
-          <label htmlFor="categoryName">Category Name</label>
+          <label htmlFor="categoryName">Category: </label>
           <select
             required
             id="categoryName"

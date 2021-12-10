@@ -32,7 +32,11 @@ export const saveNewCategory = createAsyncThunk(
     const categoryId = uuidv4();
     const response = await client.put(
       `https://box-it-b5c6c-default-rtdb.firebaseio.com/categories/${categoryId}.json`,
-      { id: categoryId, name: initialCategory.text }
+      {
+        id: categoryId,
+        name: initialCategory.text.name,
+        color: initialCategory.text.color,
+      }
     );
     return response;
   }
