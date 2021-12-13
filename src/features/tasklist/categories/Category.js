@@ -22,6 +22,9 @@ const Category = ({ id }) => {
   const allTasks = useSelector((state) => selectTasks(state));
   const category = useSelector((state) => selectCategoryById(state, id));
   const { name } = category;
+
+  const [color, setColor] = useState(category.color);
+  console.log(color);
   const [status, setStatus] = useState("idle");
   const [isToggled, setToggled] = useState(false);
   const [isEditing, setEditing] = useState(false);
@@ -59,17 +62,25 @@ const Category = ({ id }) => {
     !isEditing ? setEditing(true) : setEditing(false);
   };
 
+  const handleColorChange = (e) => {
+    setColor(e.target.value);
+  };
+
   const categoryInputRef = useRef();
+  const colorInputRef = useRef();
 
   const updateHandler = (event) => {
     event.preventDefault();
     const enteredCategory = categoryInputRef.current.value;
+    const enteredColor = colorInputRef.current.value;
 
     const trimmedCategory = enteredCategory.trim();
+    const trimmedColor = enteredColor.trim();
 
     let text = {
       id: category.id,
       ...(trimmedCategory !== category.name && { name: trimmedCategory }),
+      ...(trimmedColor !== category.color && { color: trimmedColor }),
     };
 
     if (text.name === undefined) {
@@ -125,6 +136,14 @@ const Category = ({ id }) => {
             ref={categoryInputRef}
           />
         </h3>
+        <label htmlFor="categoryColor">Category Color </label>
+        <input
+          type="color"
+          id="categoryColor"
+          ref={colorInputRef}
+          value={color}
+          onChange={handleColorChange}
+        />
         <div>
           <Button>Update Category</Button>
           <Button onClick={onEdit}>Cancel</Button>
