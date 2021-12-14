@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import Category from "./categories/Category";
 import Task from "./tasks/Task";
 import CardTasklist from "../ui/CardTasklist";
+import Card from "../ui/CardTasklist";
 
 import { selectCategoryIds } from "./categories/categorySlice";
 import { selectFilteredTasks } from "./tasks/taskSlice";
@@ -106,7 +107,11 @@ const TaskList = () => {
       renderedTaskListItems.length === 0 &&
       filterStatus === "all"
     ) {
-      return <NoCategories />;
+      return (
+        <Card>
+          <NoCategories />
+        </Card>
+      );
     } else {
       //existing tasks and categories
       return <ul className={classes.noBullets}>{renderedTaskListItems}</ul>;

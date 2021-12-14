@@ -1,7 +1,9 @@
+import classes from "./TaskList.module.css";
+
 //No categories or tasks
 export const NoCategories = () => {
   return (
-    <div>
+    <div className={classes.noCategories}>
       <p>You do not appear to have any existing tasks or categories.</p>
       <p>
         To create some categories to sort your tasks, click on Create a Category

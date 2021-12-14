@@ -11,6 +11,8 @@ import {
   updateTask,
 } from "./taskSlice";
 
+import { selectCategoryById } from "../categories/categorySlice";
+
 import CategoryDropDown from "../forms/CategoryDropDown";
 
 import { Checkbox } from "primereact/checkbox";
@@ -22,7 +24,11 @@ const Task = ({ id, categories }) => {
   //call our `selectTaskById` with the state _and_ the ID value
   const filterStatus = useSelector((state) => state.filters.status);
   const task = useSelector((state) => selectTaskById(state, id));
+
   const { name, category, duedate, completed } = task;
+  const categoryColor = useSelector(
+    (state) => selectCategoryById(state, category).color
+  );
 
   const [status, setStatus] = useState("idle");
   const [isToggled, setToggled] = useState(false);
@@ -106,22 +112,42 @@ const Task = ({ id, categories }) => {
   let toggle = isToggled ? (
     <div>
       {duedateComponent}
-      <Button onClick={onEdit}>Edit Task</Button>
-      <Button onClick={onDelete}>Delete Task</Button>
+      <Button
+        style={{ border: categoryColor, background: categoryColor }}
+        onClick={onEdit}
+      >
+        Edit Task
+      </Button>
+      <Button
+        style={{ border: categoryColor, background: categoryColor }}
+        onClick={onDelete}
+      >
+        Delete Task
+      </Button>
       <hr />
     </div>
   ) : null;
 
   let taskAppearance = !isEditing ? (
-    <li id={task.id} className="p-field-checkbox">
+    <li id={task.id} className={"p-field-checkbox"}>
       <Checkbox
         inputId={task.id}
         name="task"
         value={name}
         checked={completed}
         onChange={handleCheckboxChanged}
+        // style={{
+        //   border: categoryColor,
+        //   background: categoryColor,
+        //   color: categoryColor,
+        //   borderRadius: 20,
+        // }}
       />
-      <label htmlFor={task.id} onClick={handleToggled}>
+      <label
+        htmlFor={task.id}
+        onClick={handleToggled}
+        style={{ color: categoryColor }}
+      >
         {name}
         {toggle}
       </label>
@@ -164,8 +190,15 @@ const Task = ({ id, categories }) => {
           </select>
         </div>
         <div>
-          <Button>Update Task</Button>
-          <Button onClick={onEdit}>Cancel</Button>
+          <Button style={{ border: categoryColor, background: categoryColor }}>
+            Update Task
+          </Button>
+          <Button
+            style={{ border: categoryColor, background: categoryColor }}
+            onClick={onEdit}
+          >
+            Cancel
+          </Button>
         </div>
         <hr />
       </li>

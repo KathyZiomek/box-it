@@ -2,3 +2,8 @@
   list-style-type: none;
   padding: 0;
 }
+
+.noCategories {
+  padding: 5px;
+  margin: 10px;
+}
