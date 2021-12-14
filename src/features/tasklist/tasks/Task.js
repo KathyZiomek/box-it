@@ -23,11 +23,16 @@ const Task = ({ id, categories }) => {
   const filterStatus = useSelector((state) => state.filters.status);
   const task = useSelector((state) => selectTaskById(state, id));
   const { name, category, duedate, completed } = task;
+
   const [status, setStatus] = useState("idle");
   const [isToggled, setToggled] = useState(false);
   const [isEditing, setEditing] = useState(false);
   const [filter, setFilter] = useState("all");
   const dispatch = useDispatch();
+
+  const taskInputRef = useRef();
+  const categoryInputRef = useRef();
+  const duedateInputRef = useRef();
 
   if (filterStatus !== filter) {
     setFilter(filterStatus);
@@ -49,10 +54,6 @@ const Task = ({ id, categories }) => {
     event.preventDefault();
     !isEditing ? setEditing(true) : setEditing(false);
   };
-
-  const taskInputRef = useRef();
-  const categoryInputRef = useRef();
-  const duedateInputRef = useRef();
 
   const updateHandler = (event) => {
     event.preventDefault();
@@ -107,6 +108,7 @@ const Task = ({ id, categories }) => {
       {duedateComponent}
       <Button onClick={onEdit}>Edit Task</Button>
       <Button onClick={onDelete}>Delete Task</Button>
+      <hr />
     </div>
   ) : null;
 
@@ -119,7 +121,6 @@ const Task = ({ id, categories }) => {
         checked={completed}
         onChange={handleCheckboxChanged}
       />
-
       <label htmlFor={task.id} onClick={handleToggled}>
         {name}
         {toggle}
@@ -128,6 +129,7 @@ const Task = ({ id, categories }) => {
   ) : (
     <form onSubmit={updateHandler}>
       <li id={task.id} className="p-field-checkbox">
+        <hr />
         <div>
           {/* <Checkbox
             inputId={task.id}
@@ -165,6 +167,7 @@ const Task = ({ id, categories }) => {
           <Button>Update Task</Button>
           <Button onClick={onEdit}>Cancel</Button>
         </div>
+        <hr />
       </li>
     </form>
   );

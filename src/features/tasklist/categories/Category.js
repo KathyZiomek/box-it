@@ -15,22 +15,24 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 
+import classes from "./Category.module.css";
+
 //Destructure `props.id` since we only need the ID value
 const Category = ({ id }) => {
-  //call our `selectCategoryById` with the state _and_ the ID value
   const filterStatus = useSelector((state) => state.filters.status);
   const allTasks = useSelector((state) => selectTasks(state));
   const category = useSelector((state) => selectCategoryById(state, id));
-  const { name } = category;
+  const { name, color } = category;
 
-  const [color, setColor] = useState(category.color);
-  console.log(color);
   const [status, setStatus] = useState("idle");
   const [isToggled, setToggled] = useState(false);
   const [isEditing, setEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [filter, setFilter] = useState("all");
   const dispatch = useDispatch();
+
+  const categoryInputRef = useRef();
+  const colorInputRef = useRef();
 
   if (filterStatus !== filter) {
     setFilter(filterStatus);
@@ -44,6 +46,7 @@ const Category = ({ id }) => {
 
   const cancelDelete = () => {
     setIsDeleting(false);
+    setToggled(false);
   };
 
   const confirmDelete = () => {
@@ -59,31 +62,30 @@ const Category = ({ id }) => {
 
   const onEdit = (event) => {
     event.preventDefault();
-    !isEditing ? setEditing(true) : setEditing(false);
+    if (!isEditing) {
+      setEditing(true);
+      setIsDeleting(false);
+      setToggled(false);
+    } else {
+      setEditing(false);
+    }
   };
-
-  const handleColorChange = (e) => {
-    setColor(e.target.value);
-  };
-
-  const categoryInputRef = useRef();
-  const colorInputRef = useRef();
 
   const updateHandler = (event) => {
     event.preventDefault();
+
     const enteredCategory = categoryInputRef.current.value;
     const enteredColor = colorInputRef.current.value;
-
     const trimmedCategory = enteredCategory.trim();
     const trimmedColor = enteredColor.trim();
 
     let text = {
       id: category.id,
-      ...(trimmedCategory !== category.name && { name: trimmedCategory }),
-      ...(trimmedColor !== category.color && { color: trimmedColor }),
+      ...(trimmedCategory !== name && { name: trimmedCategory }),
+      ...(trimmedColor !== color && { color: trimmedColor }),
     };
 
-    if (text.name === undefined) {
+    if (text.name === undefined && text.color === undefined) {
       setEditing(false);
     } else {
       setStatus("loading");
@@ -105,48 +107,86 @@ const Category = ({ id }) => {
     }
   };
 
-  let toggle = isToggled ? (
-    <div>
-      <Button onClick={onEdit}>Edit Category</Button>
-      <Button onClick={onDelete}>Delete Category</Button>
-    </div>
-  ) : null;
+  let toggle =
+    isToggled && !isDeleting ? (
+      <div>
+        <Button
+          style={{ border: category.color, background: category.color }}
+          onClick={onEdit}
+        >
+          Edit Category
+        </Button>
+        <Button
+          style={{ border: category.color, background: category.color }}
+          onClick={onDelete}
+        >
+          Delete Category
+        </Button>
+        <hr />
+      </div>
+    ) : null;
 
   let categoryAppearance = !isEditing ? (
-    <div>
-      <h3 id={category.id} onClick={handleToggled}>
+    <div className={classes.categoryDiv}>
+      <h3
+        id={category.id}
+        onClick={handleToggled}
+        className={classes.categoryTitle}
+        style={{
+          background: category.color,
+        }}
+      >
         {name}
-        {toggle}
       </h3>
+      {toggle}
+
       {isDeleting && (
         <div>
           <DeleteModal />
-          <Button onClick={confirmDelete}>Confirm</Button>
-          <Button onClick={cancelDelete}>Cancel</Button>
+          <Button
+            style={{ border: category.color, background: category.color }}
+            onClick={confirmDelete}
+          >
+            Confirm
+          </Button>
+          <Button
+            style={{ border: category.color, background: category.color }}
+            onClick={cancelDelete}
+          >
+            Cancel
+          </Button>
         </div>
       )}
     </div>
   ) : (
-    <form onSubmit={updateHandler}>
-      <div>
-        <h3 id={category.id}>
+    <form onSubmit={updateHandler} className={classes.editingForm}>
+      <div className={classes.categoryDiv}>
+        <div id={category.id}>
           <InputText
             id={category.id}
             defaultValue={name}
             ref={categoryInputRef}
           />
-        </h3>
+        </div>
         <label htmlFor="categoryColor">Category Color </label>
         <input
           type="color"
           id="categoryColor"
           ref={colorInputRef}
-          value={color}
-          onChange={handleColorChange}
+          defaultValue={color}
         />
         <div>
-          <Button>Update Category</Button>
-          <Button onClick={onEdit}>Cancel</Button>
+          <Button
+            style={{ border: category.color, background: category.color }}
+          >
+            Update Category
+          </Button>
+          <Button
+            style={{ border: category.color, background: category.color }}
+            onClick={onEdit}
+          >
+            Cancel
+          </Button>
         </div>
       </div>
     </form>
@@ -169,5 +209,4 @@ const Category = ({ id }) => {
 
 export default Category;
 
-/**TODO: add extra information for the category that is shown when you click on the title (type) */
 /**TODO: add styling for the categories */

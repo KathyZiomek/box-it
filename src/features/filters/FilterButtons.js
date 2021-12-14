@@ -126,7 +126,7 @@ const FilterButtons = () => {
 
   return (
     <Card>
-      <div>
+      <div style={{ padding: 5 }}>
         <h5>Actions</h5>
         <Button onClick={onMarkCompletedClicked} disabled={disabledButtons}>
           Mark All Completed
@@ -137,11 +137,11 @@ const FilterButtons = () => {
         </Button>
       </div>
 
-      <div>
+      <div style={{ padding: 5 }}>
         <RemainingTasks count={tasksRemainingCounter} />
       </div>
 
-      <div>
+      <div style={{ padding: 5 }}>
         <StatusFilter value={status} onChange={onStatusChange} />
       </div>
     </Card>
