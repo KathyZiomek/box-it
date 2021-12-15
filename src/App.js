@@ -14,6 +14,7 @@ import Layout from "./features/layout/Layout";
 import CreateCategoryPage from "./pages/tasks/CreateCategoryPage";
 import CreateTaskPage from "./pages/tasks/CreateTaskPage";
 import AllTasksPage from "./pages/tasks/AllTasksPage";
+import HomePage from "./pages/tasks/HomePage";
 
 function App() {
   return (
@@ -25,8 +26,11 @@ function App() {
         <Route path="/create-task">
           <CreateTaskPage />
         </Route>
-        <Route path="/">
+        <Route path="/tasklist">
           <AllTasksPage />
+        </Route>
+        <Route path="/">
+          <HomePage />
         </Route>
       </Switch>
     </Layout>

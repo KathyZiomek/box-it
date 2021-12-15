@@ -14,7 +14,8 @@ import { selectCategories } from "../tasklist/categories/categorySlice";
 import { Button } from "primereact/button";
 import { RadioButton } from "primereact/radiobutton";
 import classes from "../tasklist/TaskList.module.css";
-import Card from "../ui/CardTasklist";
+// import Card from "../ui/CardTasklist";
+import { Card } from "primereact/card";
 
 const RemainingTasks = ({ count }) => {
   const suffix = count === 1 ? "" : "s";

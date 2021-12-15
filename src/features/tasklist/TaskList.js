@@ -6,8 +6,9 @@ import { useSelector } from "react-redux";
 
 import Category from "./categories/Category";
 import Task from "./tasks/Task";
-import CardTasklist from "../ui/CardTasklist";
-import Card from "../ui/CardTasklist";
+// import CardTasklist from "../ui/CardTasklist";
+import { Card } from "primereact/card";
+// import Card from "../ui/CardTasklist";
 
 import { selectCategoryIds } from "./categories/categorySlice";
 import { selectFilteredTasks } from "./tasks/taskSlice";
@@ -79,11 +80,12 @@ const TaskList = () => {
         ) : (
           <EmptyCategory />
         );
+      const header = <Category key={categoryId} id={categoryId} />;
       return (
-        <CardTasklist key={categoryId} id={categoryId}>
-          <Category key={categoryId} id={categoryId} />
+        <Card key={categoryId} id={categoryId} header={header}>
+          {/* <Category key={categoryId} id={categoryId} /> */}
           {renderedTasks}
-        </CardTasklist>
+        </Card>
       );
     });
     //no tasks or categories
@@ -119,6 +121,3 @@ const TaskList = () => {
   }
 };
 export default TaskList;
-
-// /* TODO: add extra tasklist information (due date, priority level, on-going)
-/*/TODO: add extra category information (type, color)*/
