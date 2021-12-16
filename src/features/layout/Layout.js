@@ -2,13 +2,17 @@
 
 /**TODO: as the website becomes more complex, will need to revise this */
 
+import { useState } from "react";
+
 import classes from "./Layout.module.css";
 import TaskListNavBar from "./TaskListNavBar";
 
 const Layout = (props) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <div>
-      <TaskListNavBar />
+      {isLoggedIn ? <TaskListNavBar /> : null}
       <main className={classes.main}>{props.children}</main>
     </div>
   );

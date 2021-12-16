@@ -1,24 +1,71 @@
 //**TODO: after creating SignUp and Login components, create logic to display either one depending on user's choices */
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 
 import Login from "../../features/authentication/Login";
+import SignUp from "../../features/authentication/SignUp";
 
 const HomePage = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
 
   const loginButton = () => {
+    setIsSigningUp(false);
     setIsLoggingIn(true);
   };
 
-  const footer = !isLoggingIn ? (
-    <Button onClick={loginButton}>Login</Button>
-  ) : (
-    <Login />
-  );
+  const signupButton = () => {
+    setIsLoggingIn(false);
+    setIsSigningUp(true);
+  };
+
+  // const dfooter = !isLoggingIn ? (
+  //   <Button onClick={loginButton}>Login</Button>
+  // ) : (
+  //   <Login />
+  // );
+
+  //   <br />
+  // <div>
+  //   <Button
+  //     label="Not registered yet? Create an Account here."
+  //     className="p-button-link"
+  //   />
+  // </div>
+  const footer = () => {
+    if (!isLoggingIn && !isSigningUp) {
+      return <Button onClick={loginButton}>Login</Button>;
+    } else if (isLoggingIn) {
+      return (
+        <Fragment>
+          <Login />
+          <div>
+            <Button
+              onClick={signupButton}
+              label="Not registered yet? Create an Account here."
+              className="p-button-link"
+            />
+          </div>
+        </Fragment>
+      );
+    } else if (isSigningUp) {
+      return (
+        <Fragment>
+          <SignUp />
+          <div>
+            <Button
+              onClick={loginButton}
+              label="Already registered? Login here."
+              className="p-button-link"
+            />
+          </div>
+        </Fragment>
+      );
+    }
+  };
 
   return (
     <Card footer={footer}>
