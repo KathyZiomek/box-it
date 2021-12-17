@@ -8,6 +8,11 @@ import { client } from "../../../api/client";
 
 import { uuidv4 } from "../../../common/RandomId";
 
+import Firebase from "../../../api/Firebase";
+
+const app = Firebase();
+const databaseURL = app._options.databaseURL;
+
 const categoriesAdapter = createEntityAdapter();
 
 const initialState = categoriesAdapter.getInitialState({
@@ -18,9 +23,7 @@ const initialState = categoriesAdapter.getInitialState({
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async () => {
-    const response = await client.get(
-      "https://box-it-b5c6c-default-rtdb.firebaseio.com/categories.json"
-    );
+    const response = await client.get(`${databaseURL}/categories.json`);
     return response;
   }
 );
@@ -31,7 +34,7 @@ export const saveNewCategory = createAsyncThunk(
     const initialCategory = { text };
     const categoryId = uuidv4();
     const response = await client.put(
-      `https://box-it-b5c6c-default-rtdb.firebaseio.com/categories/${categoryId}.json`,
+      `${databaseURL}/categories/${categoryId}.json`,
       {
         id: categoryId,
         name: initialCategory.text.name,
@@ -47,7 +50,7 @@ export const deleteCategory = createAsyncThunk(
   async (text) => {
     const initialCategory = { text };
     const response = await client(
-      `https://box-it-b5c6c-default-rtdb.firebaseio.com/categories/${initialCategory.text}.json`,
+      `${databaseURL}/categories/${initialCategory.text}.json`,
       { method: "DELETE" }
     );
     if (response === null) {
@@ -63,7 +66,7 @@ export const updateCategory = createAsyncThunk(
   async (text) => {
     const initialCategory = { text };
     const response = await client(
-      `https://box-it-b5c6c-default-rtdb.firebaseio.com/categories/${initialCategory.text.id}.json`,
+      `${databaseURL}/categories/${initialCategory.text.id}.json`,
       { method: "PATCH", body: initialCategory.text }
     );
     if (response === null) {

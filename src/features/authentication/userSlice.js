@@ -14,6 +14,11 @@ import { client } from "../../api/client";
 
 import { uuidv4 } from "../../common/RandomId";
 
+import Firebase from "../../api/Firebase";
+
+const app = Firebase();
+const databaseURL = app._options.databaseURL;
+
 const usersAdapter = createEntityAdapter();
 
 const initialState = usersAdapter.getInitialState({
@@ -22,7 +27,7 @@ const initialState = usersAdapter.getInitialState({
 
 //Thunk functions
 export const fetchUser = createAsyncThunk("users/fetchUser", async () => {
-  const response = await client.get();
+  // const response = await client.get();
 });
 
 /**TODO: incorporate code that hides passwords in the database */
@@ -31,15 +36,12 @@ export const saveNewUser = createAsyncThunk(
   async (text) => {
     const initialUser = { text };
     const userId = uuidv4();
-    const response = await client.put(
-      `https://box-it-b5c6c-default-rtdb.firebaseio.com/users/${userId}.json`,
-      {
-        id: userId,
-        name: initialUser.text.name,
-        email: initialUser.text.email,
-        password: initialUser.text.password,
-      }
-    );
+    const response = await client.put(`${databaseURL}/users/${userId}.json`, {
+      id: userId,
+      name: initialUser.text.name,
+      email: initialUser.text.email,
+      password: initialUser.text.password,
+    });
     return response;
   }
 );

@@ -10,6 +10,11 @@ import { uuidv4 } from "../../../common/RandomId";
 
 import { StatusFilters } from "../../filters/filtersSlice";
 
+import Firebase from "../../../api/Firebase";
+
+const app = Firebase();
+const databaseURL = app._options.databaseURL;
+
 const tasksAdapter = createEntityAdapter();
 
 const initialState = tasksAdapter.getInitialState({
@@ -18,9 +23,7 @@ const initialState = tasksAdapter.getInitialState({
 
 //Thunk functions
 export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
-  const response = await client.get(
-    "https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks.json"
-  );
+  const response = await client.get(`${databaseURL}/tasks.json`);
   return response;
 });
 
@@ -29,16 +32,13 @@ export const saveNewTask = createAsyncThunk(
   async (text) => {
     const initialTask = { text };
     const taskId = uuidv4();
-    const response = await client.put(
-      `https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks/${taskId}.json`,
-      {
-        id: taskId,
-        name: initialTask.text.task,
-        duedate: initialTask.text.duedate,
-        category: initialTask.text.category,
-        completed: false,
-      }
-    );
+    const response = await client.put(`${databaseURL}/tasks/${taskId}.json`, {
+      id: taskId,
+      name: initialTask.text.task,
+      duedate: initialTask.text.duedate,
+      category: initialTask.text.category,
+      completed: false,
+    });
     return response;
   }
 );
@@ -48,7 +48,7 @@ export const deleteTask = createAsyncThunk(
   async (text) => {
     const initialTask = { text };
     const response = await client(
-      `https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks/${initialTask.text}.json`,
+      `${databaseURL}/tasks/${initialTask.text}.json`,
       { method: "DELETE" }
     );
     if (response === null) {
@@ -65,7 +65,7 @@ export const taskCompletedStatusChanged = createAsyncThunk(
   async (text) => {
     const initialTask = { text };
     const response = await client.put(
-      `https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks/${initialTask.text.id}.json`,
+      `${databaseURL}/tasks/${initialTask.text.id}.json`,
       {
         id: initialTask.text.id,
         name: initialTask.text.name,
@@ -87,7 +87,7 @@ export const updateTask = createAsyncThunk(
   async (text) => {
     const initialTask = { text };
     const response = await client(
-      `https://box-it-b5c6c-default-rtdb.firebaseio.com/tasks/${initialTask.text.id}.json`,
+      `${databaseURL}/tasks/${initialTask.text.id}.json`,
       { method: "PATCH", body: initialTask.text }
     );
     if (response === null) {

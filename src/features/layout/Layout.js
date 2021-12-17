@@ -10,6 +10,9 @@ import TaskListNavBar from "./TaskListNavBar";
 const Layout = (props) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  /**TODO: remove when correct logic is added */
+  // setIsLoggedIn(false);
+
   return (
     <div>
       {isLoggedIn ? <TaskListNavBar /> : null}

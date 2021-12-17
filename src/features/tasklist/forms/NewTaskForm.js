@@ -48,7 +48,6 @@ const NewTaskForm = () => {
     const enteredTask = taskInputRef.current.value;
     const enteredCategory = categoryInputRef.current.value;
     const enteredDuedate = duedate;
-    console.log(enteredDuedate);
 
     /**Clean the data */
     const trimmedTask = enteredTask.trim();

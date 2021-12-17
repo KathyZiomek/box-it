@@ -1,9 +1,11 @@
 /**TODO: create SignUp component */
 
 import { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 
-import { saveNewUser } from "./userSlice";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+// import { saveNewUser } from "./userSlice";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -14,39 +16,51 @@ import userValidation from "./userValidation";
 
 const SignUp = () => {
   const [status, setStatus] = useState("idle");
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const nameInputRef = useRef();
+  // const nameInputRef = useRef();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
   //   const [isLoading, setIsLoading] = useState(false);
 
-  const newUserRegistration = (event) => {
+  const onRegister = (event) => {
     event.preventDefault();
+    setStatus("loading");
 
-    const enteredName = nameInputRef.current.value;
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
 
-    if (
-      userValidation(enteredName) &&
-      userValidation(enteredEmail) &&
-      userValidation(enteredPassword)
-    ) {
-      const trimmedName = enteredName.trim();
+    if (userValidation(enteredEmail) && userValidation(enteredPassword)) {
       const trimmedEmail = enteredEmail.trim();
       const trimmedPassword = enteredPassword.trim();
 
-      let text = {
-        name: trimmedName,
-        email: trimmedEmail,
-        password: trimmedPassword,
-      };
+      const auth = getAuth();
+      createUserWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
+        .then((userCredential) => {
+          setStatus("idle");
+          //Signed in
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          setStatus("idle");
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(
+            "Error Code: " + errorCode + ", Error Message: " + errorMessage
+          );
+        });
 
-      setStatus("loading");
-      dispatch(saveNewUser(text));
-      setStatus("idle");
+      // let text = {
+      //   // name: trimmedName,
+      //   email: trimmedEmail,
+      //   password: trimmedPassword,
+      // };
+
+      // setStatus("loading");
+      // dispatch(saveNewUser(text));
+      // setStatus("idle");
     } else {
       return;
     }
@@ -61,22 +75,8 @@ const SignUp = () => {
 
   return (
     <Card title="Sign Up Form">
-      <form onSubmit={newUserRegistration}>
+      <form onSubmit={onRegister}>
         <div>
-          <div className="p-inputgroup">
-            <span className="p-inputgroup-addon">
-              <i className="pi pi-user"></i>
-            </span>
-            <InputText
-              type="text"
-              id="name"
-              required
-              placeholder="Your Name"
-              ref={nameInputRef}
-              disabled={isLoading}
-            />
-          </div>
-          <br />
           <div className="p-inputgroup">
             <span className="p-inputgroup-addon">
               <i className="pi pi-envelope"></i>
@@ -107,8 +107,8 @@ const SignUp = () => {
         </div>
         <br />
         <Button>Sign Up</Button>
-        {loader}
       </form>
+      {loader}
     </Card>
   );
 };
