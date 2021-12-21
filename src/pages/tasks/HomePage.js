@@ -2,11 +2,15 @@
 
 import { Fragment, useState } from "react";
 
-import { Card } from "primereact/card";
-import { Button } from "primereact/button";
+import { useSelector } from "react-redux";
+
+import { selectUsers } from "../../features/authentication/userSlice";
 
 import Login from "../../features/authentication/Login";
 import SignUp from "../../features/authentication/SignUp";
+
+import { Card } from "primereact/card";
+import { Button } from "primereact/button";
 
 const HomePage = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -22,21 +26,15 @@ const HomePage = () => {
     setIsSigningUp(true);
   };
 
-  // const dfooter = !isLoggingIn ? (
-  //   <Button onClick={loginButton}>Login</Button>
-  // ) : (
-  //   <Login />
-  // );
+  const userCount = useSelector(selectUsers);
 
-  //   <br />
-  // <div>
-  //   <Button
-  //     label="Not registered yet? Create an Account here."
-  //     className="p-button-link"
-  //   />
-  // </div>
+  let userExists =
+    userCount.length === 1 && userCount[0].status === "loggedIn" ? true : false;
+
   const footer = () => {
-    if (!isLoggingIn && !isSigningUp) {
+    if (userExists === true) {
+      return null;
+    } else if (!isLoggingIn && !isSigningUp) {
       return <Button onClick={loginButton}>Login</Button>;
     } else if (isLoggingIn) {
       return (
@@ -70,20 +68,28 @@ const HomePage = () => {
   return (
     <Card footer={footer}>
       <h1>Box It</h1>
-      <div>
-        <p>
-          Life can get pretty stressful. We all have tasks we need to keep track
-          of - whether they are household chores or school deadlines. What's the
-          best way to keep all these tasks organized? It's simple - Box It!
-        </p>
-        <p>
-          Box It helps you organize tasks using categories that are kept in
-          colour-coordinated boxes. Mark tasks as complete using checkboxes. And
-          most importantly - while we keep your tasks in a box, we won't keep
-          you in a box. You get to customize your colour scheme and categories
-          as much as you want.
-        </p>
-      </div>
+      {!userExists ? (
+        <div>
+          <p>
+            Life can get pretty stressful. We all have tasks we need to keep
+            track of - whether they are household chores or school deadlines.
+            What's the best way to keep all these tasks organized? It's simple -
+            Box It!
+          </p>
+          <p>
+            Box It helps you organize tasks using categories that are kept in
+            colour-coordinated boxes. Mark tasks as complete using checkboxes.
+            And most importantly - while we keep your tasks in a box, we won't
+            keep you in a box. You get to customize your colour scheme and
+            categories as much as you want.
+          </p>
+        </div>
+      ) : (
+        <div>
+          <p>Welcome!</p>
+          <p>To get started, select an option from the navigation bar.</p>
+        </div>
+      )}
     </Card>
   );
 };

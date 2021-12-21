@@ -7,6 +7,7 @@ import {
 import { client } from "../../../api/client";
 
 import { uuidv4 } from "../../../common/RandomId";
+import { ObjectLength } from "../../../common/ObjectLength";
 
 import Firebase from "../../../api/Firebase";
 
@@ -22,9 +23,38 @@ const initialState = categoriesAdapter.getInitialState({
 // Thunk function
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
-  async () => {
+  async (text) => {
+    const user = { text };
     const response = await client.get(`${databaseURL}/categories.json`);
-    return response;
+
+    if (response !== null) {
+      let categories = {};
+      for (var key in response) {
+        if (!response.hasOwnProperty(key)) continue;
+
+        let obj = response[key];
+        let objId = key;
+
+        for (var prop in obj) {
+          if (!obj.hasOwnProperty(prop)) continue;
+
+          if (user.text === obj[prop]) {
+            const newItem = { [objId]: obj };
+
+            if (ObjectLength(categories) > 0) {
+              categories = { ...categories, [objId]: obj };
+            } else {
+              categories = newItem;
+            }
+          }
+        }
+      }
+      console.log(categories);
+
+      return categories;
+    } else {
+      return response;
+    }
   }
 );
 

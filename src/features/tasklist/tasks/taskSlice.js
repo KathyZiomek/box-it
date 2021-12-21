@@ -7,6 +7,7 @@ import {
 import { client } from "../../../api/client";
 
 import { uuidv4 } from "../../../common/RandomId";
+import { ObjectLength } from "../../../common/ObjectLength";
 
 import { StatusFilters } from "../../filters/filtersSlice";
 
@@ -22,9 +23,38 @@ const initialState = tasksAdapter.getInitialState({
 });
 
 //Thunk functions
-export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
+export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async (text) => {
+  const user = { text };
   const response = await client.get(`${databaseURL}/tasks.json`);
-  return response;
+
+  if (response !== null) {
+    let tasks = {};
+    for (var key in response) {
+      if (!response.hasOwnProperty(key)) continue;
+
+      let obj = response[key];
+      let objId = key;
+
+      for (var prop in obj) {
+        if (!obj.hasOwnProperty(prop)) continue;
+
+        if (user.text === obj[prop]) {
+          const newItem = { [objId]: obj };
+
+          if (ObjectLength(tasks) > 0) {
+            tasks = { ...tasks, [objId]: obj };
+          } else {
+            tasks = newItem;
+          }
+        }
+      }
+    }
+    console.log(tasks);
+
+    return tasks;
+  } else {
+    return response;
+  }
 });
 
 export const saveNewTask = createAsyncThunk(

@@ -1,8 +1,15 @@
 /**TODO: create Login component */
 
 import { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+
+import { fetchTasks } from "../tasklist/tasks/taskSlice";
+import { fetchCategories } from "../tasklist/categories/categorySlice";
+import { userAdded } from "./userSlice";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+import ErrorMessages from "./ErrorMessages";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -11,17 +18,15 @@ import { ProgressSpinner } from "primereact/progressspinner";
 
 const Login = () => {
   const [status, setStatus] = useState("idle");
+  const [error, setError] = useState();
+  const dispatch = useDispatch();
 
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
-  // const [isLoading, setIsLoading] = useState(false);
-
-  // let placeholder = isLoading ? "" : "Enter email here...";
 
   const onLogin = (event) => {
     setStatus("loading");
     event.preventDefault();
-    setStatus("loading");
 
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
@@ -34,19 +39,19 @@ const Login = () => {
         setStatus("idle");
         // Signed in
         const user = userCredential.user;
+
         const uid = user.uid;
-        console.log(uid);
-        console.log(user);
-        // ...
+        const text = { [uid]: { id: uid, status: "loggedIn" } };
+
+        dispatch(fetchCategories(uid)).then(dispatch(fetchTasks(uid)));
+        dispatch(userAdded(text));
       })
       .catch((error) => {
         setStatus("idle");
         const errorCode = error.code;
-        const errorMessage = error.message;
-        /**TODO: handle error message - output a message to the user if there is an error */
-        console.log(
-          "Error Code: " + errorCode + ", Error Message: " + errorMessage
-        );
+        console.log(errorCode);
+        const userMessage = ErrorMessages(errorCode);
+        setError(userMessage);
       });
   };
 
@@ -54,6 +59,12 @@ const Login = () => {
   let loader = isLoading ? (
     <div>
       <ProgressSpinner />
+    </div>
+  ) : null;
+
+  let errorMessage = error ? (
+    <div>
+      <p style={{ color: "red" }}>{error}</p>
     </div>
   ) : null;
 
@@ -71,7 +82,6 @@ const Login = () => {
               required
               placeholder="Email Address"
               ref={emailInputRef}
-              // disabled={isLoading}
             />
           </div>
           <br />
@@ -85,7 +95,6 @@ const Login = () => {
               required
               placeholder="Password"
               ref={passwordInputRef}
-              // disabled={isLoading}
             />
           </div>
         </div>
@@ -93,6 +102,7 @@ const Login = () => {
         <Button>Login</Button>
       </form>
       {loader}
+      {errorMessage}
     </Card>
   );
 };

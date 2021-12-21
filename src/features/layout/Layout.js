@@ -2,16 +2,18 @@
 
 /**TODO: as the website becomes more complex, will need to revise this */
 
-import { useState } from "react";
+import { useSelector } from "react-redux";
+
+import { selectUsers } from "../authentication/userSlice";
 
 import classes from "./Layout.module.css";
 import TaskListNavBar from "./TaskListNavBar";
 
 const Layout = (props) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const userCount = useSelector(selectUsers);
 
-  /**TODO: remove when correct logic is added */
-  // setIsLoggedIn(false);
+  let isLoggedIn =
+    userCount.length === 1 && userCount[0].status === "loggedIn" ? true : null;
 
   return (
     <div>
