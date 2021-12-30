@@ -7,7 +7,7 @@ import {
   deleteTask,
   // allTasksCompleted,
   selectTasks,
-  taskCompletedStatusChanged,
+  updateTask,
 } from "../tasklist/tasks/taskSlice";
 import { selectCategories } from "../tasklist/categories/categorySlice";
 
@@ -102,12 +102,9 @@ const FilterButtons = () => {
     tasksRemaining.forEach((task) => {
       let text = {
         id: task.id,
-        name: task.name,
-        category: task.category,
-        duedate: task.duedate,
         completed: true,
       };
-      dispatch(taskCompletedStatusChanged(text));
+      dispatch(updateTask(text));
     });
   };
 
@@ -126,9 +123,15 @@ const FilterButtons = () => {
   const onStatusChange = (status) => dispatch(statusFilterChanged(status));
 
   return (
-    <Card>
+    <Card
+      header={
+        <div style={{ margin: 0, background: "#1976D2" }}>
+          <br />
+        </div>
+      }
+    >
+      <h2>Actions</h2>
       <div style={{ padding: 5 }}>
-        <h5>Actions</h5>
         <Button onClick={onMarkCompletedClicked} disabled={disabledButtons}>
           Mark All Completed
         </Button>

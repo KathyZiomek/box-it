@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { saveNewTask } from "../tasks/taskSlice";
 import { selectCategoryIds } from "../categories/categorySlice";
+import { selectUserIds } from "../../authentication/userSlice";
+
 import Success from "../../ui/Success";
 import CategoryDropDown from "./CategoryDropDown";
 
@@ -37,7 +39,7 @@ const NewTaskForm = () => {
   /**Setting refs for the inputs */
   const taskInputRef = useRef();
   const categoryInputRef = useRef();
-  // const duedateInputRef = useRef();
+  const user = useSelector(selectUserIds);
 
   /**Function that handles when the submit button is clicked */
   const submitHandler = async (event) => {
@@ -52,12 +54,13 @@ const NewTaskForm = () => {
     /**Clean the data */
     const trimmedTask = enteredTask.trim();
     const trimmedCategory = enteredCategory.trim();
-    // const trimmedDueDate = enteredDuedate.trim();
+
     /**Combine the data into a single text object to pass to dispatch */
     const text = {
       task: trimmedTask,
       category: trimmedCategory,
       duedate: enteredDuedate,
+      uid: user[0],
     };
 
     //create and dispatch the thunk function itself
@@ -79,6 +82,10 @@ const NewTaskForm = () => {
     </div>
   ) : null;
   let submitted = success === "idle" ? null : <Success />;
+
+  let startDate = new Date("01-01-2022");
+  let endDate = new Date("01-01-2023");
+  let currentDate = new Date(duedate);
 
   return (
     <div>
@@ -113,20 +120,14 @@ const NewTaskForm = () => {
           <Calendar
             id="duedate"
             name="duedate"
-            min={"2022-01-01"}
-            max={"2023-01-01"}
-            value={duedate}
-            onChange={(e) => setDueDate(e.value)}
+            minDate={startDate}
+            maxDate={endDate}
+            value={currentDate}
+            viewDate={currentDate}
+            onChange={(e) => {
+              setDueDate(e.value);
+            }}
           />
-          {/* <input
-            type="date"
-            id="duedate"
-            name="duedate"
-            min="2022-01-01"
-            max="2023-01-01"
-            ref={duedateInputRef}
-            onClick={handleClick}
-          ></input> */}
         </div>
 
         <div>

@@ -1,7 +1,5 @@
 /**The main page of the website - handles the routing of the other pages */
-/**TODO: add authentication and a login page */
-/**TODO: add a home page */
-/**TODO: add a nav bar */
+
 /**TODO: add a user settings page */
 import React from "react";
 
@@ -16,25 +14,45 @@ import CreateTaskPage from "./pages/tasks/CreateTaskPage";
 import AllTasksPage from "./pages/tasks/AllTasksPage";
 import HomePage from "./pages/tasks/HomePage";
 
+import { useSelector } from "react-redux";
+import { selectUsers } from "./features/authentication/userSlice";
+
 function App() {
-  return (
-    <Layout>
-      <Switch>
-        <Route path="/create-category">
-          <CreateCategoryPage />
-        </Route>
-        <Route path="/create-task">
-          <CreateTaskPage />
-        </Route>
-        <Route path="/tasklist">
-          <AllTasksPage />
-        </Route>
-        <Route path="/">
-          <HomePage />
-        </Route>
-      </Switch>
-    </Layout>
-  );
+  const userCount = useSelector(selectUsers);
+
+  let isLoggedIn =
+    userCount.length === 1 && userCount[0].status === "loggedIn" ? true : null;
+
+  if (isLoggedIn) {
+    return (
+      <Layout>
+        <Switch>
+          <Route path="/create-category">
+            <CreateCategoryPage />
+          </Route>
+          <Route path="/create-task">
+            <CreateTaskPage />
+          </Route>
+          <Route path="/tasklist">
+            <AllTasksPage />
+          </Route>
+          <Route path="/">
+            <HomePage />
+          </Route>
+        </Switch>
+      </Layout>
+    );
+  } else if (!isLoggedIn) {
+    return (
+      <Layout>
+        <Switch>
+          <Route path="/">
+            <HomePage />
+          </Route>
+        </Switch>
+      </Layout>
+    );
+  }
 }
 
 export default App;

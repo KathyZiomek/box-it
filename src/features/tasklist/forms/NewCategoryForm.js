@@ -2,11 +2,13 @@
 
 import React from "react";
 import { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Success from "../../ui/Success";
 
 import { saveNewCategory } from "../categories/categorySlice";
+
+import { selectUserIds } from "../../authentication/userSlice";
 
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -30,11 +32,13 @@ const NewCategoryForm = () => {
 
   const categoryInputRef = useRef();
   const colorInputRef = useRef();
+  const user = useSelector(selectUserIds);
 
   /**Function that handles when the submit button is clicked */
   /**TODO: add data validation for new category information */
   const submitHandler = async (event) => {
     event.preventDefault();
+
     const enteredCategory = categoryInputRef.current.value;
     const enteredColor = colorInputRef.current.value;
 
@@ -44,6 +48,7 @@ const NewCategoryForm = () => {
     const text = {
       name: trimmedCategory,
       color: trimmedColor,
+      uid: user[0],
     };
 
     if (trimmedCategory.length !== 0) {

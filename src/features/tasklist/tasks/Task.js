@@ -4,21 +4,18 @@ import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 
-import {
-  deleteTask,
-  selectTaskById,
-  taskCompletedStatusChanged,
-  updateTask,
-} from "./taskSlice";
+import { deleteTask, selectTaskById, updateTask } from "./taskSlice";
 
 import { selectCategoryById } from "../categories/categorySlice";
 
 import CategoryDropDown from "../forms/CategoryDropDown";
+import DisplayDate from "./../../../common/DisplayDate";
 
 import { Checkbox } from "primereact/checkbox";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { Calendar } from "primereact/calendar";
 
 const Task = ({ id, categories }) => {
   //call our `selectTaskById` with the state _and_ the ID value
@@ -34,11 +31,12 @@ const Task = ({ id, categories }) => {
   const [isToggled, setToggled] = useState(false);
   const [isEditing, setEditing] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [newDuedate, setNewDueDate] = useState("");
   const dispatch = useDispatch();
 
   const taskInputRef = useRef();
   const categoryInputRef = useRef();
-  const duedateInputRef = useRef();
+  // const duedateInputRef = useRef();
 
   if (filterStatus !== filter) {
     setFilter(filterStatus);
@@ -66,15 +64,15 @@ const Task = ({ id, categories }) => {
 
     const enteredTask = taskInputRef.current.value;
     const enteredCategory = categoryInputRef.current.value;
-    const enteredDuedate = duedateInputRef.current.value;
+
+    const enteredDueDate = newDuedate;
     const trimmedTask = enteredTask.trim();
     const trimmedCategory = enteredCategory.trim();
-    const trimmedDueDate = enteredDuedate.trim();
 
     let text = {
       id: task.id,
       ...(trimmedTask !== task.name && { name: trimmedTask }),
-      ...(trimmedDueDate !== task.duedate && { duedate: trimmedDueDate }),
+      ...(enteredDueDate !== task.duedate && { duedate: enteredDueDate }),
       ...(trimmedCategory !== task.category && { category: trimmedCategory }),
     };
 
@@ -99,15 +97,18 @@ const Task = ({ id, categories }) => {
   const handleCheckboxChanged = (event) => {
     const text = {
       id: task.id,
-      name,
-      category,
-      duedate,
       completed: event.checked,
     };
-    dispatch(taskCompletedStatusChanged(text));
+    dispatch(updateTask(text));
   };
 
-  let duedateComponent = duedate ? <p>Due Date: {duedate}</p> : null;
+  let displayDate = DisplayDate(duedate);
+
+  let duedateComponent = duedate ? <p>Due Date: {displayDate}</p> : null;
+
+  let startDate = new Date("01-01-2022");
+  let endDate = new Date("01-01-2023");
+  let currentDate = new Date(duedate);
 
   let toggle = isToggled ? (
     <div>
@@ -136,12 +137,6 @@ const Task = ({ id, categories }) => {
         value={name}
         checked={completed}
         onChange={handleCheckboxChanged}
-        // style={{
-        //   border: categoryColor,
-        //   background: categoryColor,
-        //   color: categoryColor,
-        //   borderRadius: 20,
-        // }}
       />
       <label
         htmlFor={task.id}
@@ -157,26 +152,21 @@ const Task = ({ id, categories }) => {
       <li id={task.id} className="p-field-checkbox">
         <hr />
         <div>
-          {/* <Checkbox
-            inputId={task.id}
-            name="task"
-            value={name}
-            checked={completed}
-            onChange={handleCheckboxChanged}
-          /> */}
           <InputText id={task.id} defaultValue={name} ref={taskInputRef} />
         </div>
         <div>
           <label htmlFor="duedate">Due Date: </label>
-          <input
-            type="date"
+          <Calendar
             id="duedate"
             name="duedate"
-            min="2022-01-01"
-            defaultValue={duedate}
-            max="2023-01-01"
-            ref={duedateInputRef}
-          ></input>
+            minDate={startDate}
+            maxDate={endDate}
+            value={currentDate}
+            viewDate={currentDate}
+            onChange={(e) => {
+              setNewDueDate(e.value);
+            }}
+          />
         </div>
         <div>
           <label htmlFor="categoryName">Category: </label>

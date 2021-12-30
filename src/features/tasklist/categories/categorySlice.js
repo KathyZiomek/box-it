@@ -49,7 +49,6 @@ export const fetchCategories = createAsyncThunk(
           }
         }
       }
-      console.log(categories);
 
       return categories;
     } else {
@@ -69,6 +68,7 @@ export const saveNewCategory = createAsyncThunk(
         id: categoryId,
         name: initialCategory.text.name,
         color: initialCategory.text.color,
+        uid: initialCategory.text.uid,
       }
     );
     return response;
@@ -110,7 +110,7 @@ export const updateCategory = createAsyncThunk(
 const categoriesSlice = createSlice({
   name: "categories",
   initialState,
-  reducers: {},
+  reducers: { categoriesDeleted: categoriesAdapter.removeAll },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCategories.pending, (state, action) => {
@@ -133,7 +133,7 @@ const categoriesSlice = createSlice({
   },
 });
 
-// export const { categoryAdded, categoryDeleted } = categoriesSlice.actions;
+export const { categoriesDeleted } = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;
 

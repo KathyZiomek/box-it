@@ -33,6 +33,8 @@ const Login = () => {
     const trimmedEmail = enteredEmail.trim();
     const trimmedPassword = enteredPassword.trim();
 
+    /**TODO: add anonymous login: https://firebase.google.com/docs/auth/web/anonymous-auth */
+
     const auth = getAuth();
     signInWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
       .then((userCredential) => {
@@ -40,6 +42,7 @@ const Login = () => {
         // Signed in
         const user = userCredential.user;
 
+        // console.log(user);
         const uid = user.uid;
         const text = { [uid]: { id: uid, status: "loggedIn" } };
 
@@ -49,7 +52,7 @@ const Login = () => {
       .catch((error) => {
         setStatus("idle");
         const errorCode = error.code;
-        console.log(errorCode);
+        // console.log(errorCode);
         const userMessage = ErrorMessages(errorCode);
         setError(userMessage);
       });

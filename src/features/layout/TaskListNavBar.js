@@ -8,14 +8,23 @@ uses react routing*/
 import { React } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { selectCategoryIds } from "../tasklist/categories/categorySlice";
+import {
+  categoriesDeleted,
+  selectCategoryIds,
+} from "../tasklist/categories/categorySlice";
+import { tasksDeleted, selectTaskIds } from "../tasklist/tasks/taskSlice";
+import { userRemoved, selectUserIds } from "../authentication/userSlice";
 
 import { Button } from "primereact/button";
 import { Menubar } from "primereact/menubar";
 
 const TaskListNavBar = () => {
-  const categoryCount = useSelector(selectCategoryIds);
+  const dispatch = useDispatch();
+  const activeUser = useSelector(selectUserIds);
+  const categories = useSelector(selectCategoryIds);
+  const tasks = useSelector(selectTaskIds);
 
   const items = [
     {
@@ -62,7 +71,7 @@ const TaskListNavBar = () => {
           },
         },
         {
-          ...(categoryCount.length > 0 && {
+          ...(categories.length > 0 && {
             label: "Create a Task",
             icon: "p-menuitem-icon pi-menu-icon pi pi-fw pi-plus",
             template: (item, options) => {
@@ -90,8 +99,15 @@ const TaskListNavBar = () => {
       icon: "pi-menu-icon pi pi-fw pi-user",
     },
   ];
+
+  const onLogout = () => {
+    dispatch(userRemoved(activeUser));
+    dispatch(categoriesDeleted(categories));
+    dispatch(tasksDeleted(tasks));
+  };
+
   const start = <h3>Box It</h3>;
-  const end = <Button>Logout</Button>;
+  const end = <Button onClick={onLogout}>Logout</Button>;
 
   return (
     <header>

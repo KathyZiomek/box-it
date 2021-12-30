@@ -53,7 +53,7 @@ const SignUp = () => {
         .catch((error) => {
           setStatus("idle");
           const errorCode = error.code;
-          console.log(errorCode);
+          // console.log(errorCode);
           const userMessage = ErrorMessages(errorCode);
           setError(userMessage);
         });

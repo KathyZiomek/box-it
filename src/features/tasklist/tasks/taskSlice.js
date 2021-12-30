@@ -49,7 +49,6 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async (text) => {
         }
       }
     }
-    console.log(tasks);
 
     return tasks;
   } else {
@@ -68,6 +67,7 @@ export const saveNewTask = createAsyncThunk(
       duedate: initialTask.text.duedate,
       category: initialTask.text.category,
       completed: false,
+      uid: initialTask.text.uid,
     });
     return response;
   }
@@ -132,6 +132,7 @@ const tasksSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
+    tasksDeleted: tasksAdapter.removeAll,
     // completedTasksCleared(state, action) {
     //   const completedIds = Object.values(state.entities)
     //     .filter((task) => task.completed)
@@ -172,7 +173,7 @@ const tasksSlice = createSlice({
   },
 });
 
-export const { completedTasksCleared } = tasksSlice.actions;
+export const { tasksDeleted } = tasksSlice.actions;
 
 export default tasksSlice.reducer;
 

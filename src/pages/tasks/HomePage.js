@@ -1,5 +1,3 @@
-//**TODO: after creating SignUp and Login components, create logic to display either one depending on user's choices */
-
 import { Fragment, useState } from "react";
 
 import { useSelector } from "react-redux";
@@ -13,6 +11,7 @@ import { Card } from "primereact/card";
 import { Button } from "primereact/button";
 
 const HomePage = () => {
+  window.history.replaceState(null, "Box-It", "/");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
 
