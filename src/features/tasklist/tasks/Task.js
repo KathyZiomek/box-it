@@ -46,9 +46,9 @@ const Task = ({ id, categories }) => {
 
   // create the category drop down
   // since `categories` is an array, we can loop over it
-  const renderedCategoryItems = categories.map((categoryId) => {
-    return <CategoryDropDown key={categoryId} id={categoryId} />;
-  });
+  // const renderedCategoryItems = categories.map((categoryId) => {
+  //   return <CategoryDropDown key={categoryId} id={categoryId} />;
+  // });
 
   const onDelete = () => {
     dispatch(deleteTask(task.id));
@@ -63,7 +63,7 @@ const Task = ({ id, categories }) => {
     event.preventDefault();
 
     const enteredTask = taskInputRef.current.value;
-    const enteredCategory = categoryInputRef.current.value;
+    const enteredCategory = categoryInputRef.current.props.value;
 
     const enteredDueDate = newDuedate;
     const trimmedTask = enteredTask.trim();
@@ -170,14 +170,7 @@ const Task = ({ id, categories }) => {
         </div>
         <div>
           <label htmlFor="categoryName">Category: </label>
-          <select
-            required
-            id="categoryName"
-            ref={categoryInputRef}
-            defaultValue={task.category}
-          >
-            {renderedCategoryItems}
-          </select>
+          <CategoryDropDown ref={categoryInputRef} />
         </div>
         <div>
           <Button style={{ border: categoryColor, background: categoryColor }}>

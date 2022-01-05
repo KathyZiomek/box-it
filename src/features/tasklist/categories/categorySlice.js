@@ -9,15 +9,23 @@ import { client } from "../../../api/client";
 import { uuidv4 } from "../../../common/RandomId";
 import { ObjectLength } from "../../../common/ObjectLength";
 
-import Firebase from "../../../api/Firebase";
+import {
+  Firebase,
+  ReturnToken,
+  ReturnUid,
+  FirebaseUrl,
+} from "../../../api/Firebase";
+import { getAuth } from "firebase/auth";
+// import { useSelector } from "react-redux";
 
 const app = Firebase();
-const databaseURL = app._options.databaseURL;
+const databaseURL = FirebaseUrl(app);
 
 const categoriesAdapter = createEntityAdapter();
 
 const initialState = categoriesAdapter.getInitialState({
   status: "idle",
+  httpErr: false,
 });
 
 // Thunk function
@@ -25,7 +33,10 @@ export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async (text) => {
     const user = { text };
-    const response = await client.get(`${databaseURL}/categories.json`);
+
+    const response = await client.get(
+      `${databaseURL}/categories.json?auth=${user.text.token}`
+    );
 
     if (response !== null) {
       let categories = {};
@@ -38,7 +49,7 @@ export const fetchCategories = createAsyncThunk(
         for (var prop in obj) {
           if (!obj.hasOwnProperty(prop)) continue;
 
-          if (user.text === obj[prop]) {
+          if (user.text.uid === obj[prop]) {
             const newItem = { [objId]: obj };
 
             if (ObjectLength(categories) > 0) {
@@ -50,6 +61,7 @@ export const fetchCategories = createAsyncThunk(
         }
       }
 
+      console.log(response);
       return categories;
     } else {
       return response;
@@ -59,28 +71,44 @@ export const fetchCategories = createAsyncThunk(
 
 export const saveNewCategory = createAsyncThunk(
   "categories/saveNewCategory",
-  async (text) => {
+  async (text, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
+    const auth = getAuth();
+    const uid = ReturnUid(auth);
+    const token = ReturnToken(auth);
+
     const initialCategory = { text };
     const categoryId = uuidv4();
-    const response = await client.put(
-      `${databaseURL}/categories/${categoryId}.json`,
-      {
-        id: categoryId,
-        name: initialCategory.text.name,
-        color: initialCategory.text.color,
-        uid: initialCategory.text.uid,
+
+    try {
+      const response = await client.put(
+        `${databaseURL}/categories/${categoryId}.json?auth=${token}`,
+        {
+          id: categoryId,
+          name: initialCategory.text.name,
+          color: initialCategory.text.color,
+          uid: uid,
+        }
+      );
+      if (response === null) {
+        // console.log(response);
+        return rejectWithValue(response);
       }
-    );
-    return response;
+      return fulfillWithValue(response);
+    } catch (error) {
+      throw rejectWithValue(error.message);
+    }
   }
 );
 
 export const deleteCategory = createAsyncThunk(
   "categories/categoryDeleted",
   async (text) => {
+    const auth = getAuth();
+    const token = ReturnToken(auth);
+
     const initialCategory = { text };
     const response = await client(
-      `${databaseURL}/categories/${initialCategory.text}.json`,
+      `${databaseURL}/categories/${initialCategory.text}.json?auth=${token}`,
       { method: "DELETE" }
     );
     if (response === null) {
@@ -94,9 +122,11 @@ export const deleteCategory = createAsyncThunk(
 export const updateCategory = createAsyncThunk(
   "categories/categoryUpdated",
   async (text) => {
+    const auth = getAuth();
+    const token = ReturnToken(auth);
     const initialCategory = { text };
     const response = await client(
-      `${databaseURL}/categories/${initialCategory.text.id}.json`,
+      `${databaseURL}/categories/${initialCategory.text.id}.json?auth=${token}`,
       { method: "PATCH", body: initialCategory.text }
     );
     if (response === null) {
@@ -124,7 +154,18 @@ const categoriesSlice = createSlice({
           state.status = "idle";
         }
       })
-      .addCase(saveNewCategory.fulfilled, categoriesAdapter.addOne)
+      .addCase(saveNewCategory.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(saveNewCategory.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.httpErr = false;
+        categoriesAdapter.addOne(state, action.payload);
+      })
+      .addCase(saveNewCategory.rejected, (state, action) => {
+        state.status = "idle";
+        state.httpErr = true;
+      })
       .addCase(deleteCategory.fulfilled, categoriesAdapter.removeOne)
       .addCase(updateCategory.fulfilled, (state, { payload }) => {
         const { id, ...changes } = payload;

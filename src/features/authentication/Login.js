@@ -8,6 +8,7 @@ import { fetchCategories } from "../tasklist/categories/categorySlice";
 import { userAdded } from "./userSlice";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { ReturnUid, ReturnToken } from "../../api/Firebase";
 
 import ErrorMessages from "./ErrorMessages";
 
@@ -37,22 +38,24 @@ const Login = () => {
 
     const auth = getAuth();
     signInWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
-      .then((userCredential) => {
+      .then(() => {
         setStatus("idle");
         // Signed in
-        const user = userCredential.user;
+        // const user = userCredential.user;
+        const token = ReturnToken(auth);
+        const uid = ReturnUid(auth);
 
-        // console.log(user);
-        const uid = user.uid;
-        const text = { [uid]: { id: uid, status: "loggedIn" } };
+        const currentUser = { [uid]: { id: uid, status: "loggedIn" } };
+        const authUser = { uid: uid, token: token };
 
-        dispatch(fetchCategories(uid)).then(dispatch(fetchTasks(uid)));
-        dispatch(userAdded(text));
+        dispatch(userAdded(currentUser));
+        dispatch(fetchCategories(authUser));
+        dispatch(fetchTasks(authUser));
       })
       .catch((error) => {
         setStatus("idle");
         const errorCode = error.code;
-        // console.log(errorCode);
+        console.log("Login error: " + errorCode);
         const userMessage = ErrorMessages(errorCode);
         setError(userMessage);
       });

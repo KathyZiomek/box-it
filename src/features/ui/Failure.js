@@ -2,15 +2,15 @@ import { Messages } from "primereact/messages";
 
 import { useRef, useEffect } from "react";
 
-const Success = () => {
+const Failure = () => {
   const msg = useRef(null);
 
   useEffect(() => {
     msg.current.show([
       {
-        severity: "success",
-        summary: "Success! ",
-        detail: "",
+        severity: "error",
+        summary: "Error - ",
+        detail: "Submit Failed.",
         sticky: true,
       },
     ]);
@@ -23,4 +23,4 @@ const Success = () => {
   );
 };
 
-export default Success;
+export default Failure;

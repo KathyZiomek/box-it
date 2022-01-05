@@ -5,7 +5,7 @@ import { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { saveNewTask } from "../tasks/taskSlice";
-import { selectCategoryIds } from "../categories/categorySlice";
+// import { selectCategoryIds } from "../categories/categorySlice";
 import { selectUserIds } from "../../authentication/userSlice";
 
 import Success from "../../ui/Success";
@@ -15,21 +15,20 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Calendar } from "primereact/calendar";
-// import { Dropdown } from "primereact/dropdown";
 
 const NewTaskForm = () => {
-  const categoryIds = useSelector(selectCategoryIds);
+  // const categoryIds = useSelector(selectCategoryIds);
   const [newTask, setNewTask] = useState("");
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
   const [duedate, setDueDate] = useState("");
   const dispatch = useDispatch();
 
-  //create the category drop down
-  //since `categories` is an array, we can loop over it
-  const renderedCategoryItems = categoryIds.map((categoryId) => {
-    return <CategoryDropDown key={categoryId} id={categoryId} />;
-  });
+  // //create the category drop down
+  // //since `categories` is an array, we can loop over it
+  // const renderedCategoryItems = categoryIds.map((categoryId) => {
+  //   return <CategoryDropDown key={categoryId} id={categoryId} />;
+  // });
 
   const handleClick = () => {
     setSuccess("idle");
@@ -48,7 +47,7 @@ const NewTaskForm = () => {
 
     /**get the refs for entered values */
     const enteredTask = taskInputRef.current.value;
-    const enteredCategory = categoryInputRef.current.value;
+    const enteredCategory = categoryInputRef.current.props.value;
     const enteredDuedate = duedate;
 
     /**Clean the data */
@@ -106,14 +105,7 @@ const NewTaskForm = () => {
         </div>
         <div>
           <label htmlFor="categoryName">Category Name</label>
-          <select
-            required
-            id="categoryName"
-            ref={categoryInputRef}
-            onClick={handleClick}
-          >
-            {renderedCategoryItems}
-          </select>
+          <CategoryDropDown ref={categoryInputRef} />
         </div>
         <div>
           <label htmlFor="duedate">Due Date</label>

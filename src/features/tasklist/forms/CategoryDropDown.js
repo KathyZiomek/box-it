@@ -1,27 +1,43 @@
 /**This file handles the component that creates the dropdown with the existing category names that is output in the NewTaskForm component -> CreateTask page */
-import React from "react";
+import React, { useState } from "react";
 import { Fragment } from "react";
 
-import { useSelector /*, useDispatch*/ } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { selectCategoryById } from "../categories/categorySlice";
+import { selectCategories } from "../categories/categorySlice";
 
-// const selectCategoryById = (state, categoryId) => {
-//   return state.categories.find((category) => category.id === categoryId);
-// };
+import { Dropdown } from "primereact/dropdown";
 
-const CategoryDropDown = ({ id }) => {
+const CategoryDropDown = React.forwardRef((props, ref) => {
   //call our `selectCategoryById` with the state _and_ the ID value
-  const category = useSelector((state) => selectCategoryById(state, id));
-  const { name } = category;
+  const [category, setCategory] = useState();
+  const categories = useSelector(selectCategories);
+  console.log(categories);
+
+  let categorySelectItems = null;
+  categorySelectItems = categories.map((category) => {
+    if (categorySelectItems === null) {
+      return { label: category.name, value: category.id };
+    } else {
+      return {
+        ...categorySelectItems,
+        label: category.name,
+        value: category.id,
+      };
+    }
+  });
 
   return (
     <Fragment>
-      <option id={category.id} value={category.id}>
-        {name}
-      </option>
+      <Dropdown
+        options={categorySelectItems}
+        placeholder="Select a Category"
+        onChange={(e) => setCategory(e.value)}
+        ref={ref}
+        value={category}
+      />
     </Fragment>
   );
-};
+});
 
 export default CategoryDropDown;

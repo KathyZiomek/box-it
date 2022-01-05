@@ -9,12 +9,18 @@ import { client } from "../../../api/client";
 import { uuidv4 } from "../../../common/RandomId";
 import { ObjectLength } from "../../../common/ObjectLength";
 
+import {
+  Firebase,
+  ReturnToken,
+  ReturnUid,
+  FirebaseUrl,
+} from "../../../api/Firebase";
+import { getAuth } from "firebase/auth";
+
 import { StatusFilters } from "../../filters/filtersSlice";
 
-import Firebase from "../../../api/Firebase";
-
 const app = Firebase();
-const databaseURL = app._options.databaseURL;
+const databaseURL = FirebaseUrl(app);
 
 const tasksAdapter = createEntityAdapter();
 
@@ -25,7 +31,9 @@ const initialState = tasksAdapter.getInitialState({
 //Thunk functions
 export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async (text) => {
   const user = { text };
-  const response = await client.get(`${databaseURL}/tasks.json`);
+  const response = await client.get(
+    `${databaseURL}/tasks.json?auth=${user.text.token}`
+  );
 
   if (response !== null) {
     let tasks = {};
@@ -38,7 +46,7 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async (text) => {
       for (var prop in obj) {
         if (!obj.hasOwnProperty(prop)) continue;
 
-        if (user.text === obj[prop]) {
+        if (user.text.uid === obj[prop]) {
           const newItem = { [objId]: obj };
 
           if (ObjectLength(tasks) > 0) {
@@ -59,16 +67,23 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async (text) => {
 export const saveNewTask = createAsyncThunk(
   "tasks/saveNewTask",
   async (text) => {
+    const auth = getAuth();
+    const uid = ReturnUid(auth);
+    const token = ReturnToken(auth);
+
     const initialTask = { text };
     const taskId = uuidv4();
-    const response = await client.put(`${databaseURL}/tasks/${taskId}.json`, {
-      id: taskId,
-      name: initialTask.text.task,
-      duedate: initialTask.text.duedate,
-      category: initialTask.text.category,
-      completed: false,
-      uid: initialTask.text.uid,
-    });
+    const response = await client.put(
+      `${databaseURL}/tasks/${taskId}.json?auth=${token}`,
+      {
+        id: taskId,
+        name: initialTask.text.task,
+        duedate: initialTask.text.duedate,
+        category: initialTask.text.category,
+        completed: false,
+        uid: uid,
+      }
+    );
     return response;
   }
 );
@@ -76,9 +91,12 @@ export const saveNewTask = createAsyncThunk(
 export const deleteTask = createAsyncThunk(
   "tasks/taskDeleted",
   async (text) => {
+    const auth = getAuth();
+    const token = ReturnToken(auth);
+
     const initialTask = { text };
     const response = await client(
-      `${databaseURL}/tasks/${initialTask.text}.json`,
+      `${databaseURL}/tasks/${initialTask.text}.json?auth=${token}`,
       { method: "DELETE" }
     );
     if (response === null) {
@@ -89,35 +107,38 @@ export const deleteTask = createAsyncThunk(
   }
 );
 
-//TODO: update this function to handle general updates instead of specifically the checkbox
-export const taskCompletedStatusChanged = createAsyncThunk(
-  "tasks/taskCompleted",
-  async (text) => {
-    const initialTask = { text };
-    const response = await client.put(
-      `${databaseURL}/tasks/${initialTask.text.id}.json`,
-      {
-        id: initialTask.text.id,
-        name: initialTask.text.name,
-        category: initialTask.text.category,
-        duedate: initialTask.text.duedate,
-        completed: initialTask.text.completed,
-      }
-    );
-    if (response === null) {
-      return initialTask.text;
-    } else {
-      return response;
-    }
-  }
-);
+// //TODO: update this function to handle general updates instead of specifically the checkbox
+// export const taskCompletedStatusChanged = createAsyncThunk(
+//   "tasks/taskCompleted",
+//   async (text) => {
+//     const initialTask = { text };
+//     const response = await client.put(
+//       `${databaseURL}/tasks/${initialTask.text.id}.json?auth=${token}`,
+//       {
+//         id: initialTask.text.id,
+//         name: initialTask.text.name,
+//         category: initialTask.text.category,
+//         duedate: initialTask.text.duedate,
+//         completed: initialTask.text.completed,
+//       }
+//     );
+//     if (response === null) {
+//       return initialTask.text;
+//     } else {
+//       return response;
+//     }
+//   }
+// );
 
 export const updateTask = createAsyncThunk(
   "tasks/taskUpdated",
   async (text) => {
+    const auth = getAuth();
+    const token = ReturnToken(auth);
+
     const initialTask = { text };
     const response = await client(
-      `${databaseURL}/tasks/${initialTask.text.id}.json`,
+      `${databaseURL}/tasks/${initialTask.text.id}.json?auth=${token}`,
       { method: "PATCH", body: initialTask.text }
     );
     if (response === null) {
@@ -164,12 +185,12 @@ const tasksSlice = createSlice({
       .addCase(updateTask.fulfilled, (state, { payload }) => {
         const { id, ...changes } = payload;
         tasksAdapter.updateOne(state, { id, changes });
-      })
-      .addCase(taskCompletedStatusChanged.fulfilled, (state, action) => {
-        const taskId = action.payload.id;
-        const task = state.entities[taskId];
-        task.completed = !task.completed;
       });
+    // .addCase(taskCompletedStatusChanged.fulfilled, (state, action) => {
+    //   const taskId = action.payload.id;
+    //   const task = state.entities[taskId];
+    //   task.completed = !task.completed;
+    // });
   },
 });
 

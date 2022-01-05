@@ -1,3 +1,5 @@
+/**TODO: replace with Prime React component */
+
 const DeleteModal = () => {
   return (
     <div>

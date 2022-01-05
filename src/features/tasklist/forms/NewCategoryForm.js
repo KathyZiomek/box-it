@@ -2,13 +2,12 @@
 
 import React from "react";
 import { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import Success from "../../ui/Success";
+import Failure from "../../ui/Failure";
 
 import { saveNewCategory } from "../categories/categorySlice";
-
-import { selectUserIds } from "../../authentication/userSlice";
 
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -32,10 +31,10 @@ const NewCategoryForm = () => {
 
   const categoryInputRef = useRef();
   const colorInputRef = useRef();
-  const user = useSelector(selectUserIds);
 
   /**Function that handles when the submit button is clicked */
   /**TODO: add data validation for new category information */
+
   const submitHandler = async (event) => {
     event.preventDefault();
 
@@ -48,16 +47,21 @@ const NewCategoryForm = () => {
     const text = {
       name: trimmedCategory,
       color: trimmedColor,
-      uid: user[0],
     };
 
     if (trimmedCategory.length !== 0) {
       setStatus("loading");
-      await dispatch(saveNewCategory(text));
-      setNewCategory("");
-      setColor("#1976D2");
-      setStatus("idle");
-      setSuccess("success");
+      const response = await dispatch(saveNewCategory(text));
+
+      if (response.type === "categories/saveNewCategory/rejected") {
+        setSuccess(false);
+        setStatus("idle");
+      } else if (response.type === "categories/saveNewCategory/fulfilled") {
+        setNewCategory("");
+        setColor("#1976D2");
+        setStatus("idle");
+        setSuccess(true);
+      }
     } else {
       return;
     }
@@ -70,7 +74,15 @@ const NewCategoryForm = () => {
       <p>Submitting...</p>
     </div>
   ) : null;
-  let submitted = success === "idle" ? null : <Success />;
+
+  let message = null;
+  if (success === true) {
+    message = <Success />;
+  } else if (success === false) {
+    message = <Failure />;
+  } else if (success === "idle") {
+    message = null;
+  }
 
   return (
     <form onSubmit={submitHandler}>
@@ -102,7 +114,7 @@ const NewCategoryForm = () => {
       </div>
       <Button>Submit</Button>
       {loader}
-      {submitted}
+      {message}
     </form>
   );
 };
