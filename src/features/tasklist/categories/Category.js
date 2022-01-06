@@ -1,3 +1,5 @@
+/**NOTE: toast's can have severity levels of info, warn, error and fatal */
+
 /**This component outputs the category titles in the task list */
 import { React, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,11 +11,13 @@ import {
 } from "./categorySlice";
 import { deleteTask, selectTasks } from "../tasks/taskSlice";
 
-import DeleteModal from "../../ui/DeleteModal";
-
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { confirmDialog } from "primereact/confirmdialog";
+import { Toast } from "primereact/toast";
+import { Panel } from "primereact/panel";
+import { Ripple } from "primereact/ripple";
 
 import classes from "./Category.module.css";
 
@@ -25,10 +29,11 @@ const Category = ({ id }) => {
   const { name, color } = category;
 
   const [status, setStatus] = useState("idle");
-  const [isToggled, setToggled] = useState(false);
+  // const [isToggled, setToggled] = useState(false);
   const [isEditing, setEditing] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  // const [isDeleting, setIsDeleting] = useState(false);
   const [filter, setFilter] = useState("all");
+  const toast = useRef(null);
   const dispatch = useDispatch();
 
   const categoryInputRef = useRef();
@@ -37,41 +42,68 @@ const Category = ({ id }) => {
   if (filterStatus !== filter) {
     setFilter(filterStatus);
     setEditing(false);
-    setToggled(false);
+    // setToggled(false);
   }
 
-  const onDelete = () => {
-    setIsDeleting(true);
-  };
-
   const cancelDelete = () => {
-    setIsDeleting(false);
-    setToggled(false);
+    // setIsDeleting(false);
+    // setToggled(false);
+    toast.current.show({
+      severity: "info",
+      summary: "Delete Canceled",
+      // detail: "",
+      life: 1500,
+    });
   };
 
   const confirmDelete = () => {
-    //if the task is under the category that will be deleted, dispatch that delete action
-    allTasks.forEach((task) => {
-      if (task.category === category.id) {
-        dispatch(deleteTask(task.id));
-      }
+    toast.current.show({
+      severity: "info",
+      summary: "Success",
+      detail: `"${category.name}" Category Deleted`,
+      life: 1500,
     });
-    dispatch(deleteCategory(category.id));
-    setIsDeleting(false);
+
+    const deleteContent = () => {
+      allTasks.forEach((task) => {
+        if (task.category === category.id) {
+          dispatch(deleteTask(task.id));
+        }
+      });
+      dispatch(deleteCategory(category.id));
+      // setIsDeleting(false);
+      // setToggled(false);
+    };
+    const toastComplete = () => {
+      setTimeout(deleteContent, 1500);
+    };
+
+    toastComplete();
+  };
+
+  const confirm = () => {
+    confirmDialog({
+      message:
+        "Deleting a category box will also delete any tasks under that category. Are you sure you want to continue?",
+      header: "Warning",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => confirmDelete(),
+      reject: () => cancelDelete(),
+    });
   };
 
   const onEdit = (event) => {
     event.preventDefault();
     if (!isEditing) {
       setEditing(true);
-      setIsDeleting(false);
-      setToggled(false);
+      // setIsDeleting(false);
+      // setToggled(false);
     } else {
       setEditing(false);
     }
   };
 
-  const updateHandler = (event) => {
+  const updateHandler = async (event) => {
     event.preventDefault();
 
     const enteredCategory = categoryInputRef.current.value;
@@ -89,46 +121,85 @@ const Category = ({ id }) => {
       setEditing(false);
     } else {
       setStatus("loading");
-      dispatch(updateCategory(text));
-      setStatus("idle");
-      setEditing(false);
-    }
-  };
 
-  const handleToggled = () => {
-    if (isToggled) {
-      setToggled(false);
-    } else {
-      if (isDeleting) {
-        return;
-      } else {
-        setToggled(true);
+      const response = await dispatch(updateCategory(text));
+
+      if (response.type === "categories/categoryUpdated/rejected") {
+        toast.current.show({
+          severity: "error",
+          summary: `Error`,
+          detail: `Update for ${name} failed.`,
+          life: 2000,
+        });
+        setStatus("idle");
+      } else if (response.type === "categories/categoryUpdated/fulfilled") {
+        setStatus("idle");
+        setEditing(false);
+
+        let detail, life;
+        if (trimmedCategory !== name) {
+          detail = `"${name}" Category Changed to "${trimmedCategory}"`;
+          life = 2000;
+        } else if (trimmedCategory === name) {
+          detail = `${name} Category Updated`;
+          life = 1500;
+        }
+
+        toast.current.show({
+          severity: "info",
+          summary: "Success",
+          detail: detail,
+          life: life,
+        });
       }
     }
   };
 
-  let toggle =
-    isToggled && !isDeleting ? (
-      <div>
-        <Button
-          style={{ border: category.color, background: category.color }}
-          onClick={onEdit}
-        >
-          Edit Category
-        </Button>
-        <Button
-          style={{ border: category.color, background: category.color }}
-          onClick={onDelete}
-        >
-          Delete Category
-        </Button>
-        <hr />
-      </div>
-    ) : null;
+  // const handleToggled = () => {
+  //   if (isToggled) {
+  //     setToggled(false);
+  //   } else {
+  //     if (isDeleting) {
+  //       return;
+  //     } else {
+  //       setToggled(true);
+  //     }
+  //   }
+  // };
+
+  let toggle = !isEditing /*&& !isDeleting */ ? (
+    <div>
+      <Button
+        type="button"
+        style={{
+          border: category.color,
+          background: category.color,
+          width: "12rem",
+          marginRight: 12,
+        }}
+        onClick={onEdit}
+        icon="pi pi-pencil"
+        label="Edit Category"
+      ></Button>
+
+      <Button
+        type="button"
+        style={{
+          border: category.color,
+          background: category.color,
+          width: "12rem",
+        }}
+        onClick={confirm}
+        icon="pi pi-times"
+        label="Delete Category"
+      ></Button>
+      {/* <hr /> */}
+    </div>
+  ) : null;
 
   let categoryAppearance = !isEditing ? (
     <div className={classes.categoryDiv}>
-      <h3
+      {/* <h3
         id={category.id}
         onClick={handleToggled}
         className={classes.categoryTitle}
@@ -137,26 +208,8 @@ const Category = ({ id }) => {
         }}
       >
         {name}
-      </h3>
+      </h3> */}
       {toggle}
-
-      {isDeleting && (
-        <div>
-          <DeleteModal />
-          <Button
-            style={{ border: category.color, background: category.color }}
-            onClick={confirmDelete}
-          >
-            Confirm
-          </Button>
-          <Button
-            style={{ border: category.color, background: category.color }}
-            onClick={cancelDelete}
-          >
-            Cancel
-          </Button>
-        </div>
-      )}
     </div>
   ) : (
     <form onSubmit={updateHandler} className={classes.editingForm}>
@@ -177,16 +230,26 @@ const Category = ({ id }) => {
         />
         <div>
           <Button
-            style={{ border: category.color, background: category.color }}
-          >
-            Update Category
-          </Button>
+            style={{
+              border: category.color,
+              background: category.color,
+              width: "12rem",
+              marginRight: 12,
+            }}
+            icon="pi pi-check"
+            label="Update Category"
+          ></Button>
+
           <Button
-            style={{ border: category.color, background: category.color }}
+            style={{
+              border: category.color,
+              background: category.color,
+              width: "12rem",
+            }}
             onClick={onEdit}
-          >
-            Cancel
-          </Button>
+            icon="pi pi-times"
+            label="Cancel"
+          ></Button>
         </div>
       </div>
     </form>
@@ -199,14 +262,41 @@ const Category = ({ id }) => {
     </div>
   ) : null;
 
+  const template = (options) => {
+    const toggleIcon = options.collapsed
+      ? "pi pi-chevron-down"
+      : "pi pi-chevron-up";
+    const className = `${options.className} p-jc-start`;
+    // const titleClassName = `${options.titleClassName} p-pl-1`;
+
+    return (
+      <div
+        style={{ border: category.color, background: category.color }}
+        className={className}
+      >
+        <span style={{ color: "white", fontSize: "25px" }}>{name}</span>
+        <button
+          style={{ color: "white" }}
+          className={options.togglerClassName}
+          onClick={options.onTogglerClick}
+          disabled={isEditing}
+        >
+          <span className={toggleIcon}></span>
+          <Ripple />
+        </button>
+      </div>
+    );
+  };
+
   return (
-    <div>
-      {categoryAppearance}
-      {loader}
+    <div style={{ marginBottom: 15, marginTop: 15 }}>
+      <Toast ref={toast} />
+      <Panel headerTemplate={template} toggleable collapsed>
+        {categoryAppearance}
+        {loader}
+      </Panel>
     </div>
   );
 };
 
 export default Category;
-
-/**TODO: add styling for the categories */

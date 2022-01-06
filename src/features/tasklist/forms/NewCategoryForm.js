@@ -56,25 +56,18 @@ const NewCategoryForm = () => {
         color: trimmedColor,
       };
 
-      if (trimmedCategory.length !== 0) {
-        setStatus("loading");
-        const response = await dispatch(saveNewCategory(text));
+      setStatus("loading");
+      const response = await dispatch(saveNewCategory(text));
 
-        if (response.type === "categories/saveNewCategory/rejected") {
-          setSuccess(false);
-          setStatus("idle");
-        } else if (response.type === "categories/saveNewCategory/fulfilled") {
-          setNewCategory("");
-          setColor("#1976D2");
-          setStatus("idle");
-          setSuccess(true);
-          setCategoryWarning(false);
-        }
-      } else {
-        setCategoryWarning(true);
+      if (response.type === "categories/saveNewCategory/rejected") {
         setSuccess(false);
         setStatus("idle");
-        return;
+      } else if (response.type === "categories/saveNewCategory/fulfilled") {
+        setNewCategory("");
+        setColor("#1976D2");
+        setStatus("idle");
+        setSuccess(true);
+        setCategoryWarning(false);
       }
     } else {
       setCategoryWarning(true);

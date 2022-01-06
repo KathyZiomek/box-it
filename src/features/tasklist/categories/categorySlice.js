@@ -129,21 +129,35 @@ export const deleteCategory = createAsyncThunk(
 
 export const updateCategory = createAsyncThunk(
   "categories/categoryUpdated",
-  async (text) => {
+  async (
+    text,
+    { /*dispatch, getState,*/ rejectWithValue, fulfillWithValue }
+  ) => {
     const auth = getAuth();
     const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
 
     const initialCategory = { text };
-    const response = await client(
-      `${databaseURL}/users/${uid}/categories/${initialCategory.text.id}.json?auth=${token}`,
-      { method: "PATCH", body: initialCategory.text }
-    );
-    if (response === null) {
-      return initialCategory.text;
-    } else {
-      return response;
+
+    try {
+      const response = await client(
+        `${databaseURL}/users/${uid}/categories/${initialCategory.text.id}.json?auth=${token}`,
+        { method: "PATCH", body: initialCategory.text }
+      );
+      if (response === null) {
+        // console.log(response);
+        return rejectWithValue(response);
+      }
+      return fulfillWithValue(response);
+    } catch (error) {
+      throw rejectWithValue(error.message);
     }
+
+    // if (response === null) {
+    //   return initialCategory.text;
+    // } else {
+    //   return response;
+    // }
   }
 );
 
@@ -177,9 +191,18 @@ const categoriesSlice = createSlice({
         state.httpErr = true;
       })
       .addCase(deleteCategory.fulfilled, categoriesAdapter.removeOne)
+
+      .addCase(updateCategory.pending, (state) => {
+        state.status = "pending";
+      })
       .addCase(updateCategory.fulfilled, (state, { payload }) => {
         const { id, ...changes } = payload;
+        state.httpErr = false;
         categoriesAdapter.updateOne(state, { id, changes });
+      })
+      .addCase(updateCategory.rejected, (state, action) => {
+        state.status = "idle";
+        state.httpErr = true;
       });
   },
 });

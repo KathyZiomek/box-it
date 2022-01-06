@@ -110,8 +110,12 @@ const Task = ({ id }) => {
   let toggle = isToggled ? (
     <div>
       {duedateComponent}
+
       <Button
-        style={{ border: categoryColor, background: categoryColor }}
+        style={{
+          border: categoryColor,
+          background: categoryColor,
+        }}
         onClick={onEdit}
       >
         Edit Task
