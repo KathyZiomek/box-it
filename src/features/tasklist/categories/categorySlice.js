@@ -64,7 +64,7 @@ export const fetchCategories = createAsyncThunk(
     //     }
     //   }
 
-    console.log(response);
+    // console.log(response);
     //   return categories;
     return response;
     // } else {

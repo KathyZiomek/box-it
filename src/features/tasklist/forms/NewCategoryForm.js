@@ -12,15 +12,20 @@ import { saveNewCategory } from "../categories/categorySlice";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { Message } from "primereact/message";
 
 const NewCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
   const [color, setColor] = useState("#1976D2");
+  const [categoryWarning, setCategoryWarning] = useState(false);
   const dispatch = useDispatch();
 
   const handleClick = () => {
+    if (categoryWarning === true) {
+      setCategoryWarning(false);
+    }
     setSuccess("idle");
   };
 
@@ -42,28 +47,39 @@ const NewCategoryForm = () => {
     const enteredCategory = categoryInputRef.current.value;
     const enteredColor = colorInputRef.current.value;
 
-    const trimmedCategory = enteredCategory.trim();
-    const trimmedColor = enteredColor.trim();
+    if (enteredCategory.length !== 0) {
+      const trimmedCategory = enteredCategory.trim();
+      const trimmedColor = enteredColor.trim();
 
-    const text = {
-      name: trimmedCategory,
-      color: trimmedColor,
-    };
+      const text = {
+        name: trimmedCategory,
+        color: trimmedColor,
+      };
 
-    if (trimmedCategory.length !== 0) {
-      setStatus("loading");
-      const response = await dispatch(saveNewCategory(text));
+      if (trimmedCategory.length !== 0) {
+        setStatus("loading");
+        const response = await dispatch(saveNewCategory(text));
 
-      if (response.type === "categories/saveNewCategory/rejected") {
+        if (response.type === "categories/saveNewCategory/rejected") {
+          setSuccess(false);
+          setStatus("idle");
+        } else if (response.type === "categories/saveNewCategory/fulfilled") {
+          setNewCategory("");
+          setColor("#1976D2");
+          setStatus("idle");
+          setSuccess(true);
+          setCategoryWarning(false);
+        }
+      } else {
+        setCategoryWarning(true);
         setSuccess(false);
         setStatus("idle");
-      } else if (response.type === "categories/saveNewCategory/fulfilled") {
-        setNewCategory("");
-        setColor("#1976D2");
-        setStatus("idle");
-        setSuccess(true);
+        return;
       }
     } else {
+      setCategoryWarning(true);
+      setSuccess(false);
+      setStatus("idle");
       return;
     }
   };
@@ -94,7 +110,7 @@ const NewCategoryForm = () => {
         <InputText
           type="text"
           id="categoryName"
-          required
+          // required
           placeholder={placeholder}
           value={newCategory}
           onChange={handleCategoryChange}
@@ -102,6 +118,9 @@ const NewCategoryForm = () => {
           disabled={isLoading}
           onClick={handleClick}
         />
+        {categoryWarning && (
+          <Message severity="error" text="Category cannot be empty" />
+        )}
       </div>
       <div>
         <label htmlFor="categoryColor">Category Color </label>
@@ -110,10 +129,11 @@ const NewCategoryForm = () => {
           id="categoryColor"
           ref={colorInputRef}
           value={color}
+          onClick={handleClick}
           onChange={handleColorChange}
         />
       </div>
-      <Button>Submit</Button>
+      <Button onClick={handleClick}>Submit</Button>
       {loader}
       {message}
     </form>
