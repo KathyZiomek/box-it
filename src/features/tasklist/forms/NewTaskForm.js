@@ -5,72 +5,104 @@ import { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { saveNewTask } from "../tasks/taskSlice";
-// import { selectCategoryIds } from "../categories/categorySlice";
-import { selectUserIds } from "../../authentication/userSlice";
+import { selectCategories } from "../categories/categorySlice";
 
 import Success from "../../ui/Success";
-import CategoryDropDown from "./CategoryDropDown";
+import Failure from "../../ui/Failure";
 
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
+import { Message } from "primereact/message";
 
 const NewTaskForm = () => {
-  // const categoryIds = useSelector(selectCategoryIds);
   const [newTask, setNewTask] = useState("");
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
   const [duedate, setDueDate] = useState("");
+  const [category, setCategory] = useState("Select a Category");
+  const [taskWarning, setTaskWarning] = useState(false);
+  const [categoryWarning, setCategoryWarning] = useState(false);
+  const categories = useSelector(selectCategories);
+
   const dispatch = useDispatch();
 
-  // //create the category drop down
-  // //since `categories` is an array, we can loop over it
-  // const renderedCategoryItems = categoryIds.map((categoryId) => {
-  //   return <CategoryDropDown key={categoryId} id={categoryId} />;
-  // });
+  let categorySelectItems = null;
+  categorySelectItems = categories.map((category) => {
+    if (categorySelectItems === null) {
+      return { label: category.name, value: category.id };
+    } else {
+      return {
+        ...categorySelectItems,
+        label: category.name,
+        value: category.id,
+      };
+    }
+  });
 
   const handleClick = () => {
+    if (taskWarning === true && categoryWarning === true) {
+      setTaskWarning(false);
+      setCategoryWarning(false);
+    } else if (taskWarning === true) {
+      setTaskWarning(false);
+    } else if (categoryWarning === true) {
+      setCategoryWarning(false);
+    }
     setSuccess("idle");
   };
 
-  const handleChange = (e) => setNewTask(e.target.value);
-  /**Setting refs for the inputs */
   const taskInputRef = useRef();
   const categoryInputRef = useRef();
-  const user = useSelector(selectUserIds);
 
-  /**Function that handles when the submit button is clicked */
   const submitHandler = async (event) => {
-    /**Avoid the default response from the browser */
     event.preventDefault();
 
-    /**get the refs for entered values */
     const enteredTask = taskInputRef.current.value;
     const enteredCategory = categoryInputRef.current.props.value;
-    const enteredDuedate = duedate;
 
-    /**Clean the data */
-    const trimmedTask = enteredTask.trim();
-    const trimmedCategory = enteredCategory.trim();
+    if (enteredTask.length !== 0) {
+      if (enteredCategory !== "Select a Category") {
+        const trimmedCategory = enteredCategory.trim();
+        const enteredDuedate = duedate;
 
-    /**Combine the data into a single text object to pass to dispatch */
-    const text = {
-      task: trimmedTask,
-      category: trimmedCategory,
-      duedate: enteredDuedate,
-      uid: user[0],
-    };
+        const trimmedTask = enteredTask.trim();
 
-    //create and dispatch the thunk function itself
-    setStatus("loading");
-    //wait for the promise returned by saveNewTask
-    await dispatch(saveNewTask(text));
-    //and clear out the text input
-    setNewTask("");
-    setStatus("idle");
-    //show a success message to the user
-    setSuccess("success");
+        const text = {
+          task: trimmedTask,
+          category: trimmedCategory,
+          duedate: enteredDuedate,
+        };
+
+        setStatus("loading");
+        const response = await dispatch(saveNewTask(text));
+
+        if (response.type === "tasks/saveNewTask/rejected") {
+          setSuccess(false);
+          setStatus("idle");
+        } else if (response.type === "tasks/saveNewTask/fulfilled") {
+          setNewTask("");
+          setCategory("Select a Category");
+          setDueDate("");
+          setStatus("idle");
+          setSuccess(true);
+          setTaskWarning(false);
+          setCategoryWarning(false);
+        }
+      } else {
+        setCategoryWarning(true);
+        setSuccess(false);
+        setStatus("idle");
+        return;
+      }
+    } else {
+      setTaskWarning(true);
+      setSuccess(false);
+      setStatus("idle");
+      return;
+    }
   };
 
   let isLoading = status === "loading";
@@ -80,7 +112,14 @@ const NewTaskForm = () => {
       <ProgressSpinner />
     </div>
   ) : null;
-  let submitted = success === "idle" ? null : <Success />;
+  let message = null;
+  if (success === true) {
+    message = <Success />;
+  } else if (success === false) {
+    message = <Failure />;
+  } else if (success === "idle") {
+    message = null;
+  }
 
   let startDate = new Date("01-01-2022");
   let endDate = new Date("01-01-2023");
@@ -94,18 +133,34 @@ const NewTaskForm = () => {
           <InputText
             type="text"
             id="taskName"
-            required
+            // required
             placeholder={placeholder}
             ref={taskInputRef}
             value={newTask}
-            onChange={handleChange}
+            onChange={(e) => setNewTask(e.target.value)}
             disabled={isLoading}
             onClick={handleClick}
           />
+          {taskWarning && (
+            <Message severity="error" text="Task cannot be empty" />
+          )}
         </div>
         <div>
           <label htmlFor="categoryName">Category Name</label>
-          <CategoryDropDown ref={categoryInputRef} />
+          <Dropdown
+            options={categorySelectItems}
+            placeholder="Select a Category"
+            ref={categoryInputRef}
+            value={category}
+            disabled={isLoading}
+            onChange={(e) => {
+              setCategory(e.value);
+            }}
+            onMouseDown={handleClick}
+          />
+          {categoryWarning && (
+            <Message severity="error" text="Must select a category" />
+          )}
         </div>
         <div>
           <label htmlFor="duedate">Due Date</label>
@@ -116,17 +171,18 @@ const NewTaskForm = () => {
             maxDate={endDate}
             value={currentDate}
             viewDate={currentDate}
+            disabled={isLoading}
             onChange={(e) => {
               setDueDate(e.value);
+              handleClick();
             }}
           />
         </div>
-
         <div>
-          <Button>Add New Task</Button>
+          <Button onClick={handleClick}>Add New Task</Button>
         </div>
         {loader}
-        {submitted}
+        {message}
       </form>
     </div>
   );
@@ -135,6 +191,3 @@ const NewTaskForm = () => {
 export default NewTaskForm;
 
 /**TODO: add data validation for new task information */
-/**TODO: add an option for a blank category/no category selected (which is valid) */
-/* TODO: add inputs for due date, if it's an on-going task, and priority level */
-/**TODO: add responsiveness that communicates to the user when they successfully/unsuccessfully submit new task data*/

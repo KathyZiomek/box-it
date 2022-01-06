@@ -7,7 +7,7 @@ import {
 import { client } from "../../../api/client";
 
 import { uuidv4 } from "../../../common/RandomId";
-import { ObjectLength } from "../../../common/ObjectLength";
+// import { ObjectLength } from "../../../common/ObjectLength";
 
 import {
   Firebase,
@@ -26,65 +26,84 @@ const tasksAdapter = createEntityAdapter();
 
 const initialState = tasksAdapter.getInitialState({
   status: "idle",
+  httpErr: false,
 });
 
 //Thunk functions
-export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async (text) => {
-  const user = { text };
+export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
+  // const user = { text };
+  const auth = getAuth();
+  const uid = ReturnUid(auth);
+  const token = ReturnToken(auth);
+
   const response = await client.get(
-    `${databaseURL}/tasks.json?auth=${user.text.token}`
+    `${databaseURL}/users/${uid}/tasks.json?auth=${token}`
   );
 
-  if (response !== null) {
-    let tasks = {};
-    for (var key in response) {
-      if (!response.hasOwnProperty(key)) continue;
+  // if (response !== null) {
+  //   let tasks = {};
+  //   for (var key in response) {
+  //     if (!response.hasOwnProperty(key)) continue;
 
-      let obj = response[key];
-      let objId = key;
+  //     let obj = response[key];
+  //     let objId = key;
 
-      for (var prop in obj) {
-        if (!obj.hasOwnProperty(prop)) continue;
+  //     for (var prop in obj) {
+  //       if (!obj.hasOwnProperty(prop)) continue;
 
-        if (user.text.uid === obj[prop]) {
-          const newItem = { [objId]: obj };
+  //       if (user.text.uid === obj[prop]) {
+  //         const newItem = { [objId]: obj };
 
-          if (ObjectLength(tasks) > 0) {
-            tasks = { ...tasks, [objId]: obj };
-          } else {
-            tasks = newItem;
-          }
-        }
-      }
-    }
-
-    return tasks;
-  } else {
-    return response;
-  }
+  //         if (ObjectLength(tasks) > 0) {
+  //           tasks = { ...tasks, [objId]: obj };
+  //         } else {
+  //           tasks = newItem;
+  //         }
+  //       }
+  //     }
+  //   }
+  console.log(response);
+  // return tasks;
+  return response;
+  // } else {
+  //   return response;
+  // }
 });
 
 export const saveNewTask = createAsyncThunk(
   "tasks/saveNewTask",
-  async (text) => {
+  async (
+    text,
+    { /*dispatch, getState,*/ rejectWithValue, fulfillWithValue }
+  ) => {
     const auth = getAuth();
     const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
 
     const initialTask = { text };
     const taskId = uuidv4();
-    const response = await client.put(
-      `${databaseURL}/tasks/${taskId}.json?auth=${token}`,
-      {
-        id: taskId,
-        name: initialTask.text.task,
-        duedate: initialTask.text.duedate,
-        category: initialTask.text.category,
-        completed: false,
-        uid: uid,
+
+    try {
+      const response = await client.put(
+        `${databaseURL}/users/${uid}/tasks/${taskId}.json?auth=${token}`,
+        {
+          id: taskId,
+          name: initialTask.text.task,
+          duedate: initialTask.text.duedate,
+          category: initialTask.text.category,
+          completed: false,
+          uid: uid,
+        }
+      );
+
+      if (response === null) {
+        // console.log(response);
+        return rejectWithValue(response);
       }
-    );
-    return response;
+      return fulfillWithValue(response);
+    } catch (error) {
+      throw rejectWithValue(error.message);
+    }
   }
 );
 
@@ -92,11 +111,12 @@ export const deleteTask = createAsyncThunk(
   "tasks/taskDeleted",
   async (text) => {
     const auth = getAuth();
+    const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
 
     const initialTask = { text };
     const response = await client(
-      `${databaseURL}/tasks/${initialTask.text}.json?auth=${token}`,
+      `${databaseURL}/users/${uid}/tasks/${initialTask.text}.json?auth=${token}`,
       { method: "DELETE" }
     );
     if (response === null) {
@@ -107,38 +127,16 @@ export const deleteTask = createAsyncThunk(
   }
 );
 
-// //TODO: update this function to handle general updates instead of specifically the checkbox
-// export const taskCompletedStatusChanged = createAsyncThunk(
-//   "tasks/taskCompleted",
-//   async (text) => {
-//     const initialTask = { text };
-//     const response = await client.put(
-//       `${databaseURL}/tasks/${initialTask.text.id}.json?auth=${token}`,
-//       {
-//         id: initialTask.text.id,
-//         name: initialTask.text.name,
-//         category: initialTask.text.category,
-//         duedate: initialTask.text.duedate,
-//         completed: initialTask.text.completed,
-//       }
-//     );
-//     if (response === null) {
-//       return initialTask.text;
-//     } else {
-//       return response;
-//     }
-//   }
-// );
-
 export const updateTask = createAsyncThunk(
   "tasks/taskUpdated",
   async (text) => {
     const auth = getAuth();
+    const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
 
     const initialTask = { text };
     const response = await client(
-      `${databaseURL}/tasks/${initialTask.text.id}.json?auth=${token}`,
+      `${databaseURL}/users/${uid}/tasks/${initialTask.text.id}.json?auth=${token}`,
       { method: "PATCH", body: initialTask.text }
     );
     if (response === null) {
@@ -154,18 +152,6 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     tasksDeleted: tasksAdapter.removeAll,
-    // completedTasksCleared(state, action) {
-    //   const completedIds = Object.values(state.entities)
-    //     .filter((task) => task.completed)
-    //     .map((task) => task.id);
-    //   tasksAdapter.removeMany(state, completedIds);
-    // },
-    // allTasksCompleted(state, action) {
-    //   Object.values(state.entities).forEach((task) => {
-    //     task.completed = true;
-    //   });
-    // },
-    // taskDeleted: tasksAdapter.removeOne,
   },
   extraReducers: (builder) => {
     builder
@@ -180,17 +166,23 @@ const tasksSlice = createSlice({
           state.status = "idle";
         }
       })
-      .addCase(saveNewTask.fulfilled, tasksAdapter.addOne)
+      .addCase(saveNewTask.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(saveNewTask.fulfilled, (state, action) => {
+        state.status = "idle";
+        state.httpErr = false;
+        tasksAdapter.addOne(state, action.payload);
+      })
+      .addCase(saveNewTask.rejected, (state, action) => {
+        state.status = "idle";
+        state.httpErr = true;
+      })
       .addCase(deleteTask.fulfilled, tasksAdapter.removeOne)
       .addCase(updateTask.fulfilled, (state, { payload }) => {
         const { id, ...changes } = payload;
         tasksAdapter.updateOne(state, { id, changes });
       });
-    // .addCase(taskCompletedStatusChanged.fulfilled, (state, action) => {
-    //   const taskId = action.payload.id;
-    //   const task = state.entities[taskId];
-    //   task.completed = !task.completed;
-    // });
   },
 });
 

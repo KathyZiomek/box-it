@@ -11,6 +11,7 @@ import { saveNewCategory } from "../categories/categorySlice";
 
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const NewCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
@@ -71,7 +72,7 @@ const NewCategoryForm = () => {
   let placeholder = isLoading ? "" : "Enter category name here...";
   let loader = isLoading ? (
     <div>
-      <p>Submitting...</p>
+      <ProgressSpinner />
     </div>
   ) : null;
 

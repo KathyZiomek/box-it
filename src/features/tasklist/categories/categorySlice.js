@@ -7,7 +7,7 @@ import {
 import { client } from "../../../api/client";
 
 import { uuidv4 } from "../../../common/RandomId";
-import { ObjectLength } from "../../../common/ObjectLength";
+// import { ObjectLength } from "../../../common/ObjectLength";
 
 import {
   Firebase,
@@ -31,47 +31,54 @@ const initialState = categoriesAdapter.getInitialState({
 // Thunk function
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
-  async (text) => {
-    const user = { text };
+  async () => {
+    // const user = { text };
+    const auth = getAuth();
+    const uid = ReturnUid(auth);
+    const token = ReturnToken(auth);
 
     const response = await client.get(
-      `${databaseURL}/categories.json?auth=${user.text.token}`
+      `${databaseURL}/users/${uid}/categories.json?auth=${token}`
     );
 
-    if (response !== null) {
-      let categories = {};
-      for (var key in response) {
-        if (!response.hasOwnProperty(key)) continue;
+    // if (response !== null) {
+    //   let categories = {};
+    //   for (var key in response) {
+    //     if (!response.hasOwnProperty(key)) continue;
 
-        let obj = response[key];
-        let objId = key;
+    //     let obj = response[key];
+    //     let objId = key;
 
-        for (var prop in obj) {
-          if (!obj.hasOwnProperty(prop)) continue;
+    //     for (var prop in obj) {
+    //       if (!obj.hasOwnProperty(prop)) continue;
 
-          if (user.text.uid === obj[prop]) {
-            const newItem = { [objId]: obj };
+    //       if (user.text.uid === obj[prop]) {
+    //         const newItem = { [objId]: obj };
 
-            if (ObjectLength(categories) > 0) {
-              categories = { ...categories, [objId]: obj };
-            } else {
-              categories = newItem;
-            }
-          }
-        }
-      }
+    //         if (ObjectLength(categories) > 0) {
+    //           categories = { ...categories, [objId]: obj };
+    //         } else {
+    //           categories = newItem;
+    //         }
+    //       }
+    //     }
+    //   }
 
-      console.log(response);
-      return categories;
-    } else {
-      return response;
-    }
+    console.log(response);
+    //   return categories;
+    return response;
+    // } else {
+    //   return response;
+    // }
   }
 );
 
 export const saveNewCategory = createAsyncThunk(
   "categories/saveNewCategory",
-  async (text, { dispatch, getState, rejectWithValue, fulfillWithValue }) => {
+  async (
+    text,
+    { /*dispatch, getState,*/ rejectWithValue, fulfillWithValue }
+  ) => {
     const auth = getAuth();
     const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
@@ -81,7 +88,7 @@ export const saveNewCategory = createAsyncThunk(
 
     try {
       const response = await client.put(
-        `${databaseURL}/categories/${categoryId}.json?auth=${token}`,
+        `${databaseURL}/users/${uid}/categories/${categoryId}.json?auth=${token}`,
         {
           id: categoryId,
           name: initialCategory.text.name,
@@ -104,11 +111,12 @@ export const deleteCategory = createAsyncThunk(
   "categories/categoryDeleted",
   async (text) => {
     const auth = getAuth();
+    const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
 
     const initialCategory = { text };
     const response = await client(
-      `${databaseURL}/categories/${initialCategory.text}.json?auth=${token}`,
+      `${databaseURL}/users/${uid}/categories/${initialCategory.text}.json?auth=${token}`,
       { method: "DELETE" }
     );
     if (response === null) {
@@ -123,10 +131,12 @@ export const updateCategory = createAsyncThunk(
   "categories/categoryUpdated",
   async (text) => {
     const auth = getAuth();
+    const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
+
     const initialCategory = { text };
     const response = await client(
-      `${databaseURL}/categories/${initialCategory.text.id}.json?auth=${token}`,
+      `${databaseURL}/users/${uid}/categories/${initialCategory.text.id}.json?auth=${token}`,
       { method: "PATCH", body: initialCategory.text }
     );
     if (response === null) {

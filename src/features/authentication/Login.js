@@ -1,5 +1,3 @@
-/**TODO: create Login component */
-
 import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
@@ -8,7 +6,7 @@ import { fetchCategories } from "../tasklist/categories/categorySlice";
 import { userAdded } from "./userSlice";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { ReturnUid, ReturnToken } from "../../api/Firebase";
+import { ReturnUid } from "../../api/Firebase";
 
 import ErrorMessages from "./ErrorMessages";
 
@@ -42,15 +40,15 @@ const Login = () => {
         setStatus("idle");
         // Signed in
         // const user = userCredential.user;
-        const token = ReturnToken(auth);
+        // const token = ReturnToken(auth);
         const uid = ReturnUid(auth);
 
         const currentUser = { [uid]: { id: uid, status: "loggedIn" } };
-        const authUser = { uid: uid, token: token };
+        // // const authUser = { uid: uid, token: token };
 
         dispatch(userAdded(currentUser));
-        dispatch(fetchCategories(authUser));
-        dispatch(fetchTasks(authUser));
+        dispatch(fetchCategories());
+        dispatch(fetchTasks());
       })
       .catch((error) => {
         setStatus("idle");

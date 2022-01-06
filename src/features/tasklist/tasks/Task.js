@@ -1,11 +1,8 @@
 /**This component outputs a single task list item - receives props from TaskList.js */
-import React from "react";
-import { useRef } from "react";
+import { React, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
 
 import { deleteTask, selectTaskById, updateTask } from "./taskSlice";
-
 import { selectCategoryById } from "../categories/categorySlice";
 
 import CategoryDropDown from "../forms/CategoryDropDown";
@@ -17,7 +14,7 @@ import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Calendar } from "primereact/calendar";
 
-const Task = ({ id, categories }) => {
+const Task = ({ id }) => {
   //call our `selectTaskById` with the state _and_ the ID value
   const filterStatus = useSelector((state) => state.filters.status);
   const task = useSelector((state) => selectTaskById(state, id));
