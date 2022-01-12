@@ -8,7 +8,7 @@ import FilterButtons from "../../features/filters/FilterButtons";
 const AllTasksPage = () => {
   return (
     <Fragment>
-      <h1>Your Task List</h1>
+      <h1 style={{ textAlign: "center" }}>Your Task List</h1>
       <hr />
       <TaskList />
       <FilterButtons />

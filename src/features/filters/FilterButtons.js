@@ -1,4 +1,4 @@
-import { React } from "react";
+import { React, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { StatusFilters, statusFilterChanged } from "./filtersSlice";
@@ -14,7 +14,7 @@ import { selectCategories } from "../tasklist/categories/categorySlice";
 import { Button } from "primereact/button";
 import { RadioButton } from "primereact/radiobutton";
 import classes from "../tasklist/TaskList.module.css";
-// import Card from "../ui/CardTasklist";
+import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
 
 const RemainingTasks = ({ count }) => {
@@ -84,6 +84,7 @@ const StatusFilter = ({ value: status, onChange }) => {
 };
 
 const FilterButtons = () => {
+  const toast = useRef(null);
   const dispatch = useDispatch();
 
   const tasksRemaining = useSelector((state) => {
@@ -111,11 +112,24 @@ const FilterButtons = () => {
   //get all current tasks
   const allTasks = useSelector((state) => selectTasks(state));
   const onClearCompletedClicked = () => {
-    allTasks.forEach((task) => {
-      if (task.completed === true) {
-        dispatch(deleteTask(task.id));
-      }
+    toast.current.show({
+      severity: "info",
+      summary: "Success",
+      detail: "Completed Tasks Cleared",
+      life: 800,
     });
+
+    const deleteContent = () => {
+      allTasks.forEach((task) => {
+        if (task.completed === true) {
+          dispatch(deleteTask(task.id));
+        }
+      });
+    };
+    const toastComplete = () => {
+      setTimeout(deleteContent, 500);
+    };
+    toastComplete();
   };
 
   let disabledButtons = allTasks.length === 0 ? true : false;
@@ -130,6 +144,7 @@ const FilterButtons = () => {
         </div>
       }
     >
+      <Toast ref={toast} />
       <h2>Actions</h2>
       <div style={{ padding: 5 }}>
         <Button onClick={onMarkCompletedClicked} disabled={disabledButtons}>

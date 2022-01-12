@@ -10,7 +10,10 @@ import Task from "./tasks/Task";
 import { Card } from "primereact/card";
 // import Card from "../ui/CardTasklist";
 
-import { selectCategoryIds } from "./categories/categorySlice";
+import {
+  selectCategoryIds,
+  selectCategories,
+} from "./categories/categorySlice";
 import { selectFilteredTasks } from "./tasks/taskSlice";
 
 import classes from "./TaskList.module.css";
@@ -27,6 +30,7 @@ import {
 
 const TaskList = () => {
   const categoryIds = useSelector(selectCategoryIds);
+  const categories = useSelector(selectCategories);
   const filteredTasks = useSelector(selectFilteredTasks);
   const categoryLoadingStatus = useSelector((state) => state.categories.status);
   const taskLoadingStatus = useSelector((state) => state.tasks.status);
@@ -65,6 +69,13 @@ const TaskList = () => {
       //save the current CategoryId into a variable so it can be passed as a foreign key into the tasks
       let noTasksCounter = 0;
 
+      let categoryColor = "white";
+      categories.forEach((category) => {
+        if (category.id === categoryId) {
+          categoryColor = category.color;
+        }
+      });
+
       const tasks = filteredTasks.map((task) => {
         if (task.category === categoryId) {
           ++noTasksCounter;
@@ -78,12 +89,25 @@ const TaskList = () => {
         noTasksCounter > 0 ? (
           <ul className={classes.noBullets}>{tasks}</ul>
         ) : (
-          <EmptyCategory />
+          <EmptyCategory color={categoryColor} />
         );
       const header = <Category key={categoryId} id={categoryId} />;
+
       return (
-        <Card key={categoryId} id={categoryId} header={header}>
+        <Card
+          key={categoryId}
+          id={categoryId}
+          // header={header}
+          style={{
+            marginBottom: "2em",
+            borderRadius: "50px",
+            backgroundColor: "white",
+            borderColor: categoryColor,
+            width: "100%",
+          }}
+        >
           {/* <Category key={categoryId} id={categoryId} /> */}
+          {header}
           {renderedTasks}
         </Card>
       );
@@ -110,7 +134,13 @@ const TaskList = () => {
       filterStatus === "all"
     ) {
       return (
-        <Card>
+        <Card
+          style={{
+            marginBottom: "2em",
+            borderRadius: "20px",
+            width: "100%",
+          }}
+        >
           <NoCategories />
         </Card>
       );

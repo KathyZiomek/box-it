@@ -15,9 +15,10 @@ export const NoCategories = () => {
 
 //empty categories
 //all
-export const EmptyCategory = () => {
+export const EmptyCategory = (color) => {
+  const categoryColor = color.color;
   return (
-    <div>
+    <div style={{ color: categoryColor, padding: "10px", textAlign: "left" }}>
       <p>This category is empty.</p>
       <p>
         Go to "Create a Task" in order to create some tasks to populate this

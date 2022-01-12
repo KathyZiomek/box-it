@@ -191,7 +191,6 @@ const categoriesSlice = createSlice({
         state.httpErr = true;
       })
       .addCase(deleteCategory.fulfilled, categoriesAdapter.removeOne)
-
       .addCase(updateCategory.pending, (state) => {
         state.status = "pending";
       })

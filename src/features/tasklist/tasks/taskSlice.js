@@ -129,20 +129,33 @@ export const deleteTask = createAsyncThunk(
 
 export const updateTask = createAsyncThunk(
   "tasks/taskUpdated",
-  async (text) => {
+  async (
+    text,
+    { /*dispatch, getState,*/ rejectWithValue, fulfillWithValue }
+  ) => {
     const auth = getAuth();
     const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
 
     const initialTask = { text };
-    const response = await client(
-      `${databaseURL}/users/${uid}/tasks/${initialTask.text.id}.json?auth=${token}`,
-      { method: "PATCH", body: initialTask.text }
-    );
-    if (response === null) {
-      return initialTask.text;
-    } else {
-      return response;
+
+    try {
+      const response = await client(
+        `${databaseURL}/users/${uid}/tasks/${initialTask.text.id}.json?auth=${token}`,
+        { method: "PATCH", body: initialTask.text }
+      );
+      // if (response === null) {
+      //   return initialTask.text;
+      // } else {
+      //   return response;
+      // }
+      if (response === null) {
+        // console.log(response);
+        return rejectWithValue(response);
+      }
+      return fulfillWithValue(response);
+    } catch (error) {
+      throw rejectWithValue(error.message);
     }
   }
 );
@@ -179,9 +192,18 @@ const tasksSlice = createSlice({
         state.httpErr = true;
       })
       .addCase(deleteTask.fulfilled, tasksAdapter.removeOne)
+      .addCase(updateTask.pending, (state) => {
+        state.status = "pending";
+      })
       .addCase(updateTask.fulfilled, (state, { payload }) => {
+        state.status = "idle";
         const { id, ...changes } = payload;
+        state.httpErr = false;
         tasksAdapter.updateOne(state, { id, changes });
+      })
+      .addCase(updateTask.rejected, (state, action) => {
+        state.status = "idle";
+        state.httpErr = true;
       });
   },
 });

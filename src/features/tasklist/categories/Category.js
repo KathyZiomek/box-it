@@ -23,17 +23,16 @@ import classes from "./Category.module.css";
 
 //Destructure `props.id` since we only need the ID value
 const Category = ({ id }) => {
+  const [status, setStatus] = useState("idle");
+  const [isEditing, setEditing] = useState(false);
+  const [filter, setFilter] = useState("all");
+  const toast = useRef(null);
+
   const filterStatus = useSelector((state) => state.filters.status);
   const allTasks = useSelector((state) => selectTasks(state));
   const category = useSelector((state) => selectCategoryById(state, id));
   const { name, color } = category;
 
-  const [status, setStatus] = useState("idle");
-  // const [isToggled, setToggled] = useState(false);
-  const [isEditing, setEditing] = useState(false);
-  // const [isDeleting, setIsDeleting] = useState(false);
-  const [filter, setFilter] = useState("all");
-  const toast = useRef(null);
   const dispatch = useDispatch();
 
   const categoryInputRef = useRef();
@@ -42,16 +41,12 @@ const Category = ({ id }) => {
   if (filterStatus !== filter) {
     setFilter(filterStatus);
     setEditing(false);
-    // setToggled(false);
   }
 
   const cancelDelete = () => {
-    // setIsDeleting(false);
-    // setToggled(false);
     toast.current.show({
       severity: "info",
       summary: "Delete Canceled",
-      // detail: "",
       life: 1500,
     });
   };
@@ -71,8 +66,6 @@ const Category = ({ id }) => {
         }
       });
       dispatch(deleteCategory(category.id));
-      // setIsDeleting(false);
-      // setToggled(false);
     };
     const toastComplete = () => {
       setTimeout(deleteContent, 1500);
@@ -96,8 +89,6 @@ const Category = ({ id }) => {
     event.preventDefault();
     if (!isEditing) {
       setEditing(true);
-      // setIsDeleting(false);
-      // setToggled(false);
     } else {
       setEditing(false);
     }
@@ -155,19 +146,7 @@ const Category = ({ id }) => {
     }
   };
 
-  // const handleToggled = () => {
-  //   if (isToggled) {
-  //     setToggled(false);
-  //   } else {
-  //     if (isDeleting) {
-  //       return;
-  //     } else {
-  //       setToggled(true);
-  //     }
-  //   }
-  // };
-
-  let toggle = !isEditing /*&& !isDeleting */ ? (
+  let toggle = !isEditing ? (
     <div>
       <Button
         type="button"
@@ -198,19 +177,7 @@ const Category = ({ id }) => {
   ) : null;
 
   let categoryAppearance = !isEditing ? (
-    <div className={classes.categoryDiv}>
-      {/* <h3
-        id={category.id}
-        onClick={handleToggled}
-        className={classes.categoryTitle}
-        style={{
-          background: category.color,
-        }}
-      >
-        {name}
-      </h3> */}
-      {toggle}
-    </div>
+    <div className={classes.categoryDiv}>{toggle}</div>
   ) : (
     <form onSubmit={updateHandler} className={classes.editingForm}>
       <div className={classes.categoryDiv}>
@@ -267,11 +234,14 @@ const Category = ({ id }) => {
       ? "pi pi-chevron-down"
       : "pi pi-chevron-up";
     const className = `${options.className} p-jc-start`;
-    // const titleClassName = `${options.titleClassName} p-pl-1`;
 
     return (
       <div
-        style={{ border: category.color, background: category.color }}
+        style={{
+          borderRadius: "20px",
+          borderColor: "white",
+          background: category.color,
+        }}
         className={className}
       >
         <span style={{ color: "white", fontSize: "25px" }}>{name}</span>
@@ -289,7 +259,7 @@ const Category = ({ id }) => {
   };
 
   return (
-    <div style={{ marginBottom: 15, marginTop: 15 }}>
+    <div style={{ marginTop: 15 }}>
       <Toast ref={toast} />
       <Panel headerTemplate={template} toggleable collapsed>
         {categoryAppearance}
