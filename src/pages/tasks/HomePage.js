@@ -44,7 +44,8 @@ const HomePage = () => {
               onClick={signupButton}
               label="Not registered yet? Create an Account here."
               className="p-button-link"
-            />
+              // style={{ background: "red" }}
+            ></Button>
           </div>
         </Fragment>
       );
@@ -57,7 +58,7 @@ const HomePage = () => {
               onClick={loginButton}
               label="Already registered? Login here."
               className="p-button-link"
-            />
+            ></Button>
           </div>
         </Fragment>
       );

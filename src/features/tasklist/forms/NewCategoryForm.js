@@ -89,7 +89,7 @@ const NewCategoryForm = () => {
   if (success === true) {
     message = <Success />;
   } else if (success === false) {
-    message = <Failure />;
+    message = <Failure message={"Submit Failed."} />;
   } else if (success === "idle") {
     message = null;
   }

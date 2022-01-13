@@ -7,7 +7,6 @@ import {
 import { client } from "../../../api/client";
 
 import { uuidv4 } from "../../../common/RandomId";
-// import { ObjectLength } from "../../../common/ObjectLength";
 
 import {
   Firebase,
@@ -16,7 +15,6 @@ import {
   FirebaseUrl,
 } from "../../../api/Firebase";
 import { getAuth } from "firebase/auth";
-// import { useSelector } from "react-redux";
 
 const app = Firebase();
 const databaseURL = FirebaseUrl(app);

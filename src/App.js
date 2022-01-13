@@ -6,6 +6,13 @@ import React from "react";
 import "primereact/resources/themes/bootstrap4-light-blue/theme.css"; //theme
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css"; //icons
+import "primeflex/primeflex.css";
+import "react-transition-group";
+
+// <!-- Dependencies -->
+// <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
+// <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
+// <script src="https://unpkg.com/react-transition-group@4.4.2/dist/react-transition-group.js"></script>
 
 import { Route, Switch } from "react-router-dom";
 import Layout from "./features/layout/Layout";
@@ -16,6 +23,11 @@ import HomePage from "./pages/tasks/HomePage";
 
 import { useSelector } from "react-redux";
 import { selectUsers } from "./features/authentication/userSlice";
+
+import PrimeReact from "primereact/api";
+
+PrimeReact.ripple = true;
+PrimeReact.cssTransition = true; // Default value is true.
 
 function App() {
   const userCount = useSelector(selectUsers);

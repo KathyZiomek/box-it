@@ -1,6 +1,4 @@
-/**TODO: create SignUp component */
-
-import { useRef, useState } from "react";
+import { useRef, useState, Fragment } from "react";
 import { useDispatch } from "react-redux";
 
 import { fetchTasks } from "../tasklist/tasks/taskSlice";
@@ -8,70 +6,121 @@ import { fetchCategories } from "../tasklist/categories/categorySlice";
 import { userAdded } from "./userSlice";
 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { ReturnUid } from "../../api/Firebase";
 
 import ErrorMessages from "./ErrorMessages";
+import Failure from "../ui/Failure";
+import { emailValidation, passwordValidation } from "./userValidation";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
-
-import userValidation from "./userValidation";
+import { Password } from "primereact/password";
+import { Divider } from "primereact/divider";
+import { Message } from "primereact/message";
 
 const SignUp = () => {
   const [status, setStatus] = useState("idle");
-  const [error, setError] = useState();
+  const [success, setSuccess] = useState("idle");
+  const [value, setValue] = useState("");
+  const [emailWarning, setEmailWarning] = useState(false);
+  const [passwordWarning, setPasswordWarning] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const dispatch = useDispatch();
 
+  const handleClick = () => {
+    if (emailWarning === true && passwordWarning === true) {
+      setEmailWarning(false);
+      setPasswordWarning(false);
+    } else if (emailWarning === true) {
+      setEmailWarning(false);
+    } else if (passwordWarning === true) {
+      setPasswordWarning(false);
+    }
+    setSuccess("idle");
+  };
+
   const emailInputRef = useRef();
-  const passwordInputRef = useRef();
 
   const onRegister = (event) => {
     event.preventDefault();
     setStatus("loading");
 
     const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value;
+    const enteredPassword = value;
+    const trimmedEmail = enteredEmail.trim();
+    const trimmedPassword = enteredPassword.trim();
 
-    if (userValidation(enteredEmail) && userValidation(enteredPassword)) {
-      const trimmedEmail = enteredEmail.trim();
-      const trimmedPassword = enteredPassword.trim();
-
+    if (emailValidation(trimmedEmail) && passwordValidation(trimmedPassword)) {
       const auth = getAuth();
       createUserWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
-        .then((userCredential) => {
+        .then(() => {
           setStatus("idle");
-          // Registered and signed in
-          const user = userCredential.user;
+          const uid = ReturnUid(auth);
+          const currentUser = { [uid]: { id: uid, status: "loggedIn" } };
 
-          const uid = user.uid;
-          const text = { [uid]: { id: uid, status: "loggedIn" } };
-
-          dispatch(fetchCategories(uid)).then(dispatch(fetchTasks(uid)));
-          dispatch(userAdded(text));
+          dispatch(userAdded(currentUser));
+          dispatch(fetchCategories());
+          dispatch(fetchTasks());
         })
         .catch((error) => {
           setStatus("idle");
           const errorCode = error.code;
-          // console.log(errorCode);
-          const userMessage = ErrorMessages(errorCode);
-          setError(userMessage);
+          setErrorMessage(ErrorMessages(errorCode));
+          setSuccess(false);
         });
-    } else {
+    } else if (
+      emailValidation(enteredEmail) &&
+      !passwordValidation(enteredPassword)
+    ) {
+      setErrorMessage(ErrorMessages("auth/invalid-password"));
+      setSuccess(false);
+      setPasswordWarning(true);
+      setStatus("idle");
+      return;
+    } else if (
+      !emailValidation(enteredEmail) &&
+      passwordValidation(enteredPassword)
+    ) {
+      setErrorMessage(ErrorMessages("auth/invalid-email"));
+      setSuccess(false);
+      setEmailWarning(true);
+      setStatus("idle");
+      return;
+    } else if (
+      !emailValidation(enteredEmail) &&
+      !passwordValidation(enteredPassword)
+    ) {
+      setErrorMessage(ErrorMessages("both invalid"));
+
+      setSuccess(false);
+      setEmailWarning(true);
+      setPasswordWarning(true);
+      setStatus("idle");
       return;
     }
   };
+
+  const header = <h6>Pick a password</h6>;
+  const footer = (
+    <Fragment>
+      <Divider />
+      <p className="p-mt-2">Suggestions</p>
+      <ul className="p-pl-2 p-ml-2 p-mt-0" style={{ lineHeight: "1.5" }}>
+        <li>At least one lowercase</li>
+        <li>At least one uppercase</li>
+        <li>At least one numeric</li>
+        <li>Minimum 6 characters</li>
+      </ul>
+    </Fragment>
+  );
 
   let isLoading = status === "loading";
   let loader = isLoading ? (
     <div>
       <ProgressSpinner />
-    </div>
-  ) : null;
-
-  let errorMessage = error ? (
-    <div>
-      <p style={{ color: "red" }}>{error}</p>
     </div>
   ) : null;
 
@@ -86,32 +135,44 @@ const SignUp = () => {
             <InputText
               type="text"
               id="email"
-              required
               placeholder="Email Address"
               ref={emailInputRef}
               disabled={isLoading}
+              autoComplete="email"
+              onClick={handleClick}
             />
+            {emailWarning && (
+              <Message severity="error" text="Email requirements not met." />
+            )}
           </div>
           <br />
           <div className="p-inputgroup">
             <span className="p-inputgroup-addon">
               <i className="pi pi-ellipsis-h"></i>
             </span>
-            <InputText
-              type="password"
-              id="password"
-              required
+            <Password
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+              }}
+              onClick={handleClick}
+              header={header}
               placeholder="Password"
-              ref={passwordInputRef}
+              footer={footer}
               disabled={isLoading}
+              autoComplete="current-password"
+              toggleMask
             />
+            {passwordWarning && (
+              <Message severity="error" text="Password requirements not met." />
+            )}
           </div>
         </div>
         <br />
-        <Button>Sign Up</Button>
+        <Button onClick={handleClick}>Sign Up</Button>
       </form>
       {loader}
-      {errorMessage}
+      {!success && <Failure message={errorMessage} />}
     </Card>
   );
 };

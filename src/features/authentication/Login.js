@@ -9,66 +9,105 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { ReturnUid } from "../../api/Firebase";
 
 import ErrorMessages from "./ErrorMessages";
+import Failure from "../ui/Failure";
+import { emailValidation, passwordValidation } from "./userValidation";
 
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { Password } from "primereact/password";
+import { Message } from "primereact/message";
 
 const Login = () => {
   const [status, setStatus] = useState("idle");
-  const [error, setError] = useState();
+  const [success, setSuccess] = useState("idle");
+  // const [error, setError] = useState();
+  const [value, setValue] = useState("");
+  const [emailWarning, setEmailWarning] = useState(false);
+  const [passwordWarning, setPasswordWarning] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const dispatch = useDispatch();
 
+  const handleClick = () => {
+    if (emailWarning === true && passwordWarning === true) {
+      setEmailWarning(false);
+      setPasswordWarning(false);
+    } else if (emailWarning === true) {
+      setEmailWarning(false);
+    } else if (passwordWarning === true) {
+      setPasswordWarning(false);
+    }
+    setSuccess("idle");
+  };
+
   const emailInputRef = useRef();
-  const passwordInputRef = useRef();
 
   const onLogin = (event) => {
     setStatus("loading");
     event.preventDefault();
 
     const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = passwordInputRef.current.value;
+    const enteredPassword = value;
     const trimmedEmail = enteredEmail.trim();
     const trimmedPassword = enteredPassword.trim();
 
-    /**TODO: add anonymous login: https://firebase.google.com/docs/auth/web/anonymous-auth */
+    if (emailValidation(trimmedEmail) && passwordValidation(trimmedPassword)) {
+      /**TODO: add anonymous login: https://firebase.google.com/docs/auth/web/anonymous-auth */
 
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
-      .then(() => {
-        setStatus("idle");
-        // Signed in
-        // const user = userCredential.user;
-        // const token = ReturnToken(auth);
-        const uid = ReturnUid(auth);
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, trimmedEmail, trimmedPassword)
+        .then(() => {
+          setStatus("idle");
+          const uid = ReturnUid(auth);
+          const currentUser = { [uid]: { id: uid, status: "loggedIn" } };
 
-        const currentUser = { [uid]: { id: uid, status: "loggedIn" } };
-        // // const authUser = { uid: uid, token: token };
-
-        dispatch(userAdded(currentUser));
-        dispatch(fetchCategories());
-        dispatch(fetchTasks());
-      })
-      .catch((error) => {
-        setStatus("idle");
-        const errorCode = error.code;
-        console.log("Login error: " + errorCode);
-        const userMessage = ErrorMessages(errorCode);
-        setError(userMessage);
-      });
+          dispatch(userAdded(currentUser));
+          dispatch(fetchCategories());
+          dispatch(fetchTasks());
+        })
+        .catch((error) => {
+          setStatus("idle");
+          const errorCode = error.code;
+          setErrorMessage(ErrorMessages(errorCode));
+          setSuccess(false);
+        });
+    } else if (
+      emailValidation(enteredEmail) &&
+      !passwordValidation(enteredPassword)
+    ) {
+      setErrorMessage(ErrorMessages("auth/invalid-password"));
+      setSuccess(false);
+      setPasswordWarning(true);
+      setStatus("idle");
+      return;
+    } else if (
+      !emailValidation(enteredEmail) &&
+      passwordValidation(enteredPassword)
+    ) {
+      setErrorMessage(ErrorMessages("auth/invalid-email"));
+      setSuccess(false);
+      setEmailWarning(true);
+      setStatus("idle");
+      return;
+    } else if (
+      !emailValidation(enteredEmail) &&
+      !passwordValidation(enteredPassword)
+    ) {
+      setErrorMessage(ErrorMessages("both invalid"));
+      setSuccess(false);
+      setEmailWarning(true);
+      setPasswordWarning(true);
+      setStatus("idle");
+      return;
+    }
   };
 
   let isLoading = status === "loading";
   let loader = isLoading ? (
     <div>
       <ProgressSpinner />
-    </div>
-  ) : null;
-
-  let errorMessage = error ? (
-    <div>
-      <p style={{ color: "red" }}>{error}</p>
     </div>
   ) : null;
 
@@ -83,30 +122,43 @@ const Login = () => {
             <InputText
               type="text"
               id="email"
-              required
               placeholder="Email Address"
               ref={emailInputRef}
+              disabled={isLoading}
+              autoComplete="email"
+              onClick={handleClick}
             />
+            {emailWarning && (
+              <Message severity="error" text="Email requirements not met." />
+            )}
           </div>
           <br />
           <div className="p-inputgroup">
             <span className="p-inputgroup-addon">
               <i className="pi pi-ellipsis-h"></i>
             </span>
-            <InputText
-              type="password"
-              id="password"
-              required
+            <Password
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value);
+              }}
+              onClick={handleClick}
               placeholder="Password"
-              ref={passwordInputRef}
+              disabled={isLoading}
+              autoComplete="current-password"
+              toggleMask
+              feedback={false}
             />
+            {passwordWarning && (
+              <Message severity="error" text="Password requirements not met." />
+            )}
           </div>
         </div>
         <br />
         <Button>Login</Button>
       </form>
       {loader}
-      {errorMessage}
+      {!success && <Failure message={errorMessage} />}
     </Card>
   );
 };

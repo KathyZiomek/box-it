@@ -2,19 +2,18 @@ import { Messages } from "primereact/messages";
 
 import { useRef, useEffect } from "react";
 
-const Failure = () => {
+const Failure = (props) => {
   const msg = useRef(null);
 
   useEffect(() => {
     msg.current.show([
       {
         severity: "error",
-        summary: "Error - ",
-        detail: "Submit Failed.",
+        detail: props.message,
         sticky: true,
       },
     ]);
-  }, []);
+  }, [props.message]);
 
   return (
     <div>

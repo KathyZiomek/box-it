@@ -2,8 +2,22 @@
  * Currently set to "true" for testing purposes
  */
 
-const userValidation = (user) => {
-  return true;
+export const emailValidation = (email) => {
+  if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
-export default userValidation;
+export const passwordValidation = (password) => {
+  const mediumStrength = new RegExp(
+    "^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})."
+  );
+
+  if (mediumStrength.test(password)) {
+    return true;
+  } else {
+    return false;
+  }
+};
