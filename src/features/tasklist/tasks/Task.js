@@ -1,5 +1,5 @@
 /**This component outputs a single task list item - receives props from TaskList.js */
-import { React, useState, useRef } from "react";
+import { React, useState, useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { deleteTask, selectTaskById, updateTask } from "./taskSlice";
@@ -19,6 +19,7 @@ import { Message } from "primereact/message";
 import { Toast } from "primereact/toast";
 import { Panel } from "primereact/panel";
 import { Ripple } from "primereact/ripple";
+import "primeflex/primeflex.css";
 
 const Task = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
@@ -192,91 +193,10 @@ const Task = ({ id }) => {
   ) : null;
 
   let taskAppearance = !isEditing ? (
-    <div>
-      {duedateComponent}
-      <Button
-        style={{
-          border: categoryColor,
-          background: categoryColor,
-          width: "12rem",
-          marginRight: 12,
-        }}
-        onClick={onEdit}
-        icon="pi pi-pencil"
-        label="Edit Task"
-      ></Button>
-      <Button
-        style={{
-          border: categoryColor,
-          background: categoryColor,
-          width: "12rem",
-        }}
-        onClick={onDelete}
-        icon="pi pi-times"
-        label="Delete Task"
-      ></Button>
-    </div>
-  ) : (
-    <form onSubmit={updateHandler}>
-      <li id={task.id} className="p-field-checkbox">
-        <div>
-          <InputText
-            id={task.id}
-            defaultValue={name}
-            ref={taskInputRef}
-            disabled={isLoading}
-            onClick={handleClick}
-          />
-          {taskWarning && (
-            <Message severity="error" text="Task cannot be empty" />
-          )}
-        </div>
-        <div>
-          <label htmlFor="categoryName">Category: </label>
-          <Dropdown
-            options={categorySelectItems}
-            ref={categoryInputRef}
-            value={displayCategory}
-            disabled={isLoading}
-            onChange={(e) => {
-              setDropDownCategory(e.value);
-            }}
-            onMouseDown={handleClick}
-          />
-        </div>
-        <div>
-          <label htmlFor="duedate">Due Date: </label>
-          <Calendar
-            id="duedate"
-            name="duedate"
-            minDate={startDate}
-            maxDate={endDate}
-            value={newDuedate}
-            viewDate={newDuedate}
-            disabled={isLoading}
-            onChange={(e) => {
-              setNewDueDate(e.value);
-              handleClick();
-            }}
-          />
-          <Button
-            style={{
-              border: categoryColor,
-              background: categoryColor,
-              width: "12rem",
-              marginLeft: 12,
-            }}
-            icon="pi pi-times"
-            label="Empty Due Date"
-            onClick={(e) => {
-              e.preventDefault();
-              setNewDueDate("");
-            }}
-            disabled={isLoading}
-          ></Button>
-        </div>
-        <br />
-        <div>
+    <Fragment>
+      <div className="p-field">{duedateComponent}</div>
+      <div className="p-formgroup-inline p-fluid">
+        <div className="p-field">
           <Button
             style={{
               border: categoryColor,
@@ -284,22 +204,120 @@ const Task = ({ id }) => {
               width: "12rem",
               marginRight: 12,
             }}
-            icon="pi pi-check"
-            label="Update Task"
-            onClick={handleClick}
-            disabled={isLoading}
+            onClick={onEdit}
+            icon="pi pi-pencil"
+            label="Edit Task"
           ></Button>
+        </div>
+        <div className="p-field">
           <Button
             style={{
               border: categoryColor,
               background: categoryColor,
               width: "12rem",
             }}
-            onClick={onEdit}
+            onClick={onDelete}
             icon="pi pi-times"
-            label="Cancel"
-            disabled={isLoading}
+            label="Delete Task"
           ></Button>
+        </div>
+      </div>
+    </Fragment>
+  ) : (
+    <form onSubmit={updateHandler}>
+      <li id={task.id}>
+        <div className="p-fluid p-formgrid p-grid">
+          <div className="p-field p-col-6">
+            <label htmlFor="categoryName">Name: </label>
+            <InputText
+              id={task.id}
+              defaultValue={name}
+              ref={taskInputRef}
+              disabled={isLoading}
+              onClick={handleClick}
+            />
+            {taskWarning && (
+              <Message severity="error" text="Task cannot be empty" />
+            )}
+          </div>
+          <div className="p-field p-col-6">
+            <label htmlFor="categoryName">Category: </label>
+            <Dropdown
+              options={categorySelectItems}
+              ref={categoryInputRef}
+              value={displayCategory}
+              disabled={isLoading}
+              onChange={(e) => {
+                setDropDownCategory(e.value);
+              }}
+              onMouseDown={handleClick}
+            />
+          </div>
+        </div>
+        <div className="p-fluid p-formgrid p-grid">
+          <div className="p-field p-col-6">
+            <label htmlFor="duedate">Due Date: </label>
+            <Calendar
+              id="duedate"
+              name="duedate"
+              minDate={startDate}
+              maxDate={endDate}
+              value={newDuedate}
+              viewDate={newDuedate}
+              disabled={isLoading}
+              onChange={(e) => {
+                setNewDueDate(e.value);
+                handleClick();
+              }}
+            />
+          </div>
+        </div>
+        <div className="p-d-flex p-jc-between">
+          <div className="p-field">
+            <Button
+              style={{
+                border: categoryColor,
+                background: categoryColor,
+                width: "10rem",
+                // marginLeft: 12,
+                // marginTop: 12,
+              }}
+              icon="pi pi-times"
+              label="Clear Due Date"
+              onClick={(e) => {
+                e.preventDefault();
+                setNewDueDate("");
+              }}
+              disabled={isLoading}
+            ></Button>
+          </div>
+          <div className="p-field">
+            <Button
+              style={{
+                border: categoryColor,
+                background: categoryColor,
+                width: "10rem",
+                // marginRight: 12,
+              }}
+              icon="pi pi-check"
+              label="Update"
+              onClick={handleClick}
+              disabled={isLoading}
+            ></Button>
+          </div>
+          <div className="p-field">
+            <Button
+              style={{
+                border: categoryColor,
+                background: categoryColor,
+                width: "10rem",
+              }}
+              onClick={onEdit}
+              icon="pi pi-times"
+              label="Cancel"
+              disabled={isLoading}
+            ></Button>
+          </div>
         </div>
       </li>
     </form>
@@ -309,41 +327,53 @@ const Task = ({ id }) => {
     const toggleIcon = options.collapsed
       ? "pi pi-chevron-down"
       : "pi pi-chevron-up";
-    const className = `${options.className} p-jc-start`;
+    const className = `${options.className}`;
 
     return (
       <div
         style={{
-          borderRadius: "20px",
+          // borderRadius: "20px",
           borderColor: categoryColor,
-          background: "white",
+          // background: "red",
         }}
         className={className}
+        onClick={!isEditing ? options.onTogglerClick : null}
+        disabled={isEditing}
       >
-        <li id={task.id} className={"p-field-checkbox"}>
-          <Checkbox
-            inputId={task.id}
-            name="task"
-            value={name}
-            checked={completed}
-            onChange={handleCheckboxChanged}
-          />
-          <label
-            htmlFor={task.id}
-            style={{ color: categoryColor, fontSize: "18px", marginLeft: 15 }}
-          >
-            {name}
-          </label>
-        </li>
-        <button
-          style={{ color: categoryColor }}
-          className={options.togglerClassName}
-          onClick={options.onTogglerClick}
-          disabled={isEditing}
-        >
-          <span className={toggleIcon}></span>
-          <Ripple />
-        </button>
+        <div className="p-d-flex p-jc-between">
+          <div>
+            <Checkbox
+              inputId={task.id}
+              name="task"
+              value={name}
+              checked={completed}
+              onChange={handleCheckboxChanged}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor={task.id}
+              style={{
+                color: categoryColor,
+                fontSize: "18px",
+                marginLeft: 15,
+              }}
+            >
+              {name}
+            </label>
+          </div>
+          <div>
+            <button
+              style={{ color: categoryColor }}
+              className={options.togglerClassName}
+              onClick={!isEditing ? options.onTogglerClick : null}
+              disabled={isEditing}
+            >
+              <span className={toggleIcon}></span>
+              <Ripple />
+            </button>
+          </div>
+        </div>
       </div>
     );
   };

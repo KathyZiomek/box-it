@@ -100,7 +100,7 @@ const TaskList = () => {
           // header={header}
           style={{
             marginBottom: "2em",
-            borderRadius: "50px",
+            // borderRadius: "50px",
             backgroundColor: "white",
             borderColor: categoryColor,
             width: "100%",
@@ -137,7 +137,7 @@ const TaskList = () => {
         <Card
           style={{
             marginBottom: "2em",
-            borderRadius: "20px",
+            // borderRadius: "20px",
             width: "100%",
           }}
         >

@@ -238,7 +238,7 @@ const Category = ({ id }) => {
     return (
       <div
         style={{
-          borderRadius: "20px",
+          // borderRadius: "20px",
           borderColor: "white",
           background: category.color,
         }}

@@ -8,6 +8,7 @@ import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css"; //icons
 import "primeflex/primeflex.css";
 import "react-transition-group";
+import "./index.css";
 
 // <!-- Dependencies -->
 // <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
