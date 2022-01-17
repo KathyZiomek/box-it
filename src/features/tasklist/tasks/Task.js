@@ -1,25 +1,21 @@
 /**This component outputs a single task list item - receives props from TaskList.js */
 import { React, useState, useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
 import { deleteTask, selectTaskById, updateTask } from "./taskSlice";
 import { selectCategoryById } from "../categories/categorySlice";
 import { selectCategories } from "../categories/categorySlice";
-
-import DisplayDate from "./../../../common/DisplayDate";
 import { checkDates } from "../../../common/DateConversion";
-
-import { Checkbox } from "primereact/checkbox";
 import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { Message } from "primereact/message";
 import { Toast } from "primereact/toast";
-import { Panel } from "primereact/panel";
-import { Ripple } from "primereact/ripple";
 import "primeflex/primeflex.css";
+
+import { EditingButtons, NotEditingButtons } from "./taskPieces/TaskButtons";
+import { TaskCheckBoxes } from "./taskPieces/TaskCheckboxes";
+import { TaskDueDate } from "./taskPieces/TaskDueDate";
 
 const Task = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
@@ -29,11 +25,6 @@ const Task = ({ id }) => {
   const categoryColor = useSelector(
     (state) => selectCategoryById(state, category).color
   );
-
-  let displayDate = DisplayDate(duedate);
-  let duedateComponent = duedate ? (
-    <p style={{ color: categoryColor }}>Due Date: {displayDate}</p>
-  ) : null;
 
   let startDate = new Date("01-01-2022");
   let endDate = new Date("01-01-2023");
@@ -46,6 +37,7 @@ const Task = ({ id }) => {
   const [isEditing, setEditing] = useState(false);
   const [filter, setFilter] = useState("all");
   const [newDuedate, setNewDueDate] = useState(currentDate);
+  const [isComplete, setIsComplete] = useState(completed);
 
   const taskInputRef = useRef();
   const categoryInputRef = useRef();
@@ -115,6 +107,10 @@ const Task = ({ id }) => {
     }
     setDropDownCategory("");
     setNewDueDate(currentDate);
+
+    if (isComplete !== completed) {
+      setIsComplete(completed);
+    }
   };
 
   const updateHandler = async (event) => {
@@ -123,6 +119,7 @@ const Task = ({ id }) => {
     const enteredTask = taskInputRef.current.value;
     const enteredCategory = categoryInputRef.current.props.value;
     const enteredDueDate = newDuedate;
+    const enteredStatus = isComplete;
 
     if (enteredTask.length === 0) {
       setTaskWarning(true);
@@ -139,12 +136,14 @@ const Task = ({ id }) => {
         ...(trimmedTask !== task.name && { name: trimmedTask }),
         ...(!areEqual && { duedate: enteredDueDate }),
         ...(enteredCategory !== task.category && { category: enteredCategory }),
+        ...(enteredStatus !== task.completed && { completed: enteredStatus }),
       };
 
       if (
         text.name === undefined &&
         text.duedate === undefined &&
-        text.category === undefined
+        text.category === undefined &&
+        text.completed === undefined
       ) {
         setStatus("idle");
         setEditing(false);
@@ -164,10 +163,13 @@ const Task = ({ id }) => {
           });
           setStatus("idle");
         } else if (response.type === "tasks/taskUpdated/fulfilled") {
+          /**TODO: this line is resulting in an error sometimes but not other times - fix */
+
           if (text.category === undefined) {
-            setEditing(false);
             setStatus("idle");
             setSuccess("idle");
+            setIsComplete(enteredStatus);
+            setEditing(false);
           } else if (text.category !== undefined) {
             setStatus("idle");
             setSuccess("idle");
@@ -177,12 +179,15 @@ const Task = ({ id }) => {
     }
   };
 
-  const handleCheckboxChanged = (event) => {
-    const text = {
-      id: task.id,
-      completed: event.checked,
-    };
-    dispatch(updateTask(text));
+  const markInProgress = () => {
+    if (isComplete) {
+      setIsComplete(false);
+    }
+  };
+  const markComplete = () => {
+    if (!isComplete) {
+      setIsComplete(true);
+    }
   };
 
   let isLoading = status === "loading";
@@ -194,34 +199,14 @@ const Task = ({ id }) => {
 
   let taskAppearance = !isEditing ? (
     <Fragment>
-      <div className="p-field">{duedateComponent}</div>
-      <div className="p-formgroup-inline p-fluid">
-        <div className="p-field">
-          <Button
-            style={{
-              border: categoryColor,
-              background: categoryColor,
-              width: "12rem",
-              marginRight: 12,
-            }}
-            onClick={onEdit}
-            icon="pi pi-pencil"
-            label="Edit Task"
-          ></Button>
-        </div>
-        <div className="p-field">
-          <Button
-            style={{
-              border: categoryColor,
-              background: categoryColor,
-              width: "12rem",
-            }}
-            onClick={onDelete}
-            icon="pi pi-times"
-            label="Delete Task"
-          ></Button>
-        </div>
+      <div className="p-field">
+        <TaskDueDate duedate={duedate} />
       </div>
+      <NotEditingButtons
+        categoryColor={categoryColor}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
     </Fragment>
   ) : (
     <form onSubmit={updateHandler}>
@@ -271,120 +256,32 @@ const Task = ({ id }) => {
               }}
             />
           </div>
-        </div>
-        <div className="p-d-flex p-jc-between">
-          <div className="p-field">
-            <Button
-              style={{
-                border: categoryColor,
-                background: categoryColor,
-                width: "10rem",
-                // marginLeft: 12,
-                // marginTop: 12,
-              }}
-              icon="pi pi-times"
-              label="Clear Due Date"
-              onClick={(e) => {
-                e.preventDefault();
-                setNewDueDate("");
-              }}
-              disabled={isLoading}
-            ></Button>
-          </div>
-          <div className="p-field">
-            <Button
-              style={{
-                border: categoryColor,
-                background: categoryColor,
-                width: "10rem",
-                // marginRight: 12,
-              }}
-              icon="pi pi-check"
-              label="Update"
-              onClick={handleClick}
-              disabled={isLoading}
-            ></Button>
-          </div>
-          <div className="p-field">
-            <Button
-              style={{
-                border: categoryColor,
-                background: categoryColor,
-                width: "10rem",
-              }}
-              onClick={onEdit}
-              icon="pi pi-times"
-              label="Cancel"
-              disabled={isLoading}
-            ></Button>
+          <div className="p-field p-col-6">
+            <TaskCheckBoxes
+              id={task.id}
+              name={name}
+              isComplete={isComplete}
+              markInProgress={markInProgress}
+              markComplete={markComplete}
+            />
           </div>
         </div>
+        <EditingButtons
+          categoryColor={categoryColor}
+          onEdit={onEdit}
+          setNewDueDate={setNewDueDate}
+          isLoading={isLoading}
+          handleClick={handleClick}
+        />
       </li>
     </form>
   );
 
-  const template = (options) => {
-    const toggleIcon = options.collapsed
-      ? "pi pi-chevron-down"
-      : "pi pi-chevron-up";
-    const className = `${options.className}`;
-
-    return (
-      <div
-        style={{
-          // borderRadius: "20px",
-          borderColor: categoryColor,
-          // background: "red",
-        }}
-        className={className}
-        onClick={!isEditing ? options.onTogglerClick : null}
-        disabled={isEditing}
-      >
-        <div className="p-d-flex p-jc-between">
-          <div>
-            <Checkbox
-              inputId={task.id}
-              name="task"
-              value={name}
-              checked={completed}
-              onChange={handleCheckboxChanged}
-            />
-          </div>
-          <div>
-            <label
-              htmlFor={task.id}
-              style={{
-                color: categoryColor,
-                fontSize: "18px",
-                marginLeft: 15,
-              }}
-            >
-              {name}
-            </label>
-          </div>
-          <div>
-            <button
-              style={{ color: categoryColor }}
-              className={options.togglerClassName}
-              onClick={!isEditing ? options.onTogglerClick : null}
-              disabled={isEditing}
-            >
-              <span className={toggleIcon}></span>
-              <Ripple />
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
-    <div style={{ marginBottom: 15, marginTop: 15 }}>
+    <div style={{ color: categoryColor }}>
       <Toast ref={toast} />
-      <Panel headerTemplate={template} toggleable collapsed>
-        {taskAppearance}
-        {loader}
-      </Panel>
+      {taskAppearance}
+      {loader}
     </div>
   );
 };

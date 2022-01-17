@@ -19,6 +19,7 @@ import { selectFilteredTasks } from "./tasks/taskSlice";
 import classes from "./TaskList.module.css";
 
 import { ProgressSpinner } from "primereact/progressspinner";
+import { Accordion, AccordionTab } from "primereact/accordion";
 
 //import tasklist messages
 import {
@@ -79,7 +80,11 @@ const TaskList = () => {
       const tasks = filteredTasks.map((task) => {
         if (task.category === categoryId) {
           ++noTasksCounter;
-          return <Task key={task.id} id={task.id} categories={categoryIds} />;
+          return (
+            <AccordionTab key={task.id} id={task.id} header={task.name}>
+              <Task key={task.id} id={task.id} categories={categoryIds} />
+            </AccordionTab>
+          );
         } else {
           return null;
         }
@@ -87,7 +92,9 @@ const TaskList = () => {
 
       let renderedTasks =
         noTasksCounter > 0 ? (
-          <ul className={classes.noBullets}>{tasks}</ul>
+          <Accordion multiple /*className={classes.noBullets}*/>
+            {tasks}
+          </Accordion>
         ) : (
           <EmptyCategory color={categoryColor} />
         );
