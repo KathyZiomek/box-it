@@ -24,3 +24,6 @@ yarn-error.log*
 
 # Firebase config
 **/src/api/Firebase.js
+
+# debugging files
+**/src/features/tasklist/tasks/taskvariables.txt

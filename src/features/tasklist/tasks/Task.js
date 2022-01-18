@@ -28,7 +28,8 @@ const Task = ({ id }) => {
 
   let startDate = new Date("01-01-2022");
   let endDate = new Date("01-01-2023");
-  let currentDate = new Date(duedate);
+  let originalDueDate =
+    duedate != null && duedate !== "" ? new Date(duedate) : "";
 
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
@@ -36,7 +37,7 @@ const Task = ({ id }) => {
   const [taskWarning, setTaskWarning] = useState(false);
   const [isEditing, setEditing] = useState(false);
   const [filter, setFilter] = useState("all");
-  const [newDuedate, setNewDueDate] = useState(currentDate);
+  const [newDueDate, setNewDueDate] = useState(originalDueDate);
   const [isComplete, setIsComplete] = useState(completed);
 
   const taskInputRef = useRef();
@@ -106,7 +107,7 @@ const Task = ({ id }) => {
       setSuccess("idle");
     }
     setDropDownCategory("");
-    setNewDueDate(currentDate);
+    setNewDueDate(originalDueDate);
 
     if (isComplete !== completed) {
       setIsComplete(completed);
@@ -118,7 +119,7 @@ const Task = ({ id }) => {
 
     const enteredTask = taskInputRef.current.value;
     const enteredCategory = categoryInputRef.current.props.value;
-    const enteredDueDate = newDuedate;
+    const enteredDueDate = newDueDate;
     const enteredStatus = isComplete;
 
     if (enteredTask.length === 0) {
@@ -129,7 +130,7 @@ const Task = ({ id }) => {
     } else {
       const trimmedTask = enteredTask.trim();
 
-      let areEqual = checkDates(enteredDueDate, currentDate);
+      let areEqual = checkDates(enteredDueDate, originalDueDate);
 
       let text = {
         id: task.id,
@@ -138,6 +139,7 @@ const Task = ({ id }) => {
         ...(enteredCategory !== task.category && { category: enteredCategory }),
         ...(enteredStatus !== task.completed && { completed: enteredStatus }),
       };
+      console.log(text);
 
       if (
         text.name === undefined &&
@@ -148,7 +150,6 @@ const Task = ({ id }) => {
         setStatus("idle");
         setEditing(false);
         setDropDownCategory("");
-        return;
       } else {
         setStatus("loading");
         const response = await dispatch(updateTask(text));
@@ -199,9 +200,7 @@ const Task = ({ id }) => {
 
   let taskAppearance = !isEditing ? (
     <Fragment>
-      <div className="p-field">
-        <TaskDueDate duedate={duedate} />
-      </div>
+      <TaskDueDate duedate={duedate} />
       <NotEditingButtons
         categoryColor={categoryColor}
         onEdit={onEdit}
@@ -247,8 +246,8 @@ const Task = ({ id }) => {
               name="duedate"
               minDate={startDate}
               maxDate={endDate}
-              value={newDuedate}
-              viewDate={newDuedate}
+              value={newDueDate}
+              viewDate={newDueDate}
               disabled={isLoading}
               onChange={(e) => {
                 setNewDueDate(e.value);

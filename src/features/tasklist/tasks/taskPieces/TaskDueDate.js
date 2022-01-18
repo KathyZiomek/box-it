@@ -2,14 +2,16 @@ import DisplayDate from "../../../../common/DisplayDate";
 import { InputText } from "primereact/inputtext";
 
 export const TaskDueDate = (props) => {
-  if (props.duedate) {
-    let displayDate = DisplayDate(props.duedate);
-
+  let textDate;
+  if (props.duedate != null && props.duedate !== "") {
+    textDate = DisplayDate(props.duedate);
     return (
-      <div className="p-fluid">
-        <div className="p-field">
-          <label htmlFor="displayDate">Due Date:</label>
-          <InputText id="displayDate" value={displayDate} disabled />
+      <div className="p-field">
+        <div className="p-fluid">
+          <div className="p-field">
+            <label htmlFor="textDate">Due Date:</label>
+            <InputText id="textDate" value={textDate} disabled />
+          </div>
         </div>
       </div>
     );
