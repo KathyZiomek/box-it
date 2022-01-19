@@ -33,7 +33,7 @@ const Task = ({ id }) => {
 
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
-  const [dropDownCategory, setDropDownCategory] = useState("");
+  const [dropDownCategory, setDropDownCategory] = useState(category);
   const [taskWarning, setTaskWarning] = useState(false);
   const [isEditing, setEditing] = useState(false);
   const [filter, setFilter] = useState("all");
@@ -41,7 +41,6 @@ const Task = ({ id }) => {
   const [isComplete, setIsComplete] = useState(completed);
 
   const taskInputRef = useRef();
-  const categoryInputRef = useRef();
   const toast = useRef(null);
 
   const dispatch = useDispatch();
@@ -60,11 +59,6 @@ const Task = ({ id }) => {
       };
     }
   });
-
-  let displayCategory =
-    dropDownCategory !== category && dropDownCategory.length === 0
-      ? category
-      : dropDownCategory;
 
   const handleClick = () => {
     if (taskWarning === true) {
@@ -106,7 +100,7 @@ const Task = ({ id }) => {
     if (success === false) {
       setSuccess("idle");
     }
-    setDropDownCategory("");
+    setDropDownCategory(category);
     setNewDueDate(originalDueDate);
 
     if (isComplete !== completed) {
@@ -118,7 +112,7 @@ const Task = ({ id }) => {
     event.preventDefault();
 
     const enteredTask = taskInputRef.current.value;
-    const enteredCategory = categoryInputRef.current.props.value;
+    const enteredCategory = dropDownCategory;
     const enteredDueDate = newDueDate;
     const enteredStatus = isComplete;
 
@@ -142,14 +136,13 @@ const Task = ({ id }) => {
       console.log(text);
 
       if (
-        text.name === undefined &&
-        text.duedate === undefined &&
-        text.category === undefined &&
-        text.completed === undefined
+        text.name == null &&
+        text.duedate == null &&
+        text.category == null &&
+        text.completed == null
       ) {
         setStatus("idle");
         setEditing(false);
-        setDropDownCategory("");
       } else {
         setStatus("loading");
         const response = await dispatch(updateTask(text));
@@ -165,15 +158,11 @@ const Task = ({ id }) => {
           setStatus("idle");
         } else if (response.type === "tasks/taskUpdated/fulfilled") {
           /**TODO: this line is resulting in an error sometimes but not other times - fix */
-
           if (text.category === undefined) {
             setStatus("idle");
             setSuccess("idle");
             setIsComplete(enteredStatus);
             setEditing(false);
-          } else if (text.category !== undefined) {
-            setStatus("idle");
-            setSuccess("idle");
           }
         }
       }
@@ -228,8 +217,7 @@ const Task = ({ id }) => {
             <label htmlFor="categoryName">Category: </label>
             <Dropdown
               options={categorySelectItems}
-              ref={categoryInputRef}
-              value={displayCategory}
+              value={dropDownCategory}
               disabled={isLoading}
               onChange={(e) => {
                 setDropDownCategory(e.value);
