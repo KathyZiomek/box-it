@@ -60,15 +60,6 @@ const Task = ({ id }) => {
     }
   });
 
-  const handleClick = () => {
-    if (taskWarning === true) {
-      setTaskWarning(false);
-    } else if (taskWarning === true) {
-      setTaskWarning(false);
-    }
-    setSuccess("idle");
-  };
-
   if (filterStatus !== filter) {
     setFilter(filterStatus);
     setEditing(false);
@@ -93,12 +84,26 @@ const Task = ({ id }) => {
     toastComplete();
   };
 
+  const handleClick = () => {
+    if (taskWarning === true) {
+      setTaskWarning(false);
+    }
+    setSuccess("idle");
+  };
+
   const onEdit = (event) => {
     event.preventDefault();
     handleClick();
-    !isEditing ? setEditing(true) : setEditing(false);
-    if (success === false) {
-      setSuccess("idle");
+    if (!isEditing) {
+      setEditing(true);
+    }
+  };
+
+  const onCancel = (event) => {
+    event.preventDefault();
+    handleClick();
+    if (isEditing) {
+      setEditing(false);
     }
     setDropDownCategory(category);
     setNewDueDate(originalDueDate);
@@ -110,6 +115,7 @@ const Task = ({ id }) => {
 
   const updateHandler = async (event) => {
     event.preventDefault();
+    console.log("test");
 
     const enteredTask = taskInputRef.current.value;
     const enteredCategory = dropDownCategory;
@@ -161,7 +167,6 @@ const Task = ({ id }) => {
           if (text.category === undefined) {
             setStatus("idle");
             setSuccess("idle");
-            setIsComplete(enteredStatus);
             setEditing(false);
           }
         }
@@ -259,6 +264,7 @@ const Task = ({ id }) => {
           setNewDueDate={setNewDueDate}
           isLoading={isLoading}
           handleClick={handleClick}
+          onCancel={onCancel}
         />
       </li>
     </form>

@@ -73,7 +73,7 @@ export const EditingButtons = (props) => {
             background: props.categoryColor,
             width: "10rem",
           }}
-          onClick={props.onEdit}
+          onClick={props.onCancel}
           icon="pi pi-times"
           label="Cancel"
           disabled={props.isLoading}
