@@ -32,15 +32,16 @@ const Task = ({ id }) => {
     duedate != null && duedate !== "" ? new Date(duedate) : "";
 
   const [status, setStatus] = useState("idle");
-  const [success, setSuccess] = useState("idle");
   const [dropDownCategory, setDropDownCategory] = useState(category);
+  const [newDueDate, setNewDueDate] = useState(originalDueDate);
+  const [newTaskName, setNewTaskName] = useState(name);
   const [taskWarning, setTaskWarning] = useState(false);
   const [isEditing, setEditing] = useState(false);
   const [filter, setFilter] = useState("all");
-  const [newDueDate, setNewDueDate] = useState(originalDueDate);
+
   const [isComplete, setIsComplete] = useState(completed);
 
-  const taskInputRef = useRef();
+  // const taskInputRef = useRef();
   const toast = useRef(null);
 
   const dispatch = useDispatch();
@@ -88,7 +89,6 @@ const Task = ({ id }) => {
     if (taskWarning === true) {
       setTaskWarning(false);
     }
-    setSuccess("idle");
   };
 
   const onEdit = (event) => {
@@ -107,6 +107,7 @@ const Task = ({ id }) => {
     }
     setDropDownCategory(category);
     setNewDueDate(originalDueDate);
+    setNewTaskName(name);
 
     if (isComplete !== completed) {
       setIsComplete(completed);
@@ -117,14 +118,14 @@ const Task = ({ id }) => {
     event.preventDefault();
     console.log("test");
 
-    const enteredTask = taskInputRef.current.value;
+    const enteredTask = newTaskName;
     const enteredCategory = dropDownCategory;
     const enteredDueDate = newDueDate;
     const enteredStatus = isComplete;
+    console.log(enteredTask);
 
     if (enteredTask.length === 0) {
       setTaskWarning(true);
-      setSuccess(false);
       setStatus("idle");
       return;
     } else {
@@ -154,7 +155,6 @@ const Task = ({ id }) => {
         const response = await dispatch(updateTask(text));
 
         if (response.type === "tasks/taskUpdated/rejected") {
-          setSuccess(false);
           toast.current.show({
             severity: "error",
             summary: `Error`,
@@ -163,10 +163,8 @@ const Task = ({ id }) => {
           });
           setStatus("idle");
         } else if (response.type === "tasks/taskUpdated/fulfilled") {
-          /**TODO: this line is resulting in an error sometimes but not other times - fix */
-          if (text.category === undefined) {
+          if (text.name == null && text.category == null) {
             setStatus("idle");
-            setSuccess("idle");
             setEditing(false);
           }
         }
@@ -209,9 +207,10 @@ const Task = ({ id }) => {
             <label htmlFor="categoryName">Name: </label>
             <InputText
               id={task.id}
-              defaultValue={name}
-              ref={taskInputRef}
+              value={newTaskName}
+              // ref={taskInputRef}
               disabled={isLoading}
+              onChange={(e) => setNewTaskName(e.target.value)}
               onClick={handleClick}
             />
             {taskWarning && (
