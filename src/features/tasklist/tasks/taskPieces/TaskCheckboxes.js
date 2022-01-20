@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { RadioButton } from "primereact/radiobutton";
 
 export const TaskCheckBoxes = (props) => {
@@ -9,7 +8,7 @@ export const TaskCheckBoxes = (props) => {
     status = false;
   }
   return (
-    <Fragment>
+    <div className="p-field p-col-6">
       <label>Status:</label>
       <div className="p-formgroup-inline">
         <div className="p-field-checkbox">
@@ -33,6 +32,6 @@ export const TaskCheckBoxes = (props) => {
           <label htmlFor="complete">Complete</label>
         </div>
       </div>
-    </Fragment>
+    </div>
   );
 };

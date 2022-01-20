@@ -5,17 +5,16 @@ import { deleteTask, selectTaskById, updateTask } from "./taskSlice";
 import { selectCategoryById } from "../categories/categorySlice";
 import { selectCategories } from "../categories/categorySlice";
 import { checkDates } from "../../../common/DateConversion";
-import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
-import { Message } from "primereact/message";
 import { Toast } from "primereact/toast";
 import "primeflex/primeflex.css";
 
 import { EditingButtons, NotEditingButtons } from "./taskPieces/TaskButtons";
 import { TaskCheckBoxes } from "./taskPieces/TaskCheckboxes";
 import { TaskDueDate } from "./taskPieces/TaskDueDate";
+import { TaskName } from "./taskPieces/TaskName";
 
 const Task = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
@@ -41,7 +40,6 @@ const Task = ({ id }) => {
 
   const [isComplete, setIsComplete] = useState(completed);
 
-  // const taskInputRef = useRef();
   const toast = useRef(null);
 
   const dispatch = useDispatch();
@@ -116,13 +114,11 @@ const Task = ({ id }) => {
 
   const updateHandler = async (event) => {
     event.preventDefault();
-    console.log("test");
 
     const enteredTask = newTaskName;
     const enteredCategory = dropDownCategory;
     const enteredDueDate = newDueDate;
     const enteredStatus = isComplete;
-    console.log(enteredTask);
 
     if (enteredTask.length === 0) {
       setTaskWarning(true);
@@ -203,20 +199,14 @@ const Task = ({ id }) => {
     <form onSubmit={updateHandler}>
       <li id={task.id}>
         <div className="p-fluid p-formgrid p-grid">
-          <div className="p-field p-col-6">
-            <label htmlFor="categoryName">Name: </label>
-            <InputText
-              id={task.id}
-              value={newTaskName}
-              // ref={taskInputRef}
-              disabled={isLoading}
-              onChange={(e) => setNewTaskName(e.target.value)}
-              onClick={handleClick}
-            />
-            {taskWarning && (
-              <Message severity="error" text="Task cannot be empty" />
-            )}
-          </div>
+          <TaskName
+            id={task.id}
+            newTaskName={newTaskName}
+            isLoading={isLoading}
+            setNewTaskName={setNewTaskName}
+            handleClick={handleClick}
+            taskWarning={taskWarning}
+          />
           <div className="p-field p-col-6">
             <label htmlFor="categoryName">Category: </label>
             <Dropdown
@@ -247,15 +237,13 @@ const Task = ({ id }) => {
               }}
             />
           </div>
-          <div className="p-field p-col-6">
-            <TaskCheckBoxes
-              id={task.id}
-              name={name}
-              isComplete={isComplete}
-              markInProgress={markInProgress}
-              markComplete={markComplete}
-            />
-          </div>
+          <TaskCheckBoxes
+            id={task.id}
+            name={name}
+            isComplete={isComplete}
+            markInProgress={markInProgress}
+            markComplete={markComplete}
+          />
         </div>
         <EditingButtons
           categoryColor={categoryColor}
