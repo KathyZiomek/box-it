@@ -3,11 +3,9 @@ import { React, useState, useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteTask, selectTaskById, updateTask } from "./taskSlice";
 import { selectCategoryById } from "../categories/categorySlice";
-import { selectCategories } from "../categories/categorySlice";
+
 import { checkDates } from "../../../common/DateConversion";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { Calendar } from "primereact/calendar";
-import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
 import "primeflex/primeflex.css";
 
@@ -15,6 +13,8 @@ import { EditingButtons, NotEditingButtons } from "./taskPieces/TaskButtons";
 import { TaskCheckBoxes } from "./taskPieces/TaskCheckboxes";
 import { TaskDueDate } from "./taskPieces/TaskDueDate";
 import { TaskName } from "./taskPieces/TaskName";
+import { TaskCalendar } from "./taskPieces/TaskCalendar";
+import { TaskCategoryDropDown } from "./taskPieces/TaskCategoryDropDown";
 
 const Task = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
@@ -25,8 +25,6 @@ const Task = ({ id }) => {
     (state) => selectCategoryById(state, category).color
   );
 
-  let startDate = new Date("01-01-2022");
-  let endDate = new Date("01-01-2023");
   let originalDueDate =
     duedate != null && duedate !== "" ? new Date(duedate) : "";
 
@@ -43,21 +41,6 @@ const Task = ({ id }) => {
   const toast = useRef(null);
 
   const dispatch = useDispatch();
-
-  const categories = useSelector(selectCategories);
-
-  let categorySelectItems = null;
-  categorySelectItems = categories.map((category) => {
-    if (categorySelectItems === null) {
-      return { label: category.name, value: category.id };
-    } else {
-      return {
-        ...categorySelectItems,
-        label: category.name,
-        value: category.id,
-      };
-    }
-  });
 
   if (filterStatus !== filter) {
     setFilter(filterStatus);
@@ -196,64 +179,44 @@ const Task = ({ id }) => {
       />
     </Fragment>
   ) : (
-    <form onSubmit={updateHandler}>
-      <li id={task.id}>
-        <div className="p-fluid p-formgrid p-grid">
-          <TaskName
-            id={task.id}
-            newTaskName={newTaskName}
-            isLoading={isLoading}
-            setNewTaskName={setNewTaskName}
-            handleClick={handleClick}
-            taskWarning={taskWarning}
-          />
-          <div className="p-field p-col-6">
-            <label htmlFor="categoryName">Category: </label>
-            <Dropdown
-              options={categorySelectItems}
-              value={dropDownCategory}
-              disabled={isLoading}
-              onChange={(e) => {
-                setDropDownCategory(e.value);
-              }}
-              onMouseDown={handleClick}
-            />
-          </div>
-        </div>
-        <div className="p-fluid p-formgrid p-grid">
-          <div className="p-field p-col-6">
-            <label htmlFor="duedate">Due Date: </label>
-            <Calendar
-              id="duedate"
-              name="duedate"
-              minDate={startDate}
-              maxDate={endDate}
-              value={newDueDate}
-              viewDate={newDueDate}
-              disabled={isLoading}
-              onChange={(e) => {
-                setNewDueDate(e.value);
-                handleClick();
-              }}
-            />
-          </div>
-          <TaskCheckBoxes
-            id={task.id}
-            name={name}
-            isComplete={isComplete}
-            markInProgress={markInProgress}
-            markComplete={markComplete}
-          />
-        </div>
-        <EditingButtons
-          categoryColor={categoryColor}
-          onEdit={onEdit}
-          setNewDueDate={setNewDueDate}
+    <form id={task.id} onSubmit={updateHandler}>
+      <div className="p-fluid p-formgrid p-grid">
+        <TaskName
+          id={task.id}
+          newTaskName={newTaskName}
           isLoading={isLoading}
+          setNewTaskName={setNewTaskName}
           handleClick={handleClick}
-          onCancel={onCancel}
+          taskWarning={taskWarning}
         />
-      </li>
+        <TaskCategoryDropDown
+          dropDownCategory={dropDownCategory}
+          isLoading={isLoading}
+          setDropDownCategory={setDropDownCategory}
+          handleClick={handleClick}
+        />
+        <TaskCalendar
+          newDueDate={newDueDate}
+          isLoading={isLoading}
+          setNewDueDate={setNewDueDate}
+          handleClick={handleClick}
+        />
+        <TaskCheckBoxes
+          id={task.id}
+          name={name}
+          isComplete={isComplete}
+          markInProgress={markInProgress}
+          markComplete={markComplete}
+        />
+      </div>
+      <EditingButtons
+        categoryColor={categoryColor}
+        onEdit={onEdit}
+        setNewDueDate={setNewDueDate}
+        isLoading={isLoading}
+        handleClick={handleClick}
+        onCancel={onCancel}
+      />
     </form>
   );
 
