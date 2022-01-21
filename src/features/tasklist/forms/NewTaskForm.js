@@ -1,11 +1,10 @@
 /**This file contains the component that outputs the "Create a Task" form which is output on the CreateTask page */
 
 import React from "react";
-import { useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 import { saveNewTask } from "../tasks/taskSlice";
-import { selectCategories } from "../categories/categorySlice";
 
 import Success from "../../ui/Success";
 import Failure from "../../ui/Failure";
@@ -13,9 +12,8 @@ import Failure from "../../ui/Failure";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Calendar } from "primereact/calendar";
-import { Dropdown } from "primereact/dropdown";
-import { Message } from "primereact/message";
 import { TaskFormName } from "./taskFormPieces/TaskFormName";
+import { TaskFormCategory } from "./taskFormPieces/TaskFormCategory";
 
 const NewTaskForm = () => {
   const [task, setTask] = useState("");
@@ -25,22 +23,8 @@ const NewTaskForm = () => {
   const [category, setCategory] = useState("Select a Category");
   const [taskWarning, setTaskWarning] = useState(false);
   const [categoryWarning, setCategoryWarning] = useState(false);
-  const categories = useSelector(selectCategories);
 
   const dispatch = useDispatch();
-
-  let categorySelectItems = null;
-  categorySelectItems = categories.map((category) => {
-    if (categorySelectItems === null) {
-      return { label: category.name, value: category.id };
-    } else {
-      return {
-        ...categorySelectItems,
-        label: category.name,
-        value: category.id,
-      };
-    }
-  });
 
   const handleClick = () => {
     if (taskWarning === true && categoryWarning === true) {
@@ -54,14 +38,11 @@ const NewTaskForm = () => {
     setSuccess("idle");
   };
 
-  // const taskInputRef = useRef();
-  const categoryInputRef = useRef();
-
   const submitHandler = async (event) => {
     event.preventDefault();
 
     const enteredTask = task;
-    const enteredCategory = categoryInputRef.current.props.value;
+    const enteredCategory = category;
 
     if (enteredTask.length !== 0) {
       if (enteredCategory !== "Select a Category") {
@@ -134,23 +115,13 @@ const NewTaskForm = () => {
           handleClick={handleClick}
           taskWarning={taskWarning}
         />
-        <div>
-          <label htmlFor="categoryName">Category Name</label>
-          <Dropdown
-            options={categorySelectItems}
-            placeholder="Select a Category"
-            ref={categoryInputRef}
-            value={category}
-            disabled={isLoading}
-            onChange={(e) => {
-              setCategory(e.value);
-            }}
-            onMouseDown={handleClick}
-          />
-          {categoryWarning && (
-            <Message severity="error" text="Must select a category" />
-          )}
-        </div>
+        <TaskFormCategory
+          category={category}
+          isLoading={isLoading}
+          setCategory={setCategory}
+          handleClick={handleClick}
+          categoryWarning={categoryWarning}
+        />
         <div>
           <label htmlFor="duedate">Due Date</label>
           <Calendar

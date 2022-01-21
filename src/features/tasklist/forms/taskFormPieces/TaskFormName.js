@@ -6,7 +6,7 @@ export const TaskFormName = (props) => {
 
   return (
     <div className="p-field">
-      <label htmlFor="taskName">Task Name</label>
+      <label htmlFor="taskName">Task Name:</label>
       <InputText
         type="text"
         id="taskName"
