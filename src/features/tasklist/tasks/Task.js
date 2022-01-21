@@ -1,13 +1,11 @@
 /**This component outputs a single task list item - receives props from TaskList.js */
 import { React, useState, useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
+
 import { deleteTask, selectTaskById, updateTask } from "./taskSlice";
 import { selectCategoryById } from "../categories/categorySlice";
 
 import { checkDates } from "../../../common/DateConversion";
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Toast } from "primereact/toast";
-import "primeflex/primeflex.css";
 
 import { EditingButtons, NotEditingButtons } from "./taskPieces/TaskButtons";
 import { TaskCheckBoxes } from "./taskPieces/TaskCheckboxes";
@@ -15,6 +13,10 @@ import { TaskDueDate } from "./taskPieces/TaskDueDate";
 import { TaskName } from "./taskPieces/TaskName";
 import { TaskCalendar } from "./taskPieces/TaskCalendar";
 import { TaskCategoryDropDown } from "./taskPieces/TaskCategoryDropDown";
+
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Toast } from "primereact/toast";
+import "primeflex/primeflex.css";
 
 const Task = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
@@ -142,7 +144,7 @@ const Task = ({ id }) => {
           });
           setStatus("idle");
         } else if (response.type === "tasks/taskUpdated/fulfilled") {
-          if (text.name == null && text.category == null) {
+          if (text.name == null && text.category == null && filter === "all") {
             setStatus("idle");
             setEditing(false);
           }

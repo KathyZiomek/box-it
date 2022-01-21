@@ -1,18 +1,17 @@
 /**This file contains the component for the New Category Form that creates the form on CreateCategory.js */
-
 import React from "react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import Success from "../../ui/Success";
 import Failure from "../../ui/Failure";
+import { CategoryFormName } from "./categoryFormPieces/CategoryFormName";
+import { CategoryFormColor } from "./categoryFormPieces/CategoryFormColor";
 
 import { saveNewCategory } from "../categories/categorySlice";
 
-import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { Message } from "primereact/message";
 
 const NewCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
@@ -29,14 +28,9 @@ const NewCategoryForm = () => {
     setSuccess("idle");
   };
 
-  const handleCategoryChange = (e) => setNewCategory(e.target.value);
-
   const handleColorChange = (e) => {
     setColor(e.target.value);
   };
-
-  const categoryInputRef = useRef();
-  const colorInputRef = useRef();
 
   /**Function that handles when the submit button is clicked */
   /**TODO: add data validation for new category information */
@@ -44,8 +38,8 @@ const NewCategoryForm = () => {
   const submitHandler = async (event) => {
     event.preventDefault();
 
-    const enteredCategory = categoryInputRef.current.value;
-    const enteredColor = colorInputRef.current.value;
+    const enteredCategory = newCategory;
+    const enteredColor = color;
 
     if (enteredCategory.length !== 0) {
       const trimmedCategory = enteredCategory.trim();
@@ -96,39 +90,34 @@ const NewCategoryForm = () => {
 
   return (
     <form onSubmit={submitHandler}>
-      <hr />
-      <div>
-        <label htmlFor="categoryName">Category Name</label>
-        <br />
-        <InputText
-          type="text"
-          id="categoryName"
-          // required
+      <div className="p-fluid">
+        <CategoryFormName
           placeholder={placeholder}
-          value={newCategory}
-          onChange={handleCategoryChange}
-          ref={categoryInputRef}
-          disabled={isLoading}
-          onClick={handleClick}
+          newCategory={newCategory}
+          setNewCategory={setNewCategory}
+          isLoading={isLoading}
+          handleClick={handleClick}
+          categoryWarning={categoryWarning}
         />
-        {categoryWarning && (
-          <Message severity="error" text="Category cannot be empty" />
-        )}
-      </div>
-      <div>
-        <label htmlFor="categoryColor">Category Color </label>
-        <input
-          type="color"
-          id="categoryColor"
-          ref={colorInputRef}
-          value={color}
-          onClick={handleClick}
-          onChange={handleColorChange}
+        <CategoryFormColor
+          color={color}
+          handleClick={handleClick}
+          handleColorChange={handleColorChange}
+          setColor={setColor}
         />
+        <div className="p-field">
+          <Button
+            style={{
+              width: "10rem",
+            }}
+            icon="pi pi-check"
+            label="Submit"
+            onClick={handleClick}
+          ></Button>
+        </div>
+        {loader}
+        {message}
       </div>
-      <Button onClick={handleClick}>Submit</Button>
-      {loader}
-      {message}
     </form>
   );
 };
