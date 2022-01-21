@@ -8,10 +8,7 @@ const CreateTaskPage = () => {
   return (
     <Card>
       <h1>Create a Task</h1>
-      <hr />
-      <div>
-        <NewTaskForm />
-      </div>
+      <NewTaskForm />
     </Card>
   );
 };

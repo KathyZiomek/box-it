@@ -10,15 +10,15 @@ import { selectCategories } from "../categories/categorySlice";
 import Success from "../../ui/Success";
 import Failure from "../../ui/Failure";
 
-import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { Message } from "primereact/message";
+import { TaskFormName } from "./taskFormPieces/TaskFormName";
 
 const NewTaskForm = () => {
-  const [newTask, setNewTask] = useState("");
+  const [task, setTask] = useState("");
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
   const [duedate, setDueDate] = useState("");
@@ -54,13 +54,13 @@ const NewTaskForm = () => {
     setSuccess("idle");
   };
 
-  const taskInputRef = useRef();
+  // const taskInputRef = useRef();
   const categoryInputRef = useRef();
 
   const submitHandler = async (event) => {
     event.preventDefault();
 
-    const enteredTask = taskInputRef.current.value;
+    const enteredTask = task;
     const enteredCategory = categoryInputRef.current.props.value;
 
     if (enteredTask.length !== 0) {
@@ -83,7 +83,7 @@ const NewTaskForm = () => {
           setSuccess(false);
           setStatus("idle");
         } else if (response.type === "tasks/saveNewTask/fulfilled") {
-          setNewTask("");
+          setTask("");
           setCategory("Select a Category");
           setDueDate("");
           setStatus("idle");
@@ -106,7 +106,6 @@ const NewTaskForm = () => {
   };
 
   let isLoading = status === "loading";
-  let placeholder = isLoading ? "" : "Enter task name here...";
   let loader = isLoading ? (
     <div>
       <ProgressSpinner />
@@ -126,25 +125,15 @@ const NewTaskForm = () => {
   let currentDate = new Date(duedate);
 
   return (
-    <div>
-      <form onSubmit={submitHandler}>
-        <div>
-          <label htmlFor="taskName">Task Name</label>
-          <InputText
-            type="text"
-            id="taskName"
-            // required
-            placeholder={placeholder}
-            ref={taskInputRef}
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
-            disabled={isLoading}
-            onClick={handleClick}
-          />
-          {taskWarning && (
-            <Message severity="error" text="Task cannot be empty" />
-          )}
-        </div>
+    <form onSubmit={submitHandler}>
+      <div className="p-fluid">
+        <TaskFormName
+          isLoading={isLoading}
+          task={task}
+          setTask={setTask}
+          handleClick={handleClick}
+          taskWarning={taskWarning}
+        />
         <div>
           <label htmlFor="categoryName">Category Name</label>
           <Dropdown
@@ -183,8 +172,8 @@ const NewTaskForm = () => {
         </div>
         {loader}
         {message}
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
 
