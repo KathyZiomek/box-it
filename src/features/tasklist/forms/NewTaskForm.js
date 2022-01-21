@@ -8,12 +8,12 @@ import { saveNewTask } from "../tasks/taskSlice";
 
 import Success from "../../ui/Success";
 import Failure from "../../ui/Failure";
+import { TaskFormName } from "./taskFormPieces/TaskFormName";
+import { TaskFormCategory } from "./taskFormPieces/TaskFormCategory";
+import { TaskFormDueDate } from "./taskFormPieces/TaskFormDueDate";
 
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { Calendar } from "primereact/calendar";
-import { TaskFormName } from "./taskFormPieces/TaskFormName";
-import { TaskFormCategory } from "./taskFormPieces/TaskFormCategory";
 
 const NewTaskForm = () => {
   const [task, setTask] = useState("");
@@ -101,10 +101,6 @@ const NewTaskForm = () => {
     message = null;
   }
 
-  let startDate = new Date("01-01-2022");
-  let endDate = new Date("01-01-2023");
-  let currentDate = new Date(duedate);
-
   return (
     <form onSubmit={submitHandler}>
       <div className="p-fluid">
@@ -122,24 +118,21 @@ const NewTaskForm = () => {
           handleClick={handleClick}
           categoryWarning={categoryWarning}
         />
-        <div>
-          <label htmlFor="duedate">Due Date</label>
-          <Calendar
-            id="duedate"
-            name="duedate"
-            minDate={startDate}
-            maxDate={endDate}
-            value={currentDate}
-            viewDate={currentDate}
-            disabled={isLoading}
-            onChange={(e) => {
-              setDueDate(e.value);
-              handleClick();
+        <TaskFormDueDate
+          duedate={duedate}
+          isLoading={isLoading}
+          setDueDate={setDueDate}
+          handleClick={handleClick}
+        />
+        <div className="p-field">
+          <Button
+            style={{
+              width: "15rem",
             }}
-          />
-        </div>
-        <div>
-          <Button onClick={handleClick}>Add New Task</Button>
+            icon="pi pi-check"
+            label="Add New Task"
+            onClick={handleClick}
+          ></Button>
         </div>
         {loader}
         {message}

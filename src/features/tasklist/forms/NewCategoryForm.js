@@ -108,10 +108,10 @@ const NewCategoryForm = () => {
         <div className="p-field">
           <Button
             style={{
-              width: "10rem",
+              width: "15rem",
             }}
             icon="pi pi-check"
-            label="Submit"
+            label="Add New Category"
             onClick={handleClick}
           ></Button>
         </div>
