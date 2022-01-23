@@ -1,4 +1,4 @@
-import { useRef, useState, Fragment } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { fetchTasks } from "../tasklist/tasks/taskSlice";
@@ -11,19 +11,18 @@ import { ReturnUid } from "../../api/Firebase";
 import ErrorMessages from "./ErrorMessages";
 import Failure from "../ui/Failure";
 import { emailValidation, passwordValidation } from "./userValidation";
+import { EmailInput } from "./authPieces/EmailInput";
 
-import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { Password } from "primereact/password";
-import { Divider } from "primereact/divider";
-import { Message } from "primereact/message";
+import { PasswordInput } from "./authPieces/PasswordInput";
+import { AuthButton } from "./authPieces/AuthButton";
 
 const SignUp = () => {
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
-  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [emailWarning, setEmailWarning] = useState(false);
   const [passwordWarning, setPasswordWarning] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -42,14 +41,12 @@ const SignUp = () => {
     setSuccess("idle");
   };
 
-  const emailInputRef = useRef();
-
   const onRegister = (event) => {
     event.preventDefault();
     setStatus("loading");
 
-    const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = value;
+    const enteredEmail = email;
+    const enteredPassword = password;
     const trimmedEmail = enteredEmail.trim();
     const trimmedPassword = enteredPassword.trim();
 
@@ -103,20 +100,6 @@ const SignUp = () => {
     }
   };
 
-  const header = <h6>Pick a password</h6>;
-  const footer = (
-    <Fragment>
-      <Divider />
-      <p className="p-mt-2">Suggestions</p>
-      <ul className="p-pl-2 p-ml-2 p-mt-0" style={{ lineHeight: "1.5" }}>
-        <li>At least one lowercase</li>
-        <li>At least one uppercase</li>
-        <li>At least one numeric</li>
-        <li>Minimum 6 characters</li>
-      </ul>
-    </Fragment>
-  );
-
   let isLoading = status === "loading";
   let loader = isLoading ? (
     <div>
@@ -125,51 +108,24 @@ const SignUp = () => {
   ) : null;
 
   return (
-    <Card title="Sign Up Form">
+    <Card title="Sign Up">
       <form onSubmit={onRegister}>
-        <div>
-          <div className="p-inputgroup">
-            <span className="p-inputgroup-addon">
-              <i className="pi pi-envelope"></i>
-            </span>
-            <InputText
-              type="text"
-              id="email"
-              placeholder="Email Address"
-              ref={emailInputRef}
-              disabled={isLoading}
-              autoComplete="email"
-              onClick={handleClick}
-            />
-            {emailWarning && (
-              <Message severity="error" text="Email requirements not met." />
-            )}
-          </div>
-          <br />
-          <div className="p-inputgroup">
-            <span className="p-inputgroup-addon">
-              <i className="pi pi-ellipsis-h"></i>
-            </span>
-            <Password
-              value={value}
-              onChange={(e) => {
-                setValue(e.target.value);
-              }}
-              onClick={handleClick}
-              header={header}
-              placeholder="Password"
-              footer={footer}
-              disabled={isLoading}
-              autoComplete="current-password"
-              toggleMask
-            />
-            {passwordWarning && (
-              <Message severity="error" text="Password requirements not met." />
-            )}
-          </div>
+        <div className="p-fluid">
+          <EmailInput
+            isLoading={isLoading}
+            handleClick={handleClick}
+            setEmail={setEmail}
+            emailWarning={emailWarning}
+          />
+          <PasswordInput
+            password={password}
+            isLoading={isLoading}
+            setPassword={setPassword}
+            handleClick={handleClick}
+            passwordWarning={passwordWarning}
+          />
         </div>
-        <br />
-        <Button onClick={handleClick}>Sign Up</Button>
+        <AuthButton label="Sign Up" handleClick={handleClick} />
       </form>
       {loader}
       {!success && <Failure message={errorMessage} />}
