@@ -12,11 +12,11 @@ import ErrorMessages from "./ErrorMessages";
 import Failure from "../ui/Failure";
 import { emailValidation, passwordValidation } from "./userValidation";
 import { EmailInput } from "./authPieces/EmailInput";
+import { PasswordInput } from "./authPieces/PasswordInput";
+import { AuthButton } from "./authPieces/AuthButton";
 
 import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { PasswordInput } from "./authPieces/PasswordInput";
-import { AuthButton } from "./authPieces/AuthButton";
 
 const SignUp = () => {
   const [status, setStatus] = useState("idle");
@@ -122,6 +122,7 @@ const SignUp = () => {
             isLoading={isLoading}
             setPassword={setPassword}
             handleClick={handleClick}
+            feedback={true}
             passwordWarning={passwordWarning}
           />
         </div>

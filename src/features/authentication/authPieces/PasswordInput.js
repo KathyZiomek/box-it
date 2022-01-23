@@ -36,6 +36,7 @@ export const PasswordInput = (props) => {
           props.setPassword(e.target.value);
         }}
         onClick={props.handleClick}
+        feedback={props.feedback}
         toggleMask
       />
       {props.passwordWarning && (

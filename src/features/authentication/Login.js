@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { fetchTasks } from "../tasklist/tasks/taskSlice";
@@ -11,19 +11,18 @@ import { ReturnUid } from "../../api/Firebase";
 import ErrorMessages from "./ErrorMessages";
 import Failure from "../ui/Failure";
 import { emailValidation, passwordValidation } from "./userValidation";
+import { EmailInput } from "./authPieces/EmailInput";
+import { PasswordInput } from "./authPieces/PasswordInput";
+import { AuthButton } from "./authPieces/AuthButton";
 
-import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { Password } from "primereact/password";
-import { Message } from "primereact/message";
 
 const Login = () => {
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
-  // const [error, setError] = useState();
-  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [emailWarning, setEmailWarning] = useState(false);
   const [passwordWarning, setPasswordWarning] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -42,14 +41,12 @@ const Login = () => {
     setSuccess("idle");
   };
 
-  const emailInputRef = useRef();
-
   const onLogin = (event) => {
     setStatus("loading");
     event.preventDefault();
 
-    const enteredEmail = emailInputRef.current.value;
-    const enteredPassword = value;
+    const enteredEmail = email;
+    const enteredPassword = password;
     const trimmedEmail = enteredEmail.trim();
     const trimmedPassword = enteredPassword.trim();
 
@@ -112,50 +109,26 @@ const Login = () => {
   ) : null;
 
   return (
-    <Card title="Login Form">
+    <Card title="Login">
       <form onSubmit={onLogin}>
-        <div>
-          <div className="p-inputgroup">
-            <span className="p-inputgroup-addon">
-              <i className="pi pi-envelope"></i>
-            </span>
-            <InputText
-              type="text"
-              id="email"
-              placeholder="Email Address"
-              ref={emailInputRef}
-              disabled={isLoading}
-              autoComplete="email"
-              onClick={handleClick}
-            />
-            {emailWarning && (
-              <Message severity="error" text="Email requirements not met." />
-            )}
-          </div>
-          <br />
-          <div className="p-inputgroup">
-            <span className="p-inputgroup-addon">
-              <i className="pi pi-ellipsis-h"></i>
-            </span>
-            <Password
-              value={value}
-              onChange={(e) => {
-                setValue(e.target.value);
-              }}
-              onClick={handleClick}
-              placeholder="Password"
-              disabled={isLoading}
-              autoComplete="current-password"
-              toggleMask
-              feedback={false}
-            />
-            {passwordWarning && (
-              <Message severity="error" text="Password requirements not met." />
-            )}
-          </div>
+        <div className="p-fluid">
+          <EmailInput
+            email={email}
+            isLoading={isLoading}
+            handleClick={handleClick}
+            setEmail={setEmail}
+            emailWarning={emailWarning}
+          />
+          <PasswordInput
+            password={password}
+            isLoading={isLoading}
+            setPassword={setPassword}
+            handleClick={handleClick}
+            feedback={false}
+            passwordWarning={passwordWarning}
+          />
         </div>
-        <br />
-        <Button>Login</Button>
+        <AuthButton label="Login" handleClick={handleClick} />
       </form>
       {loader}
       {!success && <Failure message={errorMessage} />}
