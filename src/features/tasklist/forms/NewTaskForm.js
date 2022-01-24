@@ -128,6 +128,7 @@ const NewTaskForm = () => {
           <Button
             style={{
               width: "15rem",
+              marginTop: 8,
             }}
             icon="pi pi-check"
             label="Add New Task"

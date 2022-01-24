@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { selectUsers } from "../authentication/userSlice";
 
 import classes from "./Layout.module.css";
-import TaskListNavBar from "./TaskListNavBar";
+import NavBar from "./NavBar";
 
 const Layout = (props) => {
   const userCount = useSelector(selectUsers);
@@ -17,7 +17,7 @@ const Layout = (props) => {
 
   return (
     <div>
-      {isLoggedIn ? <TaskListNavBar /> : null}
+      {isLoggedIn ? <NavBar /> : null}
       <main className={classes.main}>{props.children}</main>
     </div>
   );
