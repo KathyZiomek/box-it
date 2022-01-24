@@ -6,8 +6,9 @@ export const AuthButton = (props) => {
       <Button
         style={{
           width: "15rem",
+          marginTop: 10,
         }}
-        icon="pi pi-check"
+        icon={props.icon}
         label={props.label}
         onClick={props.handleClick}
       ></Button>

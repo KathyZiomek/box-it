@@ -14,8 +14,8 @@ import {
 } from "../tasklist/categories/categorySlice";
 import { tasksDeleted, selectTaskIds } from "../tasklist/tasks/taskSlice";
 import { userRemoved, selectUserIds } from "../authentication/userSlice";
+import { AuthButton } from "../authentication/authPieces/AuthButton";
 
-import { Button } from "primereact/button";
 import { Menubar } from "primereact/menubar";
 
 const NavBar = () => {
@@ -27,7 +27,7 @@ const NavBar = () => {
   const items = [
     {
       label: "Home",
-      icon: "pi-menu-icon pi pi-fw pi-home",
+      icon: "p-menuitem-icon pi-menu-icon pi pi-fw pi-home",
       template: (item, options) => {
         return (
           <Link className={options.className} to="/">
@@ -105,7 +105,9 @@ const NavBar = () => {
   };
 
   const start = <h3>Box It</h3>;
-  const end = <Button onClick={onLogout}>Logout</Button>;
+  const end = (
+    <AuthButton icon="pi pi-times" label="Logout" handleClick={onLogout} />
+  );
 
   return (
     <header>

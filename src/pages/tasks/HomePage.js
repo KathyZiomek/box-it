@@ -6,6 +6,7 @@ import { selectUsers } from "../../features/authentication/userSlice";
 
 import Login from "../../features/authentication/Login";
 import SignUp from "../../features/authentication/SignUp";
+import { AuthButton } from "../../features/authentication/authPieces/AuthButton";
 
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
@@ -34,7 +35,14 @@ const HomePage = () => {
     if (userExists === true) {
       return null;
     } else if (!isLoggingIn && !isSigningUp) {
-      return <Button onClick={loginButton}>Login</Button>;
+      return (
+        <AuthButton
+          icon="pi pi-check"
+          label="Login"
+          handleClick={loginButton}
+        />
+      );
+      // <Button onClick={loginButton}>Login</Button>;
     } else if (isLoggingIn) {
       return (
         <Fragment>

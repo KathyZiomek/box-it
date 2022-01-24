@@ -126,7 +126,11 @@ const SignUp = () => {
             passwordWarning={passwordWarning}
           />
         </div>
-        <AuthButton label="Sign Up" handleClick={handleClick} />
+        <AuthButton
+          icon="pi pi-check"
+          label="Sign Up"
+          handleClick={handleClick}
+        />
       </form>
       {loader}
       {!success && <Failure message={errorMessage} />}
