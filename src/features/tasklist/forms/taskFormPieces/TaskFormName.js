@@ -15,6 +15,7 @@ export const TaskFormName = (props) => {
         onChange={(e) => props.setTask(e.target.value)}
         disabled={props.isLoading}
         onClick={props.handleClick}
+        autoComplete="taskName"
       />
       {props.taskWarning && (
         <Message severity="error" text="Task cannot be empty" />
