@@ -10,17 +10,14 @@ import "primeflex/primeflex.css";
 import "react-transition-group";
 import "./index.css";
 
-// <!-- Dependencies -->
-// <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
-// <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
-// <script src="https://unpkg.com/react-transition-group@4.4.2/dist/react-transition-group.js"></script>
-
 import { Route, Switch } from "react-router-dom";
 import Layout from "./features/layout/Layout";
-import CreateCategoryPage from "./pages/tasks/CreateCategoryPage";
-import CreateTaskPage from "./pages/tasks/CreateTaskPage";
-import AllTasksPage from "./pages/tasks/AllTasksPage";
-import HomePage from "./pages/tasks/HomePage";
+import CreateCategoryPage from "./pages/tasklist/CreateCategoryPage";
+import CreateTaskPage from "./pages/tasklist/CreateTaskPage";
+import TaskListPage from "./pages/tasklist/TaskListPage";
+import DeleteAllPage from "./pages/tasklist/DeleteAllPage";
+import UserSettingsPage from "./pages/UserSettingsPage";
+import HomePage from "./pages/HomePage";
 
 import { useSelector } from "react-redux";
 import { selectUsers } from "./features/authentication/userSlice";
@@ -47,7 +44,13 @@ function App() {
             <CreateTaskPage />
           </Route>
           <Route path="/tasklist">
-            <AllTasksPage />
+            <TaskListPage />
+          </Route>
+          <Route path="/delete-all">
+            <DeleteAllPage />
+          </Route>
+          <Route path="/user-settings">
+            <UserSettingsPage />
           </Route>
           <Route path="/">
             <HomePage />

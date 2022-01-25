@@ -2,11 +2,11 @@ import { Fragment, useState } from "react";
 
 import { useSelector } from "react-redux";
 
-import { selectUsers } from "../../features/authentication/userSlice";
+import { selectUsers } from "../features/authentication/userSlice";
 
-import Login from "../../features/authentication/Login";
-import SignUp from "../../features/authentication/SignUp";
-import { AuthButton } from "../../features/authentication/authPieces/AuthButton";
+import Login from "../features/authentication/Login";
+import SignUp from "../features/authentication/SignUp";
+import { AuthButton } from "../features/authentication/authPieces/AuthButton";
 
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
@@ -42,7 +42,6 @@ const HomePage = () => {
           handleClick={loginButton}
         />
       );
-      // <Button onClick={loginButton}>Login</Button>;
     } else if (isLoggingIn) {
       return (
         <Fragment>
@@ -52,7 +51,6 @@ const HomePage = () => {
               onClick={signupButton}
               label="Not registered yet? Create an Account here."
               className="p-button-link"
-              // style={{ background: "red" }}
             ></Button>
           </div>
         </Fragment>

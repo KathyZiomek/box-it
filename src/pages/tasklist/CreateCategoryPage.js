@@ -1,9 +1,6 @@
-/**This file contains the component that outputs the page with the create a category form */
-
 import NewCategoryForm from "../../features/tasklist/forms/NewCategoryForm";
 
 import { Card } from "primereact/card";
-// import Card from "../../features/ui/Card";
 
 const CreateCategoryPage = () => {
   return (
