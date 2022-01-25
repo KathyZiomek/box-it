@@ -37,7 +37,7 @@ export const PasswordInput = (props) => {
         }}
         onClick={props.handleClick}
         feedback={props.feedback}
-        toggleMask
+        toggleMask={!props.passwordWarning}
       />
       {props.passwordWarning && (
         <Message severity="error" text="Password requirements not met." />

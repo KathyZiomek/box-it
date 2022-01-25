@@ -67,6 +67,15 @@ const Login = () => {
         .catch((error) => {
           setStatus("idle");
           const errorCode = error.code;
+          console.log(errorCode);
+          if (errorCode.includes("password") && errorCode.includes("email")) {
+            setPasswordWarning(true);
+            setEmailWarning(true);
+          } else if (errorCode.includes("password")) {
+            setPasswordWarning(true);
+          } else if (errorCode.includes("email")) {
+            setEmailWarning(true);
+          }
           setErrorMessage(ErrorMessages(errorCode));
           setSuccess(false);
         });

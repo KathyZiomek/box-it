@@ -1,5 +1,4 @@
-/**NOTE: toast's can have severity levels of info, warn, error and fatal */
-
+/**NOTE: toasts can have severity levels of info, warn, error and fatal */
 /**This component outputs the category titles in the task list */
 import { React, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";

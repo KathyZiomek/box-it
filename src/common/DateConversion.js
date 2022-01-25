@@ -1,74 +1,43 @@
-export const WeekdayConversion = (text) => {
-  if (text === 0) {
-    return "Sunday";
-  }
-  if (text === 1) {
-    return "Monday";
-  }
-  if (text === 2) {
-    return "Tuesday";
-  }
-  if (text === 3) {
-    return "Wednesday";
-  }
-  if (text === 4) {
-    return "Thursday";
-  }
-  if (text === 5) {
-    return "Friday";
-  }
-  if (text === 6) {
-    return "Saturday";
-  }
+export const WeekdayConversion = (weekday) => {
+  let weekdayDict = {
+    0: "Sunday",
+    1: "Monday",
+    2: "Tuesday",
+    3: "Wednesday",
+    4: "Thursday",
+    5: "Friday",
+    6: "Saturday",
+  };
+
+  return weekdayDict[weekday];
 };
 
-export const MonthConversion = (text) => {
-  if (text === 0) {
-    return "January";
-  }
-  if (text === 1) {
-    return "February";
-  }
-  if (text === 2) {
-    return "March";
-  }
-  if (text === 3) {
-    return "April";
-  }
-  if (text === 4) {
-    return "May";
-  }
-  if (text === 5) {
-    return "June";
-  }
-  if (text === 6) {
-    return "July";
-  }
-  if (text === 7) {
-    return "August";
-  }
-  if (text === 8) {
-    return "September";
-  }
-  if (text === 9) {
-    return "October";
-  }
-  if (text === 10) {
-    return "November";
-  }
-  if (text === 11) {
-    return "December";
-  }
+export const MonthConversion = (month) => {
+  let monthDict = {
+    0: "January",
+    1: "February",
+    2: "March",
+    3: "April",
+    4: "May",
+    5: "June",
+    6: "July",
+    7: "August",
+    8: "September",
+    9: "October",
+    10: "November",
+    11: "December",
+  };
+  return monthDict[month];
 };
 
-export const DayEnding = (text) => {
-  if (text === 1 || text === 21 || text === 31) {
+export const DayEnding = (day) => {
+  if (day === 1 || day === 21 || day === 31) {
     return "st";
-  } else if (text === 2 || text === 22) {
+  } else if (day === 2 || day === 22) {
     return "nd";
-  } else if (text === 3 || text === 23) {
+  } else if (day === 3 || day === 23) {
     return "rd";
-  } else if (text >= 4) {
+  } else if (day >= 4) {
     return "th";
   }
 };

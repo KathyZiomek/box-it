@@ -17,9 +17,7 @@ export const EmailInput = (props) => {
         onClick={props.handleClick}
         onChange={(e) => props.setEmail(e.target.value)}
       />
-      {props.emailWarning && (
-        <Message severity="error" text="Email requirements not met." />
-      )}
+      {props.emailWarning && <Message severity="error" text="Invalid Email." />}
     </div>
   );
 };

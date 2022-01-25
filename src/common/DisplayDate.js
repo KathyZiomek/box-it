@@ -5,20 +5,20 @@ import {
   DayEnding,
 } from "./DateConversion";
 
-const DisplayDate = (text) => {
-  const initialDate = new Date(text);
+// TODO: Rename variable
+const DisplayDate = (duedate) => {
+  const initialDueDate = new Date(duedate);
 
   //Display dates as Weekday, Month Day, Year
   //e.g. Saturday, January 01, 2022
 
-  const weekday = WeekdayConversion(initialDate.getDay());
-  const month = MonthConversion(initialDate.getMonth());
-  const day = initialDate.getDate();
+  const weekday = WeekdayConversion(initialDueDate.getDay());
+  const month = MonthConversion(initialDueDate.getMonth());
+  const day = initialDueDate.getDate();
   const dayEnding = DayEnding(day);
-  const year = initialDate.getFullYear();
+  const year = initialDueDate.getFullYear();
 
-  const newDueDate =
-    weekday + ", " + month + " " + day + dayEnding + ", " + year;
+  const newDueDate = `${weekday}, ${month} ${day}${dayEnding}, ${year}`;
 
   return newDueDate;
 };
