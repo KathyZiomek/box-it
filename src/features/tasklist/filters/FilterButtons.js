@@ -8,12 +8,12 @@ import {
   // allTasksCompleted,
   selectTasks,
   updateTask,
-} from "../tasklist/tasks/taskSlice";
-import { selectCategories } from "../tasklist/categories/categorySlice";
+} from "../tasklistPieces/tasks/taskSlice";
+import { selectCategories } from "../tasklistPieces/categories/categorySlice";
 
 import { Button } from "primereact/button";
 import { RadioButton } from "primereact/radiobutton";
-import classes from "../tasklist/TaskList.module.css";
+import classes from "../../tasklist/TaskList.module.css";
 import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
 

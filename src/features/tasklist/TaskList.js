@@ -4,30 +4,26 @@
 import { React } from "react";
 import { useSelector } from "react-redux";
 
-import Category from "./categories/Category";
-import Task from "./tasks/Task";
-// import CardTasklist from "../ui/CardTasklist";
+import Category from "./tasklistPieces/categories/Category";
+import Task from "./tasklistPieces/tasks/Task";
 import { Card } from "primereact/card";
-// import Card from "../ui/CardTasklist";
-
-import {
-  selectCategoryIds,
-  selectCategories,
-} from "./categories/categorySlice";
-import { selectFilteredTasks } from "./tasks/taskSlice";
-
-import classes from "./TaskList.module.css";
-
-import { ProgressSpinner } from "primereact/progressspinner";
-import { Accordion, AccordionTab } from "primereact/accordion";
-
-//import tasklist messages
 import {
   NoCategories,
   EmptyCategory,
   NoActiveTasks,
   NoCompletedTasks,
-} from "./TaskListMessages";
+} from "./tasklistPieces/TaskListMessages";
+
+import {
+  selectCategoryIds,
+  selectCategories,
+} from "./tasklistPieces/categories/categorySlice";
+import { selectFilteredTasks } from "./tasklistPieces/tasks/taskSlice";
+
+import classes from "./TaskList.module.css";
+
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Accordion, AccordionTab } from "primereact/accordion";
 
 const TaskList = () => {
   const categoryIds = useSelector(selectCategoryIds);

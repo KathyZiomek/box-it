@@ -11,8 +11,11 @@ import { useDispatch } from "react-redux";
 import {
   categoriesDeleted,
   selectCategoryIds,
-} from "../tasklist/categories/categorySlice";
-import { tasksDeleted, selectTaskIds } from "../tasklist/tasks/taskSlice";
+} from "../tasklist/tasklistPieces/categories/categorySlice";
+import {
+  tasksDeleted,
+  selectTaskIds,
+} from "../tasklist/tasklistPieces/tasks/taskSlice";
 import { userRemoved, selectUserIds } from "../authentication/userSlice";
 import { AuthButton } from "../authentication/authPieces/AuthButton";
 
@@ -102,7 +105,7 @@ const NavBar = () => {
 
     {
       label: "User Settings",
-      icon: "pi-menu-icon pi pi-fw pi-user",
+      icon: "p-menuitem-icon pi-menu-icon pi pi-fw pi-user",
       template: (item, options) => {
         return (
           <Link className={options.className} to="/user-settings">

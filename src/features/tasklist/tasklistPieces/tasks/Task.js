@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteTask, selectTaskById, updateTask } from "./taskSlice";
 import { selectCategoryById } from "../categories/categorySlice";
 
-import { checkDates } from "../../../common/DateConversion";
+import { checkDates } from "./taskPieces/DateConversion";
 
 import { EditingButtons, NotEditingButtons } from "./taskPieces/TaskButtons";
 import { TaskCheckBoxes } from "./taskPieces/TaskCheckboxes";

@@ -4,7 +4,7 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { saveNewTask } from "../tasks/taskSlice";
+import { saveNewTask } from "../tasklistPieces/tasks/taskSlice";
 
 import Success from "../../ui/Success";
 import Failure from "../../ui/Failure";
@@ -15,7 +15,7 @@ import { TaskFormDueDate } from "./taskFormPieces/TaskFormDueDate";
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 
-const NewTaskForm = () => {
+const CreateTaskForm = () => {
   const [task, setTask] = useState("");
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
@@ -142,6 +142,6 @@ const NewTaskForm = () => {
   );
 };
 
-export default NewTaskForm;
+export default CreateTaskForm;
 
 /**TODO: add data validation for new task information */

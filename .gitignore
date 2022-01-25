@@ -26,4 +26,4 @@ yarn-error.log*
 **/src/api/Firebase.js
 
 # debugging files
-**/src/features/tasklist/tasks/taskvariables.txt
+**/src/features/tasklist/tasklistPieces/tasks/taskvariables.txt

@@ -1,4 +1,4 @@
-import DisplayDate from "../../../../common/DisplayDate";
+import DisplayDate from "./DisplayDate";
 import { InputText } from "primereact/inputtext";
 
 export const TaskDueDate = (props) => {

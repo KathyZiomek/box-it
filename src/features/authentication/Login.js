@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { fetchTasks } from "../tasklist/tasks/taskSlice";
-import { fetchCategories } from "../tasklist/categories/categorySlice";
+import { fetchTasks } from "../tasklist/tasklistPieces/tasks/taskSlice";
+import { fetchCategories } from "../tasklist/tasklistPieces/categories/categorySlice";
 import { userAdded } from "./userSlice";
 
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";

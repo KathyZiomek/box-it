@@ -1,9 +1,3 @@
-/**TODO: create user initialState */
-/**TODO: create reducer for signup - add new user to Firebase */
-/**TODO: add validation for new user information */
-/**TODO: create reducer for login - handle verifying a user's log in information */
-/**TODO: modify categorySlice to include a user ID foreign key */
-
 import {
   createSlice,
   createSelector,

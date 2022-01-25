@@ -8,12 +8,12 @@ import Failure from "../../ui/Failure";
 import { CategoryFormName } from "./categoryFormPieces/CategoryFormName";
 import { CategoryFormColor } from "./categoryFormPieces/CategoryFormColor";
 
-import { saveNewCategory } from "../categories/categorySlice";
+import { saveNewCategory } from "../tasklistPieces/categories/categorySlice";
 
 import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 
-const NewCategoryForm = () => {
+const CreateCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
@@ -122,4 +122,4 @@ const NewCategoryForm = () => {
   );
 };
 
-export default NewCategoryForm;
+export default CreateCategoryForm;

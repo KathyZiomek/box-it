@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-import { selectCategories } from "../../categories/categorySlice";
+import { selectCategories } from "../../tasklistPieces/categories/categorySlice";
 
 import { Dropdown } from "primereact/dropdown";
 import { Message } from "primereact/message";

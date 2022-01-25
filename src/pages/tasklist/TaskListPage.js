@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import TaskList from "../../features/tasklist/TaskList";
-import FilterButtons from "../../features/filters/FilterButtons";
+import FilterButtons from "../../features/tasklist/filters/FilterButtons";
 
 const TaskListPage = () => {
   return (
