@@ -114,26 +114,26 @@ const Task = ({ id }) => {
 
       let areEqual = checkDates(enteredDueDate, originalDueDate);
 
-      let text = {
+      let updatedTask = {
         id: task.id,
         ...(trimmedTask !== task.name && { name: trimmedTask }),
         ...(!areEqual && { duedate: enteredDueDate }),
         ...(enteredCategory !== task.category && { category: enteredCategory }),
         ...(enteredStatus !== task.completed && { completed: enteredStatus }),
       };
-      console.log(text);
+      // console.log(updatedTask);
 
       if (
-        text.name == null &&
-        text.duedate == null &&
-        text.category == null &&
-        text.completed == null
+        updatedTask.name == null &&
+        updatedTask.duedate == null &&
+        updatedTask.category == null &&
+        updatedTask.completed == null
       ) {
         setStatus("idle");
         setEditing(false);
       } else {
         setStatus("loading");
-        const response = await dispatch(updateTask(text));
+        const response = await dispatch(updateTask(updatedTask));
 
         if (response.type === "tasks/taskUpdated/rejected") {
           toast.current.show({
@@ -144,7 +144,11 @@ const Task = ({ id }) => {
           });
           setStatus("idle");
         } else if (response.type === "tasks/taskUpdated/fulfilled") {
-          if (text.name == null && text.category == null && filter === "all") {
+          if (
+            updatedTask.name == null &&
+            updatedTask.category == null &&
+            filter === "all"
+          ) {
             setStatus("idle");
             setEditing(false);
           }

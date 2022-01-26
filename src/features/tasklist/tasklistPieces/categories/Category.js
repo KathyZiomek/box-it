@@ -101,18 +101,21 @@ const Category = ({ id }) => {
     const trimmedCategory = enteredCategory.trim();
     const trimmedColor = enteredColor.trim();
 
-    let text = {
+    let updatedCategory = {
       id: category.id,
       ...(trimmedCategory !== name && { name: trimmedCategory }),
       ...(trimmedColor !== color && { color: trimmedColor }),
     };
 
-    if (text.name === undefined && text.color === undefined) {
+    if (
+      updatedCategory.name === undefined &&
+      updatedCategory.color === undefined
+    ) {
       setEditing(false);
     } else {
       setStatus("loading");
 
-      const response = await dispatch(updateCategory(text));
+      const response = await dispatch(updateCategory(updatedCategory));
 
       if (response.type === "categories/categoryUpdated/rejected") {
         toast.current.show({

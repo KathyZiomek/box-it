@@ -26,11 +26,9 @@ const initialState = categoriesAdapter.getInitialState({
   httpErr: false,
 });
 
-// Thunk function
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async () => {
-    // const user = { text };
     const auth = getAuth();
     const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
@@ -62,21 +60,13 @@ export const fetchCategories = createAsyncThunk(
     //     }
     //   }
 
-    // console.log(response);
-    //   return categories;
     return response;
-    // } else {
-    //   return response;
-    // }
   }
 );
 
 export const saveNewCategory = createAsyncThunk(
   "categories/saveNewCategory",
-  async (
-    text,
-    { /*dispatch, getState,*/ rejectWithValue, fulfillWithValue }
-  ) => {
+  async (text, { rejectWithValue, fulfillWithValue }) => {
     const auth = getAuth();
     const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
@@ -95,7 +85,6 @@ export const saveNewCategory = createAsyncThunk(
         }
       );
       if (response === null) {
-        // console.log(response);
         return rejectWithValue(response);
       }
       return fulfillWithValue(response);
@@ -127,10 +116,7 @@ export const deleteCategory = createAsyncThunk(
 
 export const updateCategory = createAsyncThunk(
   "categories/categoryUpdated",
-  async (
-    text,
-    { /*dispatch, getState,*/ rejectWithValue, fulfillWithValue }
-  ) => {
+  async (text, { rejectWithValue, fulfillWithValue }) => {
     const auth = getAuth();
     const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
@@ -143,19 +129,12 @@ export const updateCategory = createAsyncThunk(
         { method: "PATCH", body: initialCategory.text }
       );
       if (response === null) {
-        // console.log(response);
         return rejectWithValue(response);
       }
       return fulfillWithValue(response);
     } catch (error) {
       throw rejectWithValue(error.message);
     }
-
-    // if (response === null) {
-    //   return initialCategory.text;
-    // } else {
-    //   return response;
-    // }
   }
 );
 
@@ -212,9 +191,6 @@ export const { selectAll: selectCategories, selectById: selectCategoryById } =
   categoriesAdapter.getSelectors((state) => state.categories);
 
 export const selectCategoryIds = createSelector(
-  // First, pass one or more "input selector" functions:
   selectCategories,
-  // Then, an "output selector" that receives all the input results as arguments
-  // and returns a final result value
   (categories) => categories.map((category) => category.id)
 );

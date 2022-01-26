@@ -52,14 +52,14 @@ const CreateTaskForm = () => {
 
         const trimmedTask = enteredTask.trim();
 
-        const text = {
+        const newTask = {
           task: trimmedTask,
           category: trimmedCategory,
           duedate: enteredDuedate,
         };
 
         setStatus("loading");
-        const response = await dispatch(saveNewTask(text));
+        const response = await dispatch(saveNewTask(newTask));
 
         if (response.type === "tasks/saveNewTask/rejected") {
           setSuccess(false);

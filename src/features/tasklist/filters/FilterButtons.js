@@ -101,11 +101,11 @@ const FilterButtons = () => {
     //identify tasks that are not currently marked as completed
     //dispatch the action to update their "completed" value in firebase
     tasksRemaining.forEach((task) => {
-      let text = {
+      let updatedTask = {
         id: task.id,
         completed: true,
       };
-      dispatch(updateTask(text));
+      dispatch(updateTask(updatedTask));
     });
   };
 

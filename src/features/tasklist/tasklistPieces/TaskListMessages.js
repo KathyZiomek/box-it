@@ -1,12 +1,11 @@
 import { Fragment } from "react";
-
 import { Card } from "primereact/card";
 
 //No categories or tasks
 export const NoCategories = () => {
   return (
     <Fragment>
-      <p>You do not appear to have any existing tasks or categories.</p>
+      <p>You do not have any existing tasks or categories.</p>
       <p>
         To create some categories to sort your tasks, click on Create a Category
         in the toolbar on the left.
@@ -34,7 +33,7 @@ export const EmptyCategory = (color) => {
 export const NoActiveTasks = () => {
   return (
     <Card>
-      <p>You do not appear to have any active tasks.</p>
+      <p>You do not have any active tasks.</p>
     </Card>
   );
 };
@@ -43,7 +42,7 @@ export const NoActiveTasks = () => {
 export const NoCompletedTasks = () => {
   return (
     <Card>
-      <p>You do not appear to have any completed tasks.</p>
+      <p>You do not have any completed tasks.</p>
     </Card>
   );
 };

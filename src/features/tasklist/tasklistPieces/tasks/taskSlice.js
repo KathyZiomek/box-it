@@ -30,7 +30,6 @@ const initialState = tasksAdapter.getInitialState({
 
 //Thunk functions
 export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
-  // const user = { text };
   const auth = getAuth();
   const uid = ReturnUid(auth);
   const token = ReturnToken(auth);
@@ -38,43 +37,12 @@ export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
   const response = await client.get(
     `${databaseURL}/users/${uid}/tasks.json?auth=${token}`
   );
-
-  // if (response !== null) {
-  //   let tasks = {};
-  //   for (var key in response) {
-  //     if (!response.hasOwnProperty(key)) continue;
-
-  //     let obj = response[key];
-  //     let objId = key;
-
-  //     for (var prop in obj) {
-  //       if (!obj.hasOwnProperty(prop)) continue;
-
-  //       if (user.text.uid === obj[prop]) {
-  //         const newItem = { [objId]: obj };
-
-  //         if (ObjectLength(tasks) > 0) {
-  //           tasks = { ...tasks, [objId]: obj };
-  //         } else {
-  //           tasks = newItem;
-  //         }
-  //       }
-  //     }
-  //   }
-  // console.log(response);
-  // return tasks;
   return response;
-  // } else {
-  //   return response;
-  // }
 });
 
 export const saveNewTask = createAsyncThunk(
   "tasks/saveNewTask",
-  async (
-    text,
-    { /*dispatch, getState,*/ rejectWithValue, fulfillWithValue }
-  ) => {
+  async (text, { rejectWithValue, fulfillWithValue }) => {
     const auth = getAuth();
     const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
@@ -96,7 +64,6 @@ export const saveNewTask = createAsyncThunk(
       );
 
       if (response === null) {
-        // console.log(response);
         return rejectWithValue(response);
       }
       return fulfillWithValue(response);
@@ -128,10 +95,7 @@ export const deleteTask = createAsyncThunk(
 
 export const updateTask = createAsyncThunk(
   "tasks/taskUpdated",
-  async (
-    text,
-    { /*dispatch, getState,*/ rejectWithValue, fulfillWithValue }
-  ) => {
+  async (text, { rejectWithValue, fulfillWithValue }) => {
     const auth = getAuth();
     const uid = ReturnUid(auth);
     const token = ReturnToken(auth);
@@ -143,13 +107,7 @@ export const updateTask = createAsyncThunk(
         `${databaseURL}/users/${uid}/tasks/${initialTask.text.id}.json?auth=${token}`,
         { method: "PATCH", body: initialTask.text }
       );
-      // if (response === null) {
-      //   return initialTask.text;
-      // } else {
-      //   return response;
-      // }
       if (response === null) {
-        // console.log(response);
         return rejectWithValue(response);
       }
       return fulfillWithValue(response);
@@ -214,12 +172,8 @@ export default tasksSlice.reducer;
 export const { selectAll: selectTasks, selectById: selectTaskById } =
   tasksAdapter.getSelectors((state) => state.tasks);
 
-export const selectTaskIds = createSelector(
-  // First, pass one or more "input selector" functions:
-  selectTasks,
-  // Then, an "output selector" that receives all the input results as arguments
-  // and returns a final result value
-  (tasks) => tasks.map((task) => task.id)
+export const selectTaskIds = createSelector(selectTasks, (tasks) =>
+  tasks.map((task) => task.id)
 );
 
 export const selectFilteredTasks = createSelector(

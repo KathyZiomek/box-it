@@ -6,6 +6,7 @@ export const TaskName = (props) => {
     <div className="p-field p-col-6">
       <label htmlFor={props.id}>Name: </label>
       <InputText
+        type="text"
         id={props.id}
         value={props.newTaskName}
         disabled={props.isLoading}

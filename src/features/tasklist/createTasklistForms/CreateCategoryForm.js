@@ -46,13 +46,13 @@ const CreateCategoryForm = () => {
       const trimmedCategory = enteredCategory.trim();
       const trimmedColor = enteredColor.trim();
 
-      const text = {
+      const newCategory = {
         name: trimmedCategory,
         color: trimmedColor,
       };
 
       setStatus("loading");
-      const response = await dispatch(saveNewCategory(text));
+      const response = await dispatch(saveNewCategory(newCategory));
 
       if (response.type === "categories/saveNewCategory/rejected") {
         setSuccess(false);
