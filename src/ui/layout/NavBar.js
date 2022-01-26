@@ -11,13 +11,16 @@ import { useDispatch } from "react-redux";
 import {
   categoriesDeleted,
   selectCategoryIds,
-} from "../tasklist/tasklistPieces/categories/categorySlice";
+} from "../../features/tasklist/tasklistPieces/categories/categorySlice";
 import {
   tasksDeleted,
   selectTaskIds,
-} from "../tasklist/tasklistPieces/tasks/taskSlice";
-import { userRemoved, selectUserIds } from "../authentication/userSlice";
-import { AuthButton } from "../authentication/authPieces/AuthButton";
+} from "../../features/tasklist/tasklistPieces/tasks/taskSlice";
+import {
+  userRemoved,
+  selectUserIds,
+} from "../../features/authentication/userSlice";
+import { AuthButton } from "../../features/authentication/authPieces/AuthButton";
 
 import { Menubar } from "primereact/menubar";
 

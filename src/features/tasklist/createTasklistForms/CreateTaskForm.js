@@ -6,8 +6,9 @@ import { useDispatch } from "react-redux";
 
 import { saveNewTask } from "../tasklistPieces/tasks/taskSlice";
 
-import Success from "../../ui/Success";
-import Failure from "../../ui/Failure";
+import Success from "../../../ui/Success";
+import Failure from "../../../ui/Failure";
+
 import { TaskFormName } from "./taskFormPieces/TaskFormName";
 import { TaskFormCategory } from "./taskFormPieces/TaskFormCategory";
 import { TaskFormDueDate } from "./taskFormPieces/TaskFormDueDate";

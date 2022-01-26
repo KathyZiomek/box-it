@@ -11,7 +11,7 @@ import "react-transition-group";
 import "./index.css";
 
 import { Route, Switch } from "react-router-dom";
-import Layout from "./features/layout/Layout";
+import Layout from "./ui/layout/Layout";
 import CreateCategoryPage from "./pages/tasklist/CreateCategoryPage";
 import CreateTaskPage from "./pages/tasklist/CreateTaskPage";
 import TaskListPage from "./pages/tasklist/TaskListPage";

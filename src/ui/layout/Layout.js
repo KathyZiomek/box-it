@@ -4,7 +4,7 @@
 
 import { useSelector } from "react-redux";
 
-import { selectUsers } from "../authentication/userSlice";
+import { selectUsers } from "../../features/authentication/userSlice";
 
 import classes from "./Layout.module.css";
 import NavBar from "./NavBar";

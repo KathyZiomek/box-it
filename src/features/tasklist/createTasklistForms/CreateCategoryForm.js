@@ -3,8 +3,9 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import Success from "../../ui/Success";
-import Failure from "../../ui/Failure";
+import Success from "../../../ui/Success";
+import Failure from "../../../ui/Failure";
+
 import { CategoryFormName } from "./categoryFormPieces/CategoryFormName";
 import { CategoryFormColor } from "./categoryFormPieces/CategoryFormColor";
 
