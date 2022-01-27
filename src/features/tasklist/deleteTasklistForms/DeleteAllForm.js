@@ -1,25 +1,103 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useRef, useState } from "react";
 
-import { deleteTask } from "../tasklistPieces/tasks/taskSlice";
-import { deleteCategory } from "../tasklistPieces/categories/categorySlice";
+import { selectTasks, deleteTask } from "../tasklistPieces/tasks/taskSlice";
+import {
+  selectCategories,
+  deleteCategory,
+} from "../tasklistPieces/categories/categorySlice";
 
 import { DeleteFormText } from "./deleteFormPieces/DeleteFormText";
 import { DeleteFormButton } from "./deleteFormPieces/DeleteFormButton";
 
+import { confirmDialog } from "primereact/confirmdialog";
+import { Toast } from "primereact/toast";
+
 export const DeleteAllForm = () => {
+  const [isDisabled, setIsDisabled] = useState(false);
+  const tasks = useSelector((state) => selectTasks(state));
+  const categories = useSelector((state) => selectCategories(state));
+
+  const toast = useRef(null);
   const dispatch = useDispatch();
 
-  const deleteAll = () => {
-    console.log("test");
+  const cancelDelete = () => {
+    toast.current.show({
+      severity: "info",
+      summary: "Delete Canceled",
+      life: 1500,
+    });
+  };
+
+  const confirmDelete = () => {
+    setIsDisabled(true);
+    toast.current.show({
+      severity: "info",
+      summary: "Success",
+      detail: `Deleting All Data...`,
+      life: 1500,
+    });
+
+    const deleteContent = () => {
+      tasks.forEach((task) => {
+        dispatch(deleteTask(task.id));
+      });
+      categories.forEach((category) => {
+        dispatch(deleteCategory(category.id));
+      });
+      setIsDisabled(false);
+
+      toast.current.show({
+        severity: "info",
+        summary: "Success",
+        detail: `All Data Deleted!`,
+        life: 1500,
+      });
+    };
+    const toastComplete = () => {
+      setTimeout(deleteContent, 1500);
+    };
+
+    toastComplete();
+  };
+
+  const confirm = () => {
+    if (tasks.length === 0 && categories.length === 0) {
+      setIsDisabled(true);
+      toast.current.show({
+        severity: "info",
+        summary: "No Data To Delete",
+        life: 1500,
+      });
+
+      const unDisableButton = () => {
+        setIsDisabled(false);
+      };
+      const toastComplete = () => {
+        setTimeout(unDisableButton, 1500);
+      };
+      toastComplete();
+    } else {
+      confirmDialog({
+        message:
+          "This will delete all of your saved categories and tasks, and you will not be able to retrieve them. Are you sure you want to continue?",
+        header: "Warning",
+        icon: "pi pi-exclamation-triangle",
+        accept: () => confirmDelete(),
+        reject: () => cancelDelete(),
+      });
+    }
   };
 
   return (
     <div>
+      <Toast ref={toast} />
       <DeleteFormText />
       <DeleteFormButton
         icon={"pi pi-times"}
         label={"Delete All"}
-        action={deleteAll}
+        disabled={isDisabled}
+        action={confirm}
       />
     </div>
   );

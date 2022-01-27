@@ -10,6 +10,7 @@ export const DeleteFormButton = (props) => {
         }}
         icon={props.icon}
         label={props.label}
+        disabled={props.disabled}
         onClick={props.action}
       ></Button>
     </div>
