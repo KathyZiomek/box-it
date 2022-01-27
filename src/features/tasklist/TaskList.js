@@ -1,6 +1,3 @@
-/**This file contains the TaskList component which outputs the components from Tasks.js and Categories.js and passes props to those components */
-
-// import { Fragment } from "react";
 import { React } from "react";
 import { useSelector } from "react-redux";
 
@@ -88,9 +85,7 @@ const TaskList = () => {
 
       let renderedTasks =
         noTasksCounter > 0 ? (
-          <Accordion multiple /*className={classes.noBullets}*/>
-            {tasks}
-          </Accordion>
+          <Accordion multiple>{tasks}</Accordion>
         ) : (
           <EmptyCategory color={categoryColor} />
         );
@@ -100,16 +95,13 @@ const TaskList = () => {
         <Card
           key={categoryId}
           id={categoryId}
-          // header={header}
           style={{
             marginBottom: "2em",
-            // borderRadius: "50px",
             backgroundColor: "white",
             borderColor: categoryColor,
             width: "100%",
           }}
         >
-          {/* <Category key={categoryId} id={categoryId} /> */}
           {header}
           {renderedTasks}
         </Card>
@@ -140,7 +132,6 @@ const TaskList = () => {
         <Card
           style={{
             marginBottom: "2em",
-            // borderRadius: "20px",
             width: "100%",
           }}
         >
