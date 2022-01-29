@@ -3,15 +3,16 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import Success from "../../../ui/Success";
-import Failure from "../../../ui/Failure";
+import Success from "../../../ui/uiPieces/Success";
+import Failure from "../../../ui/uiPieces/Failure";
 
 import { CategoryFormName } from "./categoryFormPieces/CategoryFormName";
 import { CategoryFormColor } from "./categoryFormPieces/CategoryFormColor";
 
 import { saveNewCategory } from "../tasklistPieces/categories/categorySlice";
 
-import { Button } from "primereact/button";
+// import { Button } from "primereact/button";
+import { UIButton } from "../../../ui/uiPieces/UIButton";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 const CreateCategoryForm = () => {
@@ -106,16 +107,12 @@ const CreateCategoryForm = () => {
           handleColorChange={handleColorChange}
           setColor={setColor}
         />
-        <div className="p-field">
-          <Button
-            style={{
-              width: "15rem",
-            }}
-            icon="pi pi-check"
-            label="Add New Category"
-            onClick={handleClick}
-          ></Button>
-        </div>
+        <UIButton
+          width="15rem"
+          icon="pi pi-check"
+          label="Add New Category"
+          onClick={handleClick}
+        />
         {loader}
         {message}
       </div>

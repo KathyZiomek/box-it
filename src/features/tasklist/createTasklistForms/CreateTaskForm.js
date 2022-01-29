@@ -6,14 +6,14 @@ import { useDispatch } from "react-redux";
 
 import { saveNewTask } from "../tasklistPieces/tasks/taskSlice";
 
-import Success from "../../../ui/Success";
-import Failure from "../../../ui/Failure";
+import Success from "../../../ui/uiPieces/Success";
+import Failure from "../../../ui/uiPieces/Failure";
 
 import { TaskFormName } from "./taskFormPieces/TaskFormName";
 import { TaskFormCategory } from "./taskFormPieces/TaskFormCategory";
 import { TaskFormDueDate } from "./taskFormPieces/TaskFormDueDate";
+import { UIButton } from "../../../ui/uiPieces/UIButton";
 
-import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 const CreateTaskForm = () => {
@@ -125,17 +125,13 @@ const CreateTaskForm = () => {
           setDueDate={setDueDate}
           handleClick={handleClick}
         />
-        <div className="p-field">
-          <Button
-            style={{
-              width: "15rem",
-              marginTop: 8,
-            }}
-            icon="pi pi-check"
-            label="Add New Task"
-            onClick={handleClick}
-          ></Button>
-        </div>
+        <UIButton
+          width="15rem"
+          margin={8}
+          icon="pi pi-check"
+          label="Add New Task"
+          onClick={handleClick}
+        />
         {loader}
         {message}
       </div>

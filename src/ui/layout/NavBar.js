@@ -20,7 +20,7 @@ import {
   userRemoved,
   selectUserIds,
 } from "../../features/authentication/userSlice";
-import { AuthButton } from "../../features/authentication/authPieces/AuthButton";
+import { UIButton } from "../uiPieces/UIButton";
 
 import { Menubar } from "primereact/menubar";
 
@@ -128,7 +128,13 @@ const NavBar = () => {
 
   const start = <h3>Box It</h3>;
   const end = (
-    <AuthButton icon="pi pi-times" label="Logout" handleClick={onLogout} />
+    <UIButton
+      width="15rem"
+      margin={10}
+      icon="pi pi-times"
+      label="Logout"
+      onClick={onLogout}
+    />
   );
 
   return (

@@ -22,6 +22,14 @@ const ErrorMessages = (error) => {
       return "The provided email and password are both invalid. The email address must be in a valid format, and the password must contain at least six characters.";
     case "auth/too-many-requests":
       return "The server is experiencing too many requests. Please wait for a bit, then try again.";
+    case "auth/session-cookie-expired":
+      return "Your login has expired. Please login again.";
+    case "auth/id-token-expired":
+      return "Your login has expired. Please login again.";
+    case "auth/id-token-revoked":
+      return "Your login has expired. Please login again.";
+    case "auth/invalid-id-token":
+      return "Your login has expired. Please login again.";
     default:
       return "Something went wrong!";
   }

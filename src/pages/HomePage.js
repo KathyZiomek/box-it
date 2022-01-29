@@ -6,7 +6,7 @@ import { selectUsers } from "../features/authentication/userSlice";
 
 import Login from "../features/authentication/Login";
 import SignUp from "../features/authentication/SignUp";
-import { AuthButton } from "../features/authentication/authPieces/AuthButton";
+import { UIButton } from "../ui/uiPieces/UIButton";
 
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
@@ -36,10 +36,12 @@ const HomePage = () => {
       return null;
     } else if (!isLoggingIn && !isSigningUp) {
       return (
-        <AuthButton
+        <UIButton
+          width="15rem"
+          margin={10}
           icon="pi pi-check"
           label="Login"
-          handleClick={loginButton}
+          onClick={loginButton}
         />
       );
     } else if (isLoggingIn) {

@@ -9,11 +9,11 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { ReturnUid } from "../../api/Firebase";
 
 import ErrorMessages from "./ErrorMessages";
-import Failure from "../../ui/Failure";
+import Failure from "../../ui/uiPieces/Failure";
 import { emailValidation, passwordValidation } from "./userValidation";
 import { EmailInput } from "./authPieces/EmailInput";
 import { PasswordInput } from "./authPieces/PasswordInput";
-import { AuthButton } from "./authPieces/AuthButton";
+import { UIButton } from "../../ui/uiPieces/UIButton";
 
 import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -126,10 +126,13 @@ const SignUp = () => {
             passwordWarning={passwordWarning}
           />
         </div>
-        <AuthButton
+        <UIButton
+          width="15rem"
+          margin={10}
           icon="pi pi-check"
           label="Sign Up"
-          handleClick={handleClick}
+          isLoading={isLoading}
+          onClick={handleClick}
         />
       </form>
       {loader}

@@ -14,7 +14,7 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 
 export const DeleteAllForm = () => {
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const tasks = useSelector((state) => selectTasks(state));
   const categories = useSelector((state) => selectCategories(state));
 
@@ -30,7 +30,7 @@ export const DeleteAllForm = () => {
   };
 
   const confirmDelete = () => {
-    setIsDisabled(true);
+    setIsLoading(true);
     toast.current.show({
       severity: "info",
       summary: "Success",
@@ -45,7 +45,7 @@ export const DeleteAllForm = () => {
       categories.forEach((category) => {
         dispatch(deleteCategory(category.id));
       });
-      setIsDisabled(false);
+      setIsLoading(false);
 
       toast.current.show({
         severity: "info",
@@ -63,7 +63,7 @@ export const DeleteAllForm = () => {
 
   const confirm = () => {
     if (tasks.length === 0 && categories.length === 0) {
-      setIsDisabled(true);
+      setIsLoading(true);
       toast.current.show({
         severity: "info",
         summary: "No Data To Delete",
@@ -71,7 +71,7 @@ export const DeleteAllForm = () => {
       });
 
       const unDisableButton = () => {
-        setIsDisabled(false);
+        setIsLoading(false);
       };
       const toastComplete = () => {
         setTimeout(unDisableButton, 1500);
@@ -96,7 +96,7 @@ export const DeleteAllForm = () => {
       <DeleteFormButton
         icon={"pi pi-times"}
         label={"Delete All"}
-        disabled={isDisabled}
+        isLoading={isLoading}
         action={confirm}
       />
     </div>
