@@ -3,15 +3,13 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-import Success from "../../../ui/uiPieces/Success";
-import Failure from "../../../ui/uiPieces/Failure";
+import InfoMessage from "../../../ui/uiPieces/InfoMessage";
 
 import { CategoryFormName } from "./categoryFormPieces/CategoryFormName";
 import { CategoryFormColor } from "./categoryFormPieces/CategoryFormColor";
 
 import { saveNewCategory } from "../tasklistPieces/categories/categorySlice";
 
-// import { Button } from "primereact/button";
 import { UIButton } from "../../../ui/uiPieces/UIButton";
 import { ProgressSpinner } from "primereact/progressspinner";
 
@@ -83,9 +81,9 @@ const CreateCategoryForm = () => {
 
   let message = null;
   if (success === true) {
-    message = <Success />;
+    message = <InfoMessage severity="success" summary="Success!" />;
   } else if (success === false) {
-    message = <Failure message={"Submit Failed."} />;
+    message = <InfoMessage severity="error" message={"Submit Failed."} />;
   } else if (success === "idle") {
     message = null;
   }

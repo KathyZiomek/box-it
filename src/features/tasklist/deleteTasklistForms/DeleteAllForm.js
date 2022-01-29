@@ -67,14 +67,14 @@ export const DeleteAllForm = () => {
       toast.current.show({
         severity: "info",
         summary: "No Data To Delete",
-        life: 1500,
+        life: 1000,
       });
 
       const unDisableButton = () => {
         setIsLoading(false);
       };
       const toastComplete = () => {
-        setTimeout(unDisableButton, 1500);
+        setTimeout(unDisableButton, 1000);
       };
       toastComplete();
     } else {

@@ -6,8 +6,7 @@ import { useDispatch } from "react-redux";
 
 import { saveNewTask } from "../tasklistPieces/tasks/taskSlice";
 
-import Success from "../../../ui/uiPieces/Success";
-import Failure from "../../../ui/uiPieces/Failure";
+import InfoMessage from "../../../ui/uiPieces/InfoMessage";
 
 import { TaskFormName } from "./taskFormPieces/TaskFormName";
 import { TaskFormCategory } from "./taskFormPieces/TaskFormCategory";
@@ -95,9 +94,9 @@ const CreateTaskForm = () => {
   ) : null;
   let message = null;
   if (success === true) {
-    message = <Success />;
+    message = <InfoMessage severity="success" summary="Success!" />;
   } else if (success === false) {
-    message = <Failure message={"Submit Failed."} />;
+    message = <InfoMessage severity="error" message={"Submit Failed."} />;
   } else if (success === "idle") {
     message = null;
   }

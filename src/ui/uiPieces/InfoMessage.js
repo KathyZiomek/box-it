@@ -2,25 +2,25 @@ import { Messages } from "primereact/messages";
 
 import { useRef, useEffect } from "react";
 
-const Success = () => {
+const InfoMessage = (props) => {
   const msg = useRef(null);
 
   useEffect(() => {
     msg.current.show([
       {
-        severity: "success",
-        summary: "Success! ",
-        detail: "",
+        severity: props.severity,
+        summary: props.summary,
+        detail: props.message,
         sticky: true,
       },
     ]);
-  }, []);
+  }, [props.severity, props.summary, props.message]);
 
   return (
-    <div>
+    <div style={{ marginTop: 25 }}>
       <Messages ref={msg} />
     </div>
   );
 };
 
-export default Success;
+export default InfoMessage;

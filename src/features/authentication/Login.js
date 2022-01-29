@@ -9,7 +9,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { ReturnUid } from "../../api/Firebase";
 
 import ErrorMessages from "./ErrorMessages";
-import Failure from "../../ui/uiPieces/Failure";
+import InfoMessage from "../../ui/uiPieces/InfoMessage";
 
 import { emailValidation, passwordValidation } from "./userValidation";
 import { EmailInput } from "./authPieces/EmailInput";
@@ -148,7 +148,7 @@ const Login = () => {
         />
       </form>
       {loader}
-      {!success && <Failure message={errorMessage} />}
+      {!success && <InfoMessage severity="error" message={errorMessage} />}
     </Card>
   );
 };

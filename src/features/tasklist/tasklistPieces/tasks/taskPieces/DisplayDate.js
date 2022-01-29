@@ -1,11 +1,9 @@
-//imports
 import {
   WeekdayConversion,
   MonthConversion,
   DayEnding,
 } from "./DateConversion";
 
-// TODO: Rename variable
 const DisplayDate = (duedate) => {
   const initialDueDate = new Date(duedate);
 
