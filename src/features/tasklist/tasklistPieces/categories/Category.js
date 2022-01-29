@@ -10,8 +10,12 @@ import {
 } from "./categorySlice";
 import { deleteTask, selectTasks } from "../tasks/taskSlice";
 
+import {
+  EditingButtons,
+  NotEditingButtons,
+} from "./categoryPieces/CategoryButtons";
+
 import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
@@ -148,34 +152,22 @@ const Category = ({ id }) => {
     }
   };
 
-  let toggle = !isEditing ? (
+  let isLoading = status === "loading";
+  let loader = isLoading ? (
     <div>
-      <Button
-        type="button"
-        style={{
-          border: category.color,
-          background: category.color,
-          width: "12rem",
-          marginRight: 12,
-        }}
-        onClick={onEdit}
-        icon="pi pi-pencil"
-        label="Edit Category"
-      ></Button>
-
-      <Button
-        type="button"
-        style={{
-          border: category.color,
-          background: category.color,
-          width: "12rem",
-        }}
-        onClick={confirm}
-        icon="pi pi-times"
-        label="Delete Category"
-      ></Button>
-      {/* <hr /> */}
+      <ProgressSpinner />
     </div>
+  ) : null;
+
+  let toggle = !isEditing ? (
+    <NotEditingButtons
+      categoryColor={color}
+      isLoading={isLoading}
+      onEdit={onEdit}
+      //TODO:replace with:
+      // onDelete={onDelete}
+      onDelete={confirm}
+    />
   ) : null;
 
   let categoryAppearance = !isEditing ? (
@@ -198,7 +190,14 @@ const Category = ({ id }) => {
           defaultValue={color}
         />
         <div>
-          <Button
+          <EditingButtons
+            categoryColor={color}
+            isLoading={isLoading}
+            //TODO: incorporate below
+            // handleClick={handleClick}
+            // onCancel={onCancel}
+          />
+          {/* <Button
             style={{
               border: category.color,
               background: category.color,
@@ -218,18 +217,11 @@ const Category = ({ id }) => {
             onClick={onEdit}
             icon="pi pi-times"
             label="Cancel"
-          ></Button>
+          ></Button> */}
         </div>
       </div>
     </form>
   );
-
-  let isLoading = status === "loading";
-  let loader = isLoading ? (
-    <div>
-      <ProgressSpinner />
-    </div>
-  ) : null;
 
   const template = (options) => {
     const toggleIcon = options.collapsed
