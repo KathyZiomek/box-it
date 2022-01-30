@@ -11,9 +11,9 @@ import { ReturnUid } from "../../api/Firebase";
 import ErrorMessages from "./ErrorMessages";
 import InfoMessage from "../../ui/uiPieces/InfoMessage";
 import { emailValidation, passwordValidation } from "./userValidation";
-import { EmailInput } from "./authPieces/EmailInput";
 import { PasswordInput } from "./authPieces/PasswordInput";
 import { UIButton } from "../../ui/uiPieces/UIButton";
+import { UIInputText } from "../../ui/uiPieces/UIInputText";
 
 import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -111,11 +111,17 @@ const SignUp = () => {
     <Card title="Sign Up">
       <form onSubmit={onRegister}>
         <div className="p-fluid">
-          <EmailInput
+          <UIInputText
+            icon="pi pi-envelope"
+            id="email"
+            placeholder="Email Address"
+            value={email}
             isLoading={isLoading}
+            autoComplete="email"
             handleClick={handleClick}
-            setEmail={setEmail}
-            emailWarning={emailWarning}
+            setValue={setEmail}
+            warning={emailWarning}
+            errorText="Invalid Email"
           />
           <PasswordInput
             password={password}

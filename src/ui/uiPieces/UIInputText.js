@@ -1,23 +1,23 @@
 import { InputText } from "primereact/inputtext";
 import { Message } from "primereact/message";
 
-export const EmailInput = (props) => {
+export const UIInputText = (props) => {
   return (
     <div className="p-inputgroup p-field">
       <span className="p-inputgroup-addon">
-        <i className="pi pi-envelope"></i>
+        <i className={props.icon}></i>
       </span>
       <InputText
         type="text"
-        id="email"
-        placeholder="Email Address"
-        value={props.email}
+        id={props.id}
+        placeholder={props.placeholder}
+        value={props.value}
         disabled={props.isLoading}
-        autoComplete="email"
+        autoComplete={props.autoComplete}
         onClick={props.handleClick}
-        onChange={(e) => props.setEmail(e.target.value)}
+        onChange={(e) => props.setValue(e.target.value)}
       />
-      {props.emailWarning && <Message severity="error" text="Invalid Email." />}
+      {props.warning && <Message severity="error" text={props.errorText} />}
     </div>
   );
 };

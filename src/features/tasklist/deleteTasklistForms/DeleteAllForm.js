@@ -8,7 +8,7 @@ import {
 } from "../tasklistPieces/categories/categorySlice";
 
 import { DeleteFormText } from "./deleteFormPieces/DeleteFormText";
-import { DeleteFormButton } from "./deleteFormPieces/DeleteFormButton";
+import { UIButton } from "../../../ui/uiPieces/UIButton";
 
 import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
@@ -93,11 +93,13 @@ export const DeleteAllForm = () => {
     <div>
       <Toast ref={toast} />
       <DeleteFormText />
-      <DeleteFormButton
+      <UIButton
+        width="15rem"
+        margin={8}
         icon={"pi pi-times"}
         label={"Delete All"}
         isLoading={isLoading}
-        action={confirm}
+        onClick={confirm}
       />
     </div>
   );

@@ -12,9 +12,9 @@ import ErrorMessages from "./ErrorMessages";
 import InfoMessage from "../../ui/uiPieces/InfoMessage";
 
 import { emailValidation, passwordValidation } from "./userValidation";
-import { EmailInput } from "./authPieces/EmailInput";
 import { PasswordInput } from "./authPieces/PasswordInput";
 import { UIButton } from "../../ui/uiPieces/UIButton";
+import { UIInputText } from "../../ui/uiPieces/UIInputText";
 
 import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -122,12 +122,17 @@ const Login = () => {
     <Card title="Login">
       <form onSubmit={onLogin}>
         <div className="p-fluid">
-          <EmailInput
-            email={email}
+          <UIInputText
+            icon="pi pi-envelope"
+            id="email"
+            placeholder="Email Address"
+            value={email}
             isLoading={isLoading}
+            autoComplete="email"
             handleClick={handleClick}
-            setEmail={setEmail}
-            emailWarning={emailWarning}
+            setValue={setEmail}
+            warning={emailWarning}
+            errorText="Invalid Email"
           />
           <PasswordInput
             password={password}
