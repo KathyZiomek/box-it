@@ -14,6 +14,8 @@ import {
   EditingButtons,
   NotEditingButtons,
 } from "./categoryPieces/CategoryButtons";
+import { CategoryName } from "./categoryPieces/CategoryName";
+import { CategoryColor } from "./categoryPieces/CategoryColor";
 
 // import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -21,7 +23,6 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { Panel } from "primereact/panel";
 import { Ripple } from "primereact/ripple";
-import { CategoryName } from "./categoryPieces/CategoryName";
 
 // import classes from "./Category.module.css";
 
@@ -34,6 +35,7 @@ const Category = ({ id }) => {
 
   const [status, setStatus] = useState("idle");
   const [newCategoryName, setNewCategoryName] = useState(name);
+  const [newCategoryColor, setNewCategoryColor] = useState(color);
   const [categoryWarning, setCategoryWarning] = useState(false);
   const [isEditing, setEditing] = useState(false);
   const [filter, setFilter] = useState("all");
@@ -105,7 +107,7 @@ const Category = ({ id }) => {
     event.preventDefault();
 
     const enteredCategory = newCategoryName;
-    const enteredColor = colorInputRef.current.value;
+    const enteredColor = newCategoryColor;
     const trimmedCategory = enteredCategory.trim();
     const trimmedColor = enteredColor.trim();
 
@@ -180,7 +182,11 @@ const Category = ({ id }) => {
     </Fragment>
   ) : (
     // <div className={classes.categoryDiv}>{toggle}</div>
-    <form id={category.id} onSubmit={updateHandler}>
+    <form
+      id={category.id}
+      style={{ color: newCategoryColor }}
+      onSubmit={updateHandler}
+    >
       <div className="p-fluid">
         <CategoryName
           id={category.id}
@@ -199,22 +205,27 @@ const Category = ({ id }) => {
             ref={categoryInputRef}
           />
         </div> */}
-        <label htmlFor="categoryColor">Category Color </label>
+        <CategoryColor
+          color={newCategoryColor}
+          // handleClick={handleClick}
+          setNewColor={setNewCategoryColor}
+        />
+        {/* <label htmlFor="categoryColor">Category Color </label>
         <input
           type="color"
           id="categoryColor"
           ref={colorInputRef}
           defaultValue={color}
         />
-        <div>
-          <EditingButtons
-            categoryColor={color}
-            isLoading={isLoading}
-            //TODO: incorporate below
-            // handleClick={handleClick}
-            // onCancel={onCancel}
-          />
-        </div>
+        <div> */}
+        <EditingButtons
+          categoryColor={color}
+          isLoading={isLoading}
+          //TODO: incorporate below
+          // handleClick={handleClick}
+          // onCancel={onCancel}
+        />
+        {/* </div> */}
       </div>
     </form>
   );
@@ -249,7 +260,7 @@ const Category = ({ id }) => {
   };
 
   return (
-    <div style={{ marginTop: 15 }}>
+    <div /*style={{ marginTop: 15 }}*/>
       <Toast ref={toast} />
       <Panel headerTemplate={template} toggleable collapsed>
         {categoryAppearance}

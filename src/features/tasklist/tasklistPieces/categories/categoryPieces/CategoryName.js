@@ -3,7 +3,7 @@ import { Message } from "primereact/message";
 
 export const CategoryName = (props) => {
   return (
-    <div className="p-field p-col-6">
+    <div className="p-field">
       <label htmlFor={props.id}>Name:</label>
       <InputText
         type="text"
