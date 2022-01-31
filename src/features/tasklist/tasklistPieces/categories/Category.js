@@ -1,6 +1,6 @@
 /**NOTE: toasts can have severity levels of info, warn, error and fatal */
 /**This component outputs the category titles in the task list */
-import { React, useState, useRef } from "react";
+import { React, useState, useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -15,30 +15,34 @@ import {
   NotEditingButtons,
 } from "./categoryPieces/CategoryButtons";
 
-import { InputText } from "primereact/inputtext";
+// import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { Panel } from "primereact/panel";
 import { Ripple } from "primereact/ripple";
+import { CategoryName } from "./categoryPieces/CategoryName";
 
-import classes from "./Category.module.css";
+// import classes from "./Category.module.css";
 
 //Destructure `props.id` since we only need the ID value
 const Category = ({ id }) => {
-  const [status, setStatus] = useState("idle");
-  const [isEditing, setEditing] = useState(false);
-  const [filter, setFilter] = useState("all");
-  const toast = useRef(null);
-
   const filterStatus = useSelector((state) => state.filters.status);
   const allTasks = useSelector((state) => selectTasks(state));
   const category = useSelector((state) => selectCategoryById(state, id));
   const { name, color } = category;
 
+  const [status, setStatus] = useState("idle");
+  const [newCategoryName, setNewCategoryName] = useState(name);
+  const [categoryWarning, setCategoryWarning] = useState(false);
+  const [isEditing, setEditing] = useState(false);
+  const [filter, setFilter] = useState("all");
+
+  const toast = useRef(null);
+
   const dispatch = useDispatch();
 
-  const categoryInputRef = useRef();
+  // const categoryInputRef = useRef();
   const colorInputRef = useRef();
 
   if (filterStatus !== filter) {
@@ -77,7 +81,7 @@ const Category = ({ id }) => {
     toastComplete();
   };
 
-  const confirm = () => {
+  const onDelete = () => {
     confirmDialog({
       message:
         "Deleting a category box will also delete any tasks under that category. Are you sure you want to continue?",
@@ -100,7 +104,7 @@ const Category = ({ id }) => {
   const updateHandler = async (event) => {
     event.preventDefault();
 
-    const enteredCategory = categoryInputRef.current.value;
+    const enteredCategory = newCategoryName;
     const enteredColor = colorInputRef.current.value;
     const trimmedCategory = enteredCategory.trim();
     const trimmedColor = enteredColor.trim();
@@ -111,10 +115,7 @@ const Category = ({ id }) => {
       ...(trimmedColor !== color && { color: trimmedColor }),
     };
 
-    if (
-      updatedCategory.name === undefined &&
-      updatedCategory.color === undefined
-    ) {
+    if (updatedCategory.name == null && updatedCategory.color == null) {
       setEditing(false);
     } else {
       setStatus("loading");
@@ -159,29 +160,45 @@ const Category = ({ id }) => {
     </div>
   ) : null;
 
-  let toggle = !isEditing ? (
-    <NotEditingButtons
-      categoryColor={color}
-      isLoading={isLoading}
-      onEdit={onEdit}
-      //TODO:replace with:
-      // onDelete={onDelete}
-      onDelete={confirm}
-    />
-  ) : null;
+  // let toggle = !isEditing ? (
+  //   <NotEditingButtons
+  //     categoryColor={color}
+  //     isLoading={isLoading}
+  //     onEdit={onEdit}
+  //     onDelete={onDelete}
+  //   />
+  // ) : null;
 
   let categoryAppearance = !isEditing ? (
-    <div className={classes.categoryDiv}>{toggle}</div>
+    <Fragment>
+      <NotEditingButtons
+        categoryColor={color}
+        isLoading={isLoading}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+    </Fragment>
   ) : (
-    <form onSubmit={updateHandler} className={classes.editingForm}>
-      <div className={classes.categoryDiv}>
-        <div id={category.id}>
+    // <div className={classes.categoryDiv}>{toggle}</div>
+    <form id={category.id} onSubmit={updateHandler}>
+      <div className="p-fluid">
+        <CategoryName
+          id={category.id}
+          newCategory={newCategoryName}
+          setNewCategory={setNewCategoryName}
+          isLoading={isLoading}
+          // handleClick={handleClick}
+          categoryWarning={categoryWarning}
+        />
+        {/* </div>
+      <div className={classes.categoryDiv}> */}
+        {/* <div id={category.id}>
           <InputText
             id={category.id}
             defaultValue={name}
             ref={categoryInputRef}
           />
-        </div>
+        </div> */}
         <label htmlFor="categoryColor">Category Color </label>
         <input
           type="color"
@@ -197,27 +214,6 @@ const Category = ({ id }) => {
             // handleClick={handleClick}
             // onCancel={onCancel}
           />
-          {/* <Button
-            style={{
-              border: category.color,
-              background: category.color,
-              width: "12rem",
-              marginRight: 12,
-            }}
-            icon="pi pi-check"
-            label="Update Category"
-          ></Button>
-
-          <Button
-            style={{
-              border: category.color,
-              background: category.color,
-              width: "12rem",
-            }}
-            onClick={onEdit}
-            icon="pi pi-times"
-            label="Cancel"
-          ></Button> */}
         </div>
       </div>
     </form>
