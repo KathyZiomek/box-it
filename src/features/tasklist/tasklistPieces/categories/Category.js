@@ -1,5 +1,3 @@
-/**NOTE: toasts can have severity levels of info, warn, error and fatal */
-/**This component outputs the category titles in the task list */
 import { React, useState, useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -17,16 +15,12 @@ import {
 import { CategoryName } from "./categoryPieces/CategoryName";
 import { CategoryColor } from "./categoryPieces/CategoryColor";
 
-// import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { Panel } from "primereact/panel";
 import { Ripple } from "primereact/ripple";
 
-// import classes from "./Category.module.css";
-
-//Destructure `props.id` since we only need the ID value
 const Category = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
   const allTasks = useSelector((state) => selectTasks(state));
@@ -43,9 +37,6 @@ const Category = ({ id }) => {
   const toast = useRef(null);
 
   const dispatch = useDispatch();
-
-  // const categoryInputRef = useRef();
-  const colorInputRef = useRef();
 
   if (filterStatus !== filter) {
     setFilter(filterStatus);
@@ -94,13 +85,28 @@ const Category = ({ id }) => {
     });
   };
 
+  const handleClick = () => {
+    if (categoryWarning === true) {
+      setCategoryWarning(false);
+    }
+  };
+
   const onEdit = (event) => {
     event.preventDefault();
+    handleClick();
     if (!isEditing) {
       setEditing(true);
-    } else {
+    }
+  };
+
+  const onCancel = (event) => {
+    event.preventDefault();
+    handleClick();
+    if (isEditing) {
       setEditing(false);
     }
+    setNewCategoryName(name);
+    setNewCategoryColor(color);
   };
 
   const updateHandler = async (event) => {
@@ -108,49 +114,57 @@ const Category = ({ id }) => {
 
     const enteredCategory = newCategoryName;
     const enteredColor = newCategoryColor;
-    const trimmedCategory = enteredCategory.trim();
-    const trimmedColor = enteredColor.trim();
 
-    let updatedCategory = {
-      id: category.id,
-      ...(trimmedCategory !== name && { name: trimmedCategory }),
-      ...(trimmedColor !== color && { color: trimmedColor }),
-    };
-
-    if (updatedCategory.name == null && updatedCategory.color == null) {
-      setEditing(false);
+    if (enteredCategory.length === 0) {
+      setCategoryWarning(true);
+      setStatus("idle");
+      return;
     } else {
-      setStatus("loading");
+      const trimmedCategory = enteredCategory.trim();
+      const trimmedColor = enteredColor.trim();
 
-      const response = await dispatch(updateCategory(updatedCategory));
+      let updatedCategory = {
+        id: category.id,
+        ...(trimmedCategory !== name && { name: trimmedCategory }),
+        ...(trimmedColor !== color && { color: trimmedColor }),
+      };
 
-      if (response.type === "categories/categoryUpdated/rejected") {
-        toast.current.show({
-          severity: "error",
-          summary: `Error`,
-          detail: `Update for ${name} failed.`,
-          life: 2000,
-        });
-        setStatus("idle");
-      } else if (response.type === "categories/categoryUpdated/fulfilled") {
+      if (updatedCategory.name == null && updatedCategory.color == null) {
         setStatus("idle");
         setEditing(false);
+      } else {
+        setStatus("loading");
 
-        let detail, life;
-        if (trimmedCategory !== name) {
-          detail = `"${name}" Category Changed to "${trimmedCategory}"`;
-          life = 2000;
-        } else if (trimmedCategory === name) {
-          detail = `${name} Category Updated`;
-          life = 1500;
+        const response = await dispatch(updateCategory(updatedCategory));
+
+        if (response.type === "categories/categoryUpdated/rejected") {
+          toast.current.show({
+            severity: "error",
+            summary: `Error`,
+            detail: `Update for ${name} failed.`,
+            life: 2000,
+          });
+          setStatus("idle");
+        } else if (response.type === "categories/categoryUpdated/fulfilled") {
+          setStatus("idle");
+          setEditing(false);
+
+          let detail, life;
+          if (trimmedCategory !== name) {
+            detail = `"${name}" Category Changed to "${trimmedCategory}"`;
+            life = 2000;
+          } else if (trimmedCategory === name) {
+            detail = `${name} Category Updated`;
+            life = 1500;
+          }
+
+          toast.current.show({
+            severity: "info",
+            summary: "Success",
+            detail: detail,
+            life: life,
+          });
         }
-
-        toast.current.show({
-          severity: "info",
-          summary: "Success",
-          detail: detail,
-          life: life,
-        });
       }
     }
   };
@@ -162,15 +176,6 @@ const Category = ({ id }) => {
     </div>
   ) : null;
 
-  // let toggle = !isEditing ? (
-  //   <NotEditingButtons
-  //     categoryColor={color}
-  //     isLoading={isLoading}
-  //     onEdit={onEdit}
-  //     onDelete={onDelete}
-  //   />
-  // ) : null;
-
   let categoryAppearance = !isEditing ? (
     <Fragment>
       <NotEditingButtons
@@ -181,71 +186,45 @@ const Category = ({ id }) => {
       />
     </Fragment>
   ) : (
-    // <div className={classes.categoryDiv}>{toggle}</div>
-    <form
-      id={category.id}
-      style={{ color: newCategoryColor }}
-      onSubmit={updateHandler}
-    >
+    <form id={category.id} style={{ color: color }} onSubmit={updateHandler}>
       <div className="p-fluid">
         <CategoryName
           id={category.id}
           newCategory={newCategoryName}
           setNewCategory={setNewCategoryName}
           isLoading={isLoading}
-          // handleClick={handleClick}
+          handleClick={handleClick}
           categoryWarning={categoryWarning}
         />
-        {/* </div>
-      <div className={classes.categoryDiv}> */}
-        {/* <div id={category.id}>
-          <InputText
-            id={category.id}
-            defaultValue={name}
-            ref={categoryInputRef}
-          />
-        </div> */}
         <CategoryColor
           color={newCategoryColor}
-          // handleClick={handleClick}
+          handleClick={handleClick}
           setNewColor={setNewCategoryColor}
         />
-        {/* <label htmlFor="categoryColor">Category Color </label>
-        <input
-          type="color"
-          id="categoryColor"
-          ref={colorInputRef}
-          defaultValue={color}
-        />
-        <div> */}
-        <EditingButtons
-          categoryColor={color}
-          isLoading={isLoading}
-          //TODO: incorporate below
-          // handleClick={handleClick}
-          // onCancel={onCancel}
-        />
-        {/* </div> */}
       </div>
+      <EditingButtons
+        categoryColor={color}
+        isLoading={isLoading}
+        handleClick={handleClick}
+        onCancel={onCancel}
+      />
     </form>
   );
 
   const template = (options) => {
     const toggleIcon = options.collapsed
-      ? "pi pi-chevron-down"
-      : "pi pi-chevron-up";
+      ? "pi pi-chevron-right"
+      : "pi pi-chevron-down";
     const className = `${options.className} p-jc-start`;
 
     return (
       <div
         style={{
-          // borderRadius: "20px",
           borderColor: "white",
           background: category.color,
         }}
         className={className}
       >
-        <span style={{ color: "white", fontSize: "25px" }}>{name}</span>
         <button
           style={{ color: "white" }}
           className={options.togglerClassName}
@@ -255,12 +234,13 @@ const Category = ({ id }) => {
           <span className={toggleIcon}></span>
           <Ripple />
         </button>
+        <span style={{ color: "white", fontSize: "25px" }}>{name}</span>
       </div>
     );
   };
 
   return (
-    <div /*style={{ marginTop: 15 }}*/>
+    <div>
       <Toast ref={toast} />
       <Panel headerTemplate={template} toggleable collapsed>
         {categoryAppearance}
