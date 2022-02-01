@@ -6,8 +6,6 @@ const TaskListPage = () => {
   return (
     <Fragment>
       <Filters />
-      {/* <h1 style={{ textAlign: "center" }}>Your Task List</h1>
-      <hr /> */}
       <TaskList />
     </Fragment>
   );

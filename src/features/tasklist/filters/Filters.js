@@ -9,7 +9,6 @@ import {
 } from "../tasklistPieces/tasks/taskSlice";
 import { selectCategories } from "../tasklistPieces/categories/categorySlice";
 
-import { RadioButton } from "primereact/radiobutton";
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
 import {
@@ -17,6 +16,10 @@ import {
   RightFilterButton,
 } from "./filterPieces/FilterButtons";
 import { FilterCount } from "./filterPieces/FilterCount";
+import {
+  FilterRadioButtons,
+  FilterRadioButtonsStyled,
+} from "./filterPieces/FilterRadioButtons";
 
 const StatusFilter = ({ value: status, onChange }) => {
   const dispatch = useDispatch();
@@ -49,34 +52,17 @@ const StatusFilter = ({ value: status, onChange }) => {
     const handleClick = () => onChange(value);
 
     return (
-      <div
-        key={value}
-        className="p-field"
-        style={{ marginLeft: 10, marginRight: 10 }}
-      >
-        <li key={value} className="p-field-radiobutton">
-          <RadioButton
-            inputId={key}
-            value={key}
-            name="status"
-            disabled={disabledRadioButton}
-            onChange={handleClick}
-            checked={checkedButton}
-          />
-          <label htmlFor={key}>{key}</label>
-        </li>
-      </div>
+      <FilterRadioButtons
+        value={value}
+        key={key}
+        disabledRadioButton={disabledRadioButton}
+        handleClick={handleClick}
+        checkedButton={checkedButton}
+      />
     );
   });
 
-  return (
-    <Fragment>
-      <div className="p-formgroup-inline p-fluid">
-        <label style={{ marginRight: 25 }}>Filter By Status</label>
-        {renderedFilters}
-      </div>
-    </Fragment>
-  );
+  return <FilterRadioButtonsStyled renderedFilters={renderedFilters} />;
 };
 
 const Filters = () => {
@@ -160,7 +146,7 @@ const Filters = () => {
     <Fragment>
       <Toast ref={toast} />
       <Toolbar left={toolbarButtons} right={toolbarCount} />
-      <Toolbar left={other} />
+      <Toolbar left={other} style={{ marginBottom: 40 }} />
     </Fragment>
   );
 };
