@@ -1,11 +1,11 @@
 import { Fragment } from "react";
 import TaskList from "../../features/tasklist/TaskList";
-import FilterButtons from "../../features/tasklist/filters/FilterButtons";
+import Filters from "../../features/tasklist/filters/Filters";
 
 const TaskListPage = () => {
   return (
     <Fragment>
-      <FilterButtons />
+      <Filters />
       {/* <h1 style={{ textAlign: "center" }}>Your Task List</h1>
       <hr /> */}
       <TaskList />
