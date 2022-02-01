@@ -16,17 +16,7 @@ import {
   LeftFilterButton,
   RightFilterButton,
 } from "./filterPieces/FilterButtons";
-
-const RemainingTasks = ({ count }) => {
-  const suffix = count === 1 ? "" : "s";
-
-  return (
-    <div className="p-formgroup-inline p-fluid">
-      <label style={{ marginRight: 5 }}>Remaining Tasks: </label>
-      <label>{count}</label>
-    </div>
-  );
-};
+import { FilterCount } from "./filterPieces/FilterCount";
 
 const StatusFilter = ({ value: status, onChange }) => {
   const dispatch = useDispatch();
@@ -99,7 +89,6 @@ const Filters = () => {
     );
     return uncompletedTasks;
   });
-  const tasksRemainingCounter = tasksRemaining.length;
 
   const { status } = useSelector((state) => state.filters);
 
@@ -157,7 +146,7 @@ const Filters = () => {
 
   const toolbarCount = (
     <Fragment>
-      <RemainingTasks count={tasksRemainingCounter} />
+      <FilterCount tasksRemaining={tasksRemaining} />
     </Fragment>
   );
 
@@ -171,7 +160,6 @@ const Filters = () => {
     <Fragment>
       <Toast ref={toast} />
       <Toolbar left={toolbarButtons} right={toolbarCount} />
-      {/* <Toolbar left={toolbarCount} /> */}
       <Toolbar left={other} />
     </Fragment>
   );
