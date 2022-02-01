@@ -99,6 +99,13 @@ const Category = ({ id }) => {
     }
   };
 
+  const test = () => {
+    handleClick();
+    if (isEditing) {
+      setEditing(false);
+    }
+  };
+
   const onCancel = (event) => {
     event.preventDefault();
     handleClick();
@@ -229,7 +236,7 @@ const Category = ({ id }) => {
           style={{ color: "white" }}
           className={options.togglerClassName}
           onClick={options.onTogglerClick}
-          disabled={isEditing}
+          onMouseDown={test}
         >
           <span className={toggleIcon}></span>
           <Ripple />
