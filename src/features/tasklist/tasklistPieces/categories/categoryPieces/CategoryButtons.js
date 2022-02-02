@@ -28,19 +28,32 @@ export const NotEditingButtons = (props) => {
 
 export const EditingButtons = (props) => {
   return (
-    <div className="p-formgroup-inline p-fluid">
+    // <div className="p-formgroup-inline p-fluid">
+    <div className="p-d-flex p-jc-between">
       <UIButton
         categoryColor={props.categoryColor}
-        width="12rem"
+        width="10rem"
+        margin={12}
+        icon="pi pi-times"
+        label="Reset Color"
+        isLoading={props.isLoading}
+        onClick={(e) => {
+          e.preventDefault();
+          props.setNewCategoryColor("#1976D2");
+        }}
+      />
+      <UIButton
+        categoryColor={props.categoryColor}
+        width="10rem"
         margin={12}
         icon="pi pi-check"
-        label="Update Category"
+        label="Update"
         isLoading={props.isLoading}
         onClick={props.handleClick}
       />
       <UIButton
         categoryColor={props.categoryColor}
-        width="12rem"
+        width="10rem"
         margin={12}
         icon="pi pi-times"
         label="Cancel"

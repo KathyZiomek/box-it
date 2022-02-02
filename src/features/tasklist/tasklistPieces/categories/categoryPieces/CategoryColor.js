@@ -7,9 +7,9 @@ export const CategoryColor = (props) => {
       <input
         type="color"
         id="categoryColor"
-        defaultValue={props.color}
+        value={props.color}
         onClick={props.handleClick}
-        onChange={(e) => props.setNewColor(e.target.value)}
+        onChange={(e) => props.setNewCategoryColor(e.target.value)}
       />
     </div>
   );

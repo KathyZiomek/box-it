@@ -206,12 +206,13 @@ const Category = ({ id }) => {
         <CategoryColor
           color={newCategoryColor}
           handleClick={handleClick}
-          setNewColor={setNewCategoryColor}
+          setNewCategoryColor={setNewCategoryColor}
         />
       </div>
       <EditingButtons
         categoryColor={color}
         isLoading={isLoading}
+        setNewCategoryColor={setNewCategoryColor}
         handleClick={handleClick}
         onCancel={onCancel}
       />
