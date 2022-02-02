@@ -1,6 +1,4 @@
-/**This file contains the compoonent that handles the overall layout of the pages for now */
-
-/**TODO: as the website becomes more complex, will need to revise this */
+/**This file contains the component that handles the overall layout of the pages for now */
 
 import { useSelector } from "react-redux";
 
@@ -17,7 +15,7 @@ const Layout = (props) => {
 
   return (
     <div>
-      {isLoggedIn ? <NavBar /> : null}
+      <div className={classes.navbar}>{isLoggedIn ? <NavBar /> : null}</div>
       <main className={classes.main}>{props.children}</main>
     </div>
   );
