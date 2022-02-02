@@ -52,13 +52,14 @@ const StatusFilter = ({ value: status, onChange }) => {
     const handleClick = () => onChange(value);
 
     return (
-      <FilterRadioButtons
-        value={value}
-        key={key}
-        disabledRadioButton={disabledRadioButton}
-        handleClick={handleClick}
-        checkedButton={checkedButton}
-      />
+      <li key={value} style={{ listStyle: "none" }}>
+        <FilterRadioButtons
+          value={value}
+          disabledRadioButton={disabledRadioButton}
+          handleClick={handleClick}
+          checkedButton={checkedButton}
+        />
+      </li>
     );
   });
 

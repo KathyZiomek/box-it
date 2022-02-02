@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { RadioButton } from "primereact/radiobutton";
 
 export const FilterRadioButtons = (props) => {
@@ -22,11 +21,14 @@ export const FilterRadioButtons = (props) => {
     <div
       className="p-field-radiobutton"
       key={props.value}
+      id={props.value}
       style={{ marginLeft: 10, marginRight: 10, marginTop: 0, marginBottom: 0 }}
     >
       <RadioButton
-        inputId={props.key}
-        value={props.key}
+        key={props.value}
+        id={props.value}
+        inputId={props.value}
+        value={props.value}
         name="status"
         disabled={props.disabledRadioButton}
         onChange={props.handleClick}
@@ -39,11 +41,9 @@ export const FilterRadioButtons = (props) => {
 
 export const FilterRadioButtonsStyled = (props) => {
   return (
-    <Fragment>
-      <div class="p-formgroup-inline">
-        <label style={{ marginRight: 25 }}>Filter By Status:</label>
-        {props.renderedFilters}
-      </div>
-    </Fragment>
+    <div className="p-formgroup-inline">
+      <label style={{ marginRight: 25 }}>Filter By Status:</label>
+      {props.renderedFilters}
+    </div>
   );
 };
