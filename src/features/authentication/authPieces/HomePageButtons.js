@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import InfoMessage from "../../../ui/uiPieces/InfoMessage";
 import SignUp from "../SignUp";
 import Login from "../Login";
-// import { AnonymousLogin } from "../AnonymousLogin";
+import { AnonymousLogin } from "../AnonymousLogin";
 
 import { Button } from "primereact/button";
 
@@ -19,13 +19,11 @@ export const LoggingInButtons = (props) => {
             className="p-button-link"
           ></Button>
         </div>
-        <div className="p-field">
-          <Button
-            onClick={props.anonymousLogin}
-            label="Don't want to Register for now? Login Anonymously."
-            className="p-button-link"
-          ></Button>
-        </div>
+        <AnonymousLogin
+          setStatus={props.setStatus}
+          setErrorMessage={props.setErrorMessage}
+          setSuccess={props.setSuccess}
+        />
       </div>
       {props.loader}
       {!props.success && (
@@ -47,13 +45,11 @@ export const SigningUpButtons = (props) => {
             className="p-button-link"
           ></Button>
         </div>
-        <div className="p-field">
-          <Button
-            onClick={props.anonymousLogin}
-            label="Don't want to Register for now? Login Anonymously."
-            className="p-button-link"
-          ></Button>
-        </div>
+        <AnonymousLogin
+          setStatus={props.setStatus}
+          setErrorMessage={props.setErrorMessage}
+          setSuccess={props.setSuccess}
+        />
       </div>
       {props.loader}
       {!props.success && (

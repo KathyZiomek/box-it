@@ -1,15 +1,8 @@
 import { useState } from "react";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { getAuth, signInAnonymously } from "firebase/auth";
-import { ReturnUid } from "../api/Firebase";
-
-import ErrorMessages from "../features/authentication/ErrorMessages";
-
-import { selectUsers, userAdded } from "../features/authentication/userSlice";
-import { fetchCategories } from "../features/tasklist/tasklistPieces/categories/categorySlice";
-import { fetchTasks } from "../features/tasklist/tasklistPieces/tasks/taskSlice";
+import { selectUsers } from "../features/authentication/userSlice";
 
 import { UIButton } from "../ui/uiPieces/UIButton";
 
@@ -19,7 +12,6 @@ import {
   LoggingInButtons,
   SigningUpButtons,
 } from "../features/authentication/authPieces/HomePageButtons";
-// import { AnonymousLogin } from "../features/authentication/AnonymousLogin";
 
 const HomePage = () => {
   window.history.replaceState(null, "Box-It", "/");
@@ -28,7 +20,6 @@ const HomePage = () => {
   const [status, setStatus] = useState("idle");
   const [success, setSuccess] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const dispatch = useDispatch();
 
   const loginButton = () => {
     setIsSigningUp(false);
@@ -38,34 +29,6 @@ const HomePage = () => {
   const signupButton = () => {
     setIsLoggingIn(false);
     setIsSigningUp(true);
-  };
-
-  // const anonymousLogin = () => {
-  //   <AnonymousLogin />;
-  // };
-
-  const anonymousLogin = (event) => {
-    setStatus("loading");
-    event.preventDefault();
-
-    const auth = getAuth();
-    signInAnonymously(auth)
-      .then(() => {
-        setStatus("idle");
-        const uid = ReturnUid(auth);
-        const currentUser = { [uid]: { id: uid, status: "loggedIn" } };
-
-        dispatch(userAdded(currentUser));
-        dispatch(fetchCategories());
-        dispatch(fetchTasks());
-      })
-      .catch((error) => {
-        setStatus("idle");
-        const errorCode = error.code;
-        // const errorMessage = error.message;
-        setErrorMessage(ErrorMessages(errorCode));
-        setSuccess(false);
-      });
   };
 
   const userCount = useSelector(selectUsers);
@@ -90,7 +53,9 @@ const HomePage = () => {
       return (
         <LoggingInButtons
           signupButton={signupButton}
-          anonymousLogin={anonymousLogin}
+          setStatus={setStatus}
+          setErrorMessage={setErrorMessage}
+          setSuccess={setSuccess}
           loader={loader}
           success={success}
           errorMessage={errorMessage}
@@ -100,7 +65,9 @@ const HomePage = () => {
       return (
         <SigningUpButtons
           loginButton={loginButton}
-          anonymousLogin={anonymousLogin}
+          setStatus={setStatus}
+          setErrorMessage={setErrorMessage}
+          setSuccess={setSuccess}
           loader={loader}
           success={success}
           errorMessage={errorMessage}

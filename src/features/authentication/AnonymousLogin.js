@@ -14,32 +14,34 @@ import { Button } from "primereact/button";
 
 export const AnonymousLogin = (props) => {
   const dispatch = useDispatch();
-  props.setStatus("loading");
-  //   event.preventDefault();
 
-  const auth = getAuth();
-  signInAnonymously(auth)
-    .then(() => {
-      props.setStatus("idle");
-      const uid = ReturnUid(auth);
-      const currentUser = { [uid]: { id: uid, status: "loggedIn" } };
+  const anonymousLoginHandler = () => {
+    props.setStatus("loading");
+    //   event.preventDefault();
 
-      dispatch(userAdded(currentUser));
-      dispatch(fetchCategories());
-      dispatch(fetchTasks());
-    })
-    .catch((error) => {
-      props.setStatus("idle");
-      const errorCode = error.code;
-      // const errorMessage = error.message;
-      props.setErrorMessage(ErrorMessages(errorCode));
-      props.setSuccess(false);
-    });
+    const auth = getAuth();
+    signInAnonymously(auth)
+      .then(() => {
+        props.setStatus("idle");
+        const uid = ReturnUid(auth);
+        const currentUser = { [uid]: { id: uid, status: "loggedIn" } };
+
+        dispatch(userAdded(currentUser));
+        dispatch(fetchCategories());
+        dispatch(fetchTasks());
+      })
+      .catch((error) => {
+        props.setStatus("idle");
+        const errorCode = error.code;
+        props.setErrorMessage(ErrorMessages(errorCode));
+        props.setSuccess(false);
+      });
+  };
 
   return (
     <div className="p-field">
       <Button
-        onClick={props.anonymousLogin}
+        onClick={anonymousLoginHandler}
         label="Don't want to Register for now? Login Anonymously."
         className="p-button-link"
       ></Button>
