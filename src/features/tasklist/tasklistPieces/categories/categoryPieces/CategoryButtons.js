@@ -35,7 +35,7 @@ export const EditingButtons = (props) => {
         width="10rem"
         margin={12}
         icon="pi pi-times"
-        label="Reset Color"
+        label="Default Color"
         isLoading={props.isLoading}
         onClick={(e) => {
           e.preventDefault();

@@ -1,20 +1,34 @@
-import { Fragment, useState } from "react";
+import { useState } from "react";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-import { selectUsers } from "../features/authentication/userSlice";
+import { getAuth, signInAnonymously } from "firebase/auth";
+import { ReturnUid } from "../api/Firebase";
 
-import Login from "../features/authentication/Login";
-import SignUp from "../features/authentication/SignUp";
+import ErrorMessages from "../features/authentication/ErrorMessages";
+
+import { selectUsers, userAdded } from "../features/authentication/userSlice";
+import { fetchCategories } from "../features/tasklist/tasklistPieces/categories/categorySlice";
+import { fetchTasks } from "../features/tasklist/tasklistPieces/tasks/taskSlice";
+
 import { UIButton } from "../ui/uiPieces/UIButton";
 
 import { Card } from "primereact/card";
-import { Button } from "primereact/button";
+import { ProgressSpinner } from "primereact/progressspinner";
+import {
+  LoggingInButtons,
+  SigningUpButtons,
+} from "../features/authentication/authPieces/HomePageButtons";
+// import { AnonymousLogin } from "../features/authentication/AnonymousLogin";
 
 const HomePage = () => {
   window.history.replaceState(null, "Box-It", "/");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
+  const [status, setStatus] = useState("idle");
+  const [success, setSuccess] = useState("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const dispatch = useDispatch();
 
   const loginButton = () => {
     setIsSigningUp(false);
@@ -24,6 +38,34 @@ const HomePage = () => {
   const signupButton = () => {
     setIsLoggingIn(false);
     setIsSigningUp(true);
+  };
+
+  // const anonymousLogin = () => {
+  //   <AnonymousLogin />;
+  // };
+
+  const anonymousLogin = (event) => {
+    setStatus("loading");
+    event.preventDefault();
+
+    const auth = getAuth();
+    signInAnonymously(auth)
+      .then(() => {
+        setStatus("idle");
+        const uid = ReturnUid(auth);
+        const currentUser = { [uid]: { id: uid, status: "loggedIn" } };
+
+        dispatch(userAdded(currentUser));
+        dispatch(fetchCategories());
+        dispatch(fetchTasks());
+      })
+      .catch((error) => {
+        setStatus("idle");
+        const errorCode = error.code;
+        // const errorMessage = error.message;
+        setErrorMessage(ErrorMessages(errorCode));
+        setSuccess(false);
+      });
   };
 
   const userCount = useSelector(selectUsers);
@@ -40,38 +82,39 @@ const HomePage = () => {
           width="15rem"
           margin={10}
           icon="pi pi-check"
-          label="Login"
+          label="Enter"
           onClick={loginButton}
         />
       );
     } else if (isLoggingIn) {
       return (
-        <Fragment>
-          <Login />
-          <div>
-            <Button
-              onClick={signupButton}
-              label="Not registered yet? Create an Account here."
-              className="p-button-link"
-            ></Button>
-          </div>
-        </Fragment>
+        <LoggingInButtons
+          signupButton={signupButton}
+          anonymousLogin={anonymousLogin}
+          loader={loader}
+          success={success}
+          errorMessage={errorMessage}
+        />
       );
     } else if (isSigningUp) {
       return (
-        <Fragment>
-          <SignUp />
-          <div>
-            <Button
-              onClick={loginButton}
-              label="Already registered? Login here."
-              className="p-button-link"
-            ></Button>
-          </div>
-        </Fragment>
+        <SigningUpButtons
+          loginButton={loginButton}
+          anonymousLogin={anonymousLogin}
+          loader={loader}
+          success={success}
+          errorMessage={errorMessage}
+        />
       );
     }
   };
+
+  let isLoading = status === "loading";
+  let loader = isLoading ? (
+    <div>
+      <ProgressSpinner />
+    </div>
+  ) : null;
 
   return (
     <Card footer={footer}>
