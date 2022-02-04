@@ -14,7 +14,6 @@ import {
 } from "../features/authentication/authPieces/HomePageButtons";
 
 const HomePage = () => {
-  window.history.replaceState(null, "Box-It", "/");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [status, setStatus] = useState("idle");

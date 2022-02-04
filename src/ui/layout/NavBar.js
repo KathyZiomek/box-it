@@ -5,35 +5,21 @@
 
 import { React } from "react";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 
-import {
-  categoriesDeleted,
-  selectCategoryIds,
-} from "../../features/tasklist/tasklistPieces/categories/categorySlice";
-import {
-  tasksDeleted,
-  selectTaskIds,
-} from "../../features/tasklist/tasklistPieces/tasks/taskSlice";
-import {
-  userRemoved,
-  selectUserIds,
-} from "../../features/authentication/userSlice";
-import { UIButton } from "../uiPieces/UIButton";
+import { selectCategoryIds } from "../../features/tasklist/tasklistPieces/categories/categorySlice";
 
-import { Menubar } from "primereact/menubar";
 import { HomeLink } from "./navBarPieces/HomeLink";
 import { ViewAllTasksLink } from "./navBarPieces/ViewAllTasksLink";
 import { CreateCategoryLink } from "./navBarPieces/CreateCategoryLink";
 import { DeleteAllLink } from "./navBarPieces/DeleteAllLink";
 import { CreateTaskLink } from "./navBarPieces/CreateTaskLink";
 import { UserSettingsLink } from "./navBarPieces/UserSettingsLink";
+import { LogoutLink } from "./navBarPieces/LogoutLink";
+
+import { Menubar } from "primereact/menubar";
 
 const NavBar = () => {
-  const dispatch = useDispatch();
-  const activeUser = useSelector(selectUserIds);
   const categories = useSelector(selectCategoryIds);
-  const tasks = useSelector(selectTaskIds);
 
   const home = HomeLink();
   const viewAllTasks = ViewAllTasksLink();
@@ -41,6 +27,7 @@ const NavBar = () => {
   const createTask = CreateTaskLink(categories);
   const deleteAll = DeleteAllLink();
   const userSettings = UserSettingsLink();
+  const logout = LogoutLink();
   const taskList = {
     label: "Task List",
     icon: "pi-menu-icon pi pi-fw pi-file",
@@ -57,32 +44,28 @@ const NavBar = () => {
       deleteAll,
     ],
   };
-
-  const items = [home, taskList, userSettings];
-
-  const onLogout = () => {
-    dispatch(userRemoved(activeUser));
-    dispatch(categoriesDeleted(categories));
-    dispatch(tasksDeleted(tasks));
+  const user = {
+    label: "User",
+    icon: "p-menuitem-icon pi-menu-icon pi pi-fw pi-user",
+    items: [
+      userSettings,
+      {
+        separator: true,
+      },
+      logout,
+    ],
   };
 
+  const items = [home, taskList, user];
+
   const start = <h3>Box It</h3>;
-  const end = (
-    <UIButton
-      width="15rem"
-      margin={10}
-      icon="pi pi-times"
-      label="Logout"
-      onClick={onLogout}
-    />
-  );
 
   return (
     <header>
       <nav>
         <div>
           <div className="card">
-            <Menubar model={items} start={start} end={end} />
+            <Menubar model={items} start={start} />
           </div>
         </div>
       </nav>
