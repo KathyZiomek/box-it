@@ -30,7 +30,7 @@ const TaskList = () => {
   const taskLoadingStatus = useSelector((state) => state.tasks.status);
   const filterStatus = useSelector((state) => state.filters.status);
 
-  if (categoryLoadingStatus === "loading" || taskLoadingStatus === "loading") {
+  if (categoryLoadingStatus === "pending" || taskLoadingStatus === "pending") {
     return (
       <div>
         <ProgressSpinner />
@@ -92,7 +92,7 @@ const TaskList = () => {
       const header = <Category key={categoryId} id={categoryId} />;
 
       return (
-        <Card
+        <div
           key={categoryId}
           id={categoryId}
           style={{
@@ -104,7 +104,20 @@ const TaskList = () => {
         >
           {header}
           {renderedTasks}
-        </Card>
+        </div>
+        // <Card
+        //   key={categoryId}
+        //   id={categoryId}
+        //   style={{
+        //     marginBottom: "2em",
+        //     backgroundColor: "white",
+        //     borderColor: categoryColor,
+        //     width: "100%",
+        //   }}
+        // >
+        //   {header}
+        //   {renderedTasks}
+        // </Card>
       );
     });
     //no tasks or categories

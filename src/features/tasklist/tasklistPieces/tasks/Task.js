@@ -144,14 +144,14 @@ const Task = ({ id }) => {
           });
           setStatus("idle");
         } else if (response.type === "tasks/taskUpdated/fulfilled") {
-          if (
-            updatedTask.name == null &&
-            updatedTask.category == null &&
-            filter === "all"
-          ) {
-            setStatus("idle");
-            setEditing(false);
-          }
+          // if (
+          //   updatedTask.name == null &&
+          //   updatedTask.category == null &&
+          //   filter === "all"
+          // ) {
+          //   setStatus("idle");
+          //   setEditing(false);
+          // }
         }
       }
     }

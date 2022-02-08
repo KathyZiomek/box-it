@@ -153,24 +153,22 @@ const Category = ({ id }) => {
           });
           setStatus("idle");
         } else if (response.type === "categories/categoryUpdated/fulfilled") {
-          setStatus("idle");
-          setEditing(false);
-
-          let detail, life;
-          if (trimmedCategory !== name) {
-            detail = `"${name}" Category Changed to "${trimmedCategory}"`;
-            life = 2000;
-          } else if (trimmedCategory === name) {
-            detail = `${name} Category Updated`;
-            life = 1500;
-          }
-
-          toast.current.show({
-            severity: "info",
-            summary: "Success",
-            detail: detail,
-            life: life,
-          });
+          // setStatus("idle");
+          // setEditing(false);
+          // let detail, life;
+          // if (trimmedCategory !== name) {
+          //   detail = `"${name}" Category Changed to "${trimmedCategory}"`;
+          //   life = 2000;
+          // } else if (trimmedCategory === name) {
+          //   detail = `${name} Category Updated`;
+          //   life = 1500;
+          // }
+          // toast.current.show({
+          //   severity: "info",
+          //   summary: "Success",
+          //   detail: detail,
+          //   life: life,
+          // });
         }
       }
     }

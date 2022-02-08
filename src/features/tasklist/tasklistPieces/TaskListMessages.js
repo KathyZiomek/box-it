@@ -19,13 +19,15 @@ export const NoCategories = () => {
 export const EmptyCategory = (color) => {
   const categoryColor = color.color;
   return (
-    <div style={{ color: categoryColor, padding: "10px", textAlign: "left" }}>
-      <p>This category is empty.</p>
-      <p>
-        Go to "Create a Task" in order to create some tasks to populate this
-        category.
-      </p>
-    </div>
+    <Card>
+      <div style={{ color: categoryColor, padding: "10px", textAlign: "left" }}>
+        <p>This category is empty.</p>
+        <p>
+          Go to "Create a Task" in order to create some tasks to populate this
+          category.
+        </p>
+      </div>
+    </Card>
   );
 };
 

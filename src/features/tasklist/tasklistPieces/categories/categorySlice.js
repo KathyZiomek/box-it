@@ -174,6 +174,7 @@ const categoriesSlice = createSlice({
       .addCase(updateCategory.fulfilled, (state, { payload }) => {
         const { id, ...changes } = payload;
         state.httpErr = false;
+        state.status = "idle";
         categoriesAdapter.updateOne(state, { id, changes });
       })
       .addCase(updateCategory.rejected, (state, action) => {
