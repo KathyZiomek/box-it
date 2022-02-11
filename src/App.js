@@ -2,6 +2,7 @@
 
 /**TODO: add a user settings page */
 import React from "react";
+import { Suspense } from "react";
 
 import "primereact/resources/themes/bootstrap4-light-blue/theme.css"; //theme
 //TODO: replace with
@@ -14,20 +15,30 @@ import "./index.css";
 
 import { Route, Switch } from "react-router-dom";
 import Layout from "./ui/layout/Layout";
-import CreateCategoryPage from "./pages/tasklist/CreateCategoryPage";
-import CreateTaskPage from "./pages/tasklist/CreateTaskPage";
-import TaskListPage from "./pages/tasklist/TaskListPage";
-import DeleteAllPage from "./pages/tasklist/DeleteAllPage";
-import UserSettingsPage from "./pages/UserSettingsPage";
-import HomePage from "./pages/HomePage";
+// import HomePage from "./pages/HomePage";
 
 import { useSelector } from "react-redux";
 import { selectUsers } from "./features/authentication/userSlice";
 
 import PrimeReact from "primereact/api";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { Card } from "primereact/card";
 
 PrimeReact.ripple = true;
 PrimeReact.cssTransition = true; // Default value is true.
+
+const HomePage = React.lazy(() => import("./pages/HomePage"));
+const CreateCategoryPage = React.lazy(() =>
+  import("./pages/tasklist/CreateCategoryPage")
+);
+const CreateTaskPage = React.lazy(() =>
+  import("./pages/tasklist/CreateTaskPage")
+);
+const TaskListPage = React.lazy(() => import("./pages/tasklist/TaskListPage"));
+const DeleteAllPage = React.lazy(() =>
+  import("./pages/tasklist/DeleteAllPage")
+);
+const UserSettingsPage = React.lazy(() => import("./pages/UserSettingsPage"));
 
 function App() {
   const userCount = useSelector(selectUsers);
@@ -38,36 +49,52 @@ function App() {
   if (isLoggedIn) {
     return (
       <Layout>
-        <Switch>
-          <Route path="/create-category">
-            <CreateCategoryPage />
-          </Route>
-          <Route path="/create-task">
-            <CreateTaskPage />
-          </Route>
-          <Route path="/tasklist">
-            <TaskListPage />
-          </Route>
-          <Route path="/delete-all">
-            <DeleteAllPage />
-          </Route>
-          <Route path="/user-settings">
-            <UserSettingsPage />
-          </Route>
-          <Route path="/">
-            <HomePage />
-          </Route>
-        </Switch>
+        <Suspense
+          fallback={
+            <Card>
+              <ProgressSpinner />
+            </Card>
+          }
+        >
+          <Switch>
+            <Route path="/create-category" exact>
+              <CreateCategoryPage />
+            </Route>
+            <Route path="/create-task" exact>
+              <CreateTaskPage />
+            </Route>
+            <Route path="/tasklist" exact>
+              <TaskListPage />
+            </Route>
+            <Route path="/delete-all" exact>
+              <DeleteAllPage />
+            </Route>
+            <Route path="/user-settings" exact>
+              <UserSettingsPage />
+            </Route>
+            <Route path="/">
+              <HomePage />
+            </Route>
+          </Switch>
+        </Suspense>
       </Layout>
     );
   } else if (!isLoggedIn) {
     return (
       <Layout>
-        <Switch>
-          <Route path="/">
-            <HomePage />
-          </Route>
-        </Switch>
+        <Suspense
+          fallback={
+            <Card>
+              <ProgressSpinner />
+            </Card>
+          }
+        >
+          <Switch>
+            <Route path="/">
+              <HomePage />
+            </Route>
+          </Switch>
+        </Suspense>
       </Layout>
     );
   }
