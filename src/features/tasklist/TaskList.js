@@ -21,6 +21,7 @@ import classes from "./TaskList.module.css";
 
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Accordion, AccordionTab } from "primereact/accordion";
+import Modal from "../../ui/uiPieces/Modal";
 
 const TaskList = () => {
   const categoryIds = useSelector(selectCategoryIds);
@@ -32,9 +33,11 @@ const TaskList = () => {
 
   if (categoryLoadingStatus === "pending" || taskLoadingStatus === "pending") {
     return (
-      <div>
-        <ProgressSpinner />
-      </div>
+      <Modal>
+        <div className="p-d-flex p-jc-between">
+          <ProgressSpinner />
+        </div>
+      </Modal>
     );
   } else {
     /*create a variables to store category ids depending on the current status filter:

@@ -12,6 +12,7 @@ import { saveNewCategory } from "../tasklistPieces/categories/categorySlice";
 
 import { UIButton } from "../../../ui/uiPieces/UIButton";
 import { ProgressSpinner } from "primereact/progressspinner";
+import Modal from "../../../ui/uiPieces/Modal";
 
 const CreateCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
@@ -74,9 +75,11 @@ const CreateCategoryForm = () => {
   let isLoading = status === "loading";
   let placeholder = isLoading ? "" : "Enter category name here...";
   let loader = isLoading ? (
-    <div>
-      <ProgressSpinner />
-    </div>
+    <Modal>
+      <div className="p-d-flex p-jc-between">
+        <ProgressSpinner />
+      </div>
+    </Modal>
   ) : null;
 
   let message = null;

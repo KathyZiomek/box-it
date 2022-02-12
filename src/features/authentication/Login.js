@@ -18,6 +18,7 @@ import { UIInputText } from "../../ui/uiPieces/UIInputText";
 
 import { Card } from "primereact/card";
 import { ProgressSpinner } from "primereact/progressspinner";
+import Modal from "../../ui/uiPieces/Modal";
 
 const Login = () => {
   const [status, setStatus] = useState("idle");
@@ -113,9 +114,11 @@ const Login = () => {
 
   let isLoading = status === "loading";
   let loader = isLoading ? (
-    <div>
-      <ProgressSpinner />
-    </div>
+    <Modal>
+      <div className="p-d-flex p-jc-between">
+        <ProgressSpinner />
+      </div>
+    </Modal>
   ) : null;
 
   return (

@@ -20,6 +20,7 @@ import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { Panel } from "primereact/panel";
 import { Ripple } from "primereact/ripple";
+import Modal from "../../../../ui/uiPieces/Modal";
 
 const Category = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
@@ -161,9 +162,11 @@ const Category = ({ id }) => {
 
   let isLoading = status === "loading";
   let loader = isLoading ? (
-    <div>
-      <ProgressSpinner />
-    </div>
+    <Modal>
+      <div className="p-d-flex p-jc-between">
+        <ProgressSpinner />
+      </div>
+    </Modal>
   ) : null;
 
   let categoryAppearance = !isEditing ? (

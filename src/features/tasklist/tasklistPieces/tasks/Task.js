@@ -17,6 +17,7 @@ import { TaskCategoryDropDown } from "./taskPieces/TaskCategoryDropDown";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Toast } from "primereact/toast";
 import "primeflex/primeflex.css";
+import Modal from "../../../../ui/uiPieces/Modal";
 
 const Task = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
@@ -163,9 +164,11 @@ const Task = ({ id }) => {
 
   let isLoading = status === "loading";
   let loader = isLoading ? (
-    <div>
-      <ProgressSpinner />
-    </div>
+    <Modal>
+      <div className="p-d-flex p-jc-between">
+        <ProgressSpinner />
+      </div>
+    </Modal>
   ) : null;
 
   let taskAppearance = !isEditing ? (

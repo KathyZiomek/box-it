@@ -12,6 +12,7 @@ import {
   LoggingInButtons,
   SigningUpButtons,
 } from "../features/authentication/authPieces/HomePageButtons";
+import Modal from "../ui/uiPieces/Modal";
 
 const HomePage = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -77,9 +78,11 @@ const HomePage = () => {
 
   let isLoading = status === "loading";
   let loader = isLoading ? (
-    <div>
-      <ProgressSpinner />
-    </div>
+    <Modal>
+      <div className="p-d-flex p-jc-between">
+        <ProgressSpinner />
+      </div>
+    </Modal>
   ) : null;
 
   return (
