@@ -5,14 +5,14 @@ import { useSelector } from "react-redux";
 import { selectUsers } from "../features/authentication/userSlice";
 
 import { UIButton } from "../ui/uiPieces/UIButton";
-
-import { Card } from "primereact/card";
-import { ProgressSpinner } from "primereact/progressspinner";
 import {
   LoggingInButtons,
   SigningUpButtons,
 } from "../features/authentication/authPieces/HomePageButtons";
 import Modal from "../ui/uiPieces/Modal";
+
+import { Card } from "primereact/card";
+import { ProgressBar } from "primereact/progressbar";
 
 const HomePage = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -79,9 +79,9 @@ const HomePage = () => {
   let isLoading = status === "loading";
   let loader = isLoading ? (
     <Modal>
-      <div className="p-d-flex p-jc-between">
-        <ProgressSpinner />
-      </div>
+      <Card title="Loading...">
+        <ProgressBar mode="indeterminate" />
+      </Card>
     </Modal>
   ) : null;
 

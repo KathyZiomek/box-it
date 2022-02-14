@@ -16,7 +16,7 @@ import { UIButton } from "../../ui/uiPieces/UIButton";
 import { UIInputText } from "../../ui/uiPieces/UIInputText";
 
 import { Card } from "primereact/card";
-import { ProgressSpinner } from "primereact/progressspinner";
+import { ProgressBar } from "primereact/progressbar";
 import Modal from "../../ui/uiPieces/Modal";
 
 const SignUp = () => {
@@ -100,13 +100,12 @@ const SignUp = () => {
       return;
     }
   };
-
   let isLoading = status === "loading";
   let loader = isLoading ? (
     <Modal>
-      <div className="p-d-flex p-jc-between">
-        <ProgressSpinner />
-      </div>
+      <Card title="Signing Up...">
+        <ProgressBar mode="indeterminate" />
+      </Card>
     </Modal>
   ) : null;
 

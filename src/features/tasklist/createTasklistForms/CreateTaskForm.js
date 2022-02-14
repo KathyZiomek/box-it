@@ -13,8 +13,9 @@ import { TaskFormCategory } from "./taskFormPieces/TaskFormCategory";
 import { TaskFormDueDate } from "./taskFormPieces/TaskFormDueDate";
 import { UIButton } from "../../../ui/uiPieces/UIButton";
 
-import { ProgressSpinner } from "primereact/progressspinner";
+import { ProgressBar } from "primereact/progressbar";
 import Modal from "../../../ui/uiPieces/Modal";
+import { Card } from "primereact/card";
 
 const CreateTaskForm = () => {
   const [task, setTask] = useState("");
@@ -90,9 +91,9 @@ const CreateTaskForm = () => {
   let isLoading = status === "loading";
   let loader = isLoading ? (
     <Modal>
-      <div className="p-d-flex p-jc-between">
-        <ProgressSpinner />
-      </div>
+      <Card title="Adding Task...">
+        <ProgressBar mode="indeterminate" />
+      </Card>
     </Modal>
   ) : null;
   let message = null;

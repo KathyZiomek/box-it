@@ -52,7 +52,9 @@ function App() {
         <Suspense
           fallback={
             <Card>
-              <ProgressSpinner />
+              <div className="p-d-flex p-jc-between">
+                <ProgressSpinner />
+              </div>
             </Card>
           }
         >
@@ -85,7 +87,9 @@ function App() {
         <Suspense
           fallback={
             <Card>
-              <ProgressSpinner />
+              <div className="p-d-flex p-jc-between">
+                <ProgressSpinner />
+              </div>
             </Card>
           }
         >

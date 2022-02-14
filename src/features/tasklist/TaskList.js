@@ -19,7 +19,7 @@ import { selectFilteredTasks } from "./tasklistPieces/tasks/taskSlice";
 
 import classes from "./TaskList.module.css";
 
-import { ProgressSpinner } from "primereact/progressspinner";
+import { ProgressBar } from "primereact/progressbar";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import Modal from "../../ui/uiPieces/Modal";
 
@@ -34,9 +34,9 @@ const TaskList = () => {
   if (categoryLoadingStatus === "pending" || taskLoadingStatus === "pending") {
     return (
       <Modal>
-        <div className="p-d-flex p-jc-between">
-          <ProgressSpinner />
-        </div>
+        <Card title="Loading...">
+          <ProgressBar mode="indeterminate" />
+        </Card>
       </Modal>
     );
   } else {

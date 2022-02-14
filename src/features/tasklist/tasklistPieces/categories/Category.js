@@ -15,12 +15,13 @@ import {
 import { CategoryName } from "./categoryPieces/CategoryName";
 import { CategoryColor } from "./categoryPieces/CategoryColor";
 
-import { ProgressSpinner } from "primereact/progressspinner";
+import { ProgressBar } from "primereact/progressbar";
 import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
 import { Panel } from "primereact/panel";
 import { Ripple } from "primereact/ripple";
 import Modal from "../../../../ui/uiPieces/Modal";
+import { Card } from "primereact/card";
 
 const Category = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
@@ -163,9 +164,9 @@ const Category = ({ id }) => {
   let isLoading = status === "loading";
   let loader = isLoading ? (
     <Modal>
-      <div className="p-d-flex p-jc-between">
-        <ProgressSpinner />
-      </div>
+      <Card title="Loading...">
+        <ProgressBar mode="indeterminate" />
+      </Card>
     </Modal>
   ) : null;
 

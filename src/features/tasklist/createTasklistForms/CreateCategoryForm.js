@@ -11,8 +11,9 @@ import { CategoryFormColor } from "./categoryFormPieces/CategoryFormColor";
 import { saveNewCategory } from "../tasklistPieces/categories/categorySlice";
 
 import { UIButton } from "../../../ui/uiPieces/UIButton";
-import { ProgressSpinner } from "primereact/progressspinner";
+import { ProgressBar } from "primereact/progressbar";
 import Modal from "../../../ui/uiPieces/Modal";
+import { Card } from "primereact/card";
 
 const CreateCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
@@ -76,9 +77,9 @@ const CreateCategoryForm = () => {
   let placeholder = isLoading ? "" : "Enter category name here...";
   let loader = isLoading ? (
     <Modal>
-      <div className="p-d-flex p-jc-between">
-        <ProgressSpinner />
-      </div>
+      <Card title="Adding Category...">
+        <ProgressBar mode="indeterminate" />
+      </Card>
     </Modal>
   ) : null;
 

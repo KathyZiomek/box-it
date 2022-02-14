@@ -9,9 +9,12 @@ import {
 
 import { DeleteFormText } from "./deleteFormPieces/DeleteFormText";
 import { UIButton } from "../../../ui/uiPieces/UIButton";
+import Modal from "../../../ui/uiPieces/Modal";
 
 import { confirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
+import { Card } from "primereact/card";
+import { ProgressBar } from "primereact/progressbar";
 
 export const DeleteAllForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,13 +33,14 @@ export const DeleteAllForm = () => {
   };
 
   const confirmDelete = () => {
-    setIsLoading(true);
-    toast.current.show({
-      severity: "info",
-      summary: "Success",
-      detail: `Deleting All Data...`,
-      life: 1500,
-    });
+    setIsLoading("loading");
+
+    // toast.current.show({
+    //   severity: "info",
+    //   summary: "Success",
+    //   detail: `Deleting All Data...`,
+    //   life: 1500,
+    // });
 
     const deleteContent = () => {
       tasks.forEach((task) => {
@@ -89,6 +93,15 @@ export const DeleteAllForm = () => {
     }
   };
 
+  let status = isLoading === "loading";
+  let loader = status ? (
+    <Modal>
+      <Card title="Deleting All Data...">
+        <ProgressBar mode="indeterminate" />
+      </Card>
+    </Modal>
+  ) : null;
+
   return (
     <div>
       <Toast ref={toast} />
@@ -101,6 +114,7 @@ export const DeleteAllForm = () => {
         isLoading={isLoading}
         onClick={confirm}
       />
+      {loader}
     </div>
   );
 };

@@ -14,10 +14,11 @@ import { TaskName } from "./taskPieces/TaskName";
 import { TaskCalendar } from "./taskPieces/TaskCalendar";
 import { TaskCategoryDropDown } from "./taskPieces/TaskCategoryDropDown";
 
-import { ProgressSpinner } from "primereact/progressspinner";
+import { ProgressBar } from "primereact/progressbar";
 import { Toast } from "primereact/toast";
 import "primeflex/primeflex.css";
 import Modal from "../../../../ui/uiPieces/Modal";
+import { Card } from "primereact/card";
 
 const Task = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
@@ -165,9 +166,9 @@ const Task = ({ id }) => {
   let isLoading = status === "loading";
   let loader = isLoading ? (
     <Modal>
-      <div className="p-d-flex p-jc-between">
-        <ProgressSpinner />
-      </div>
+      <Card title="Loading...">
+        <ProgressBar mode="indeterminate" />
+      </Card>
     </Modal>
   ) : null;
 
