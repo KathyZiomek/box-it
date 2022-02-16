@@ -16,7 +16,7 @@ export const LoggingInButtons = (props) => {
         <div className="p-field">
           <Button
             onClick={props.signupButton}
-            label="Not registered yet? Create an Account here."
+            label="Create an Account here."
             className="p-button-link"
           ></Button>
         </div>
@@ -42,7 +42,7 @@ export const SigningUpButtons = (props) => {
         <div className="p-field">
           <Button
             onClick={props.loginButton}
-            label="Already registered? Login here."
+            label="Login here."
             className="p-button-link"
           ></Button>
         </div>
