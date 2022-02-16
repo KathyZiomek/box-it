@@ -1,4 +1,6 @@
 import { Fragment } from "react";
+import { Link } from "react-router-dom";
+
 import { Card } from "primereact/card";
 
 //No categories or tasks
@@ -7,8 +9,8 @@ export const NoCategories = () => {
     <Fragment>
       <p>You do not have any existing tasks or categories.</p>
       <p>
-        To create some categories to sort your tasks, click on Create a Category
-        in the toolbar on the left.
+        To create some categories, go to{" "}
+        <Link to="/create-category">Create a Category</Link>.
       </p>
     </Fragment>
   );
@@ -23,8 +25,8 @@ export const EmptyCategory = (color) => {
       <div style={{ color: categoryColor, padding: "10px", textAlign: "left" }}>
         <p>This category is empty.</p>
         <p>
-          Go to "Create a Task" in order to create some tasks to populate this
-          category.
+          To create some tasks, go to{" "}
+          <Link to="/create-task">Create a Task</Link>.
         </p>
       </div>
     </Card>

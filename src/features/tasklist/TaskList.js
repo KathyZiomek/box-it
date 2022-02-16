@@ -108,19 +108,6 @@ const TaskList = () => {
           {header}
           {renderedTasks}
         </div>
-        // <Card
-        //   key={categoryId}
-        //   id={categoryId}
-        //   style={{
-        //     marginBottom: "2em",
-        //     backgroundColor: "white",
-        //     borderColor: categoryColor,
-        //     width: "100%",
-        //   }}
-        // >
-        //   {header}
-        //   {renderedTasks}
-        // </Card>
       );
     });
     //no tasks or categories

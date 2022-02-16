@@ -97,11 +97,10 @@ const HomePage = () => {
             Box It!
           </p>
           <p>
-            Box It helps you organize tasks using categories that are kept in
-            colour-coordinated boxes. Mark tasks as complete using checkboxes.
-            And most importantly - while we keep your tasks in a box, we won't
-            keep you in a box. You get to customize your colour scheme and
-            categories as much as you want.
+            Box It helps you organize tasks in color-coordinated categories. And
+            most importantly - while we keep your tasks in a box, we won't keep
+            you in a box. You get to do unlimited customizations to your color
+            scheme, categories, and tasks.
           </p>
         </div>
       ) : (
