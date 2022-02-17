@@ -7,7 +7,7 @@ const UserSettingsPage = () => {
         <i
           className="pi pi-exclamation-triangle"
           style={{ fontSize: "1em" }}
-        ></i>
+        ></i>{" "}
         User Settings
       </h1>
     </div>

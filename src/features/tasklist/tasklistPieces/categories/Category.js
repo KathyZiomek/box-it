@@ -147,13 +147,13 @@ const Category = ({ id }) => {
         const response = await dispatch(updateCategory(updatedCategory));
 
         if (response.type === "categories/categoryUpdated/rejected") {
+          setStatus("idle");
           toast.current.show({
             severity: "error",
             summary: `Error`,
             detail: `Update for ${name} failed.`,
             life: 2000,
           });
-          setStatus("idle");
         } else if (response.type === "categories/categoryUpdated/fulfilled") {
           //null
         }
