@@ -118,7 +118,7 @@ const Category = ({ id }) => {
     setNewCategoryColor(color);
   };
 
-  const updateHandler = async (event) => {
+  const updateHandler = (event) => {
     event.preventDefault();
 
     const enteredCategory = newCategoryName;
@@ -144,19 +144,7 @@ const Category = ({ id }) => {
       } else {
         setStatus("loading");
 
-        const response = await dispatch(updateCategory(updatedCategory));
-
-        if (response.type === "categories/categoryUpdated/rejected") {
-          setStatus("idle");
-          toast.current.show({
-            severity: "error",
-            summary: `Error`,
-            detail: `Update for ${name} failed.`,
-            life: 2000,
-          });
-        } else if (response.type === "categories/categoryUpdated/fulfilled") {
-          //null
-        }
+        dispatch(updateCategory(updatedCategory));
       }
     }
   };

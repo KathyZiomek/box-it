@@ -101,7 +101,7 @@ const Task = ({ id }) => {
     }
   };
 
-  const updateHandler = async (event) => {
+  const updateHandler = (event) => {
     event.preventDefault();
 
     const enteredTask = newTaskName;
@@ -136,20 +136,7 @@ const Task = ({ id }) => {
         setEditing(false);
       } else {
         setStatus("loading");
-        const response = await dispatch(updateTask(updatedTask));
-
-        if (response.type === "tasks/taskUpdated/rejected") {
-          // console.log("test");
-          // setStatus("idle");
-          // toast.current.show({
-          //   severity: "error",
-          //   summary: `Error`,
-          //   detail: `Update for ${name} failed.`,
-          //   life: 2000,
-          // });
-        } else if (response.type === "tasks/taskUpdated/fulfilled") {
-          //null
-        }
+        dispatch(updateTask(updatedTask));
       }
     }
   };
