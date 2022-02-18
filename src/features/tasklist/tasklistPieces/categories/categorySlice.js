@@ -23,7 +23,7 @@ const categoriesAdapter = createEntityAdapter();
 
 const initialState = categoriesAdapter.getInitialState({
   status: "idle",
-  httpErr: false,
+  error: "idle",
 });
 
 export const fetchCategories = createAsyncThunk(
@@ -141,7 +141,12 @@ export const updateCategory = createAsyncThunk(
 const categoriesSlice = createSlice({
   name: "categories",
   initialState,
-  reducers: { categoriesDeleted: categoriesAdapter.removeAll },
+  reducers: {
+    categoriesDeleted: categoriesAdapter.removeAll,
+    categoryErrorCleared(state, action) {
+      state.error = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCategories.pending, (state, action) => {
@@ -160,12 +165,10 @@ const categoriesSlice = createSlice({
       })
       .addCase(saveNewCategory.fulfilled, (state, action) => {
         state.status = "idle";
-        state.httpErr = false;
         categoriesAdapter.addOne(state, action.payload);
       })
       .addCase(saveNewCategory.rejected, (state, action) => {
         state.status = "idle";
-        state.httpErr = true;
       })
       .addCase(deleteCategory.fulfilled, categoriesAdapter.removeOne)
       .addCase(updateCategory.pending, (state) => {
@@ -173,18 +176,19 @@ const categoriesSlice = createSlice({
       })
       .addCase(updateCategory.fulfilled, (state, { payload }) => {
         const { id, ...changes } = payload;
-        state.httpErr = false;
+        state.error = false;
         state.status = "idle";
         categoriesAdapter.updateOne(state, { id, changes });
       })
       .addCase(updateCategory.rejected, (state, action) => {
         state.status = "idle";
-        state.httpErr = true;
+        state.error = true;
       });
   },
 });
 
-export const { categoriesDeleted } = categoriesSlice.actions;
+export const { categoriesDeleted, categoryErrorCleared } =
+  categoriesSlice.actions;
 
 export default categoriesSlice.reducer;
 

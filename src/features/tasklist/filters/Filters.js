@@ -6,8 +6,12 @@ import {
   deleteTask,
   selectTasks,
   updateTask,
+  taskErrorCleared,
 } from "../tasklistPieces/tasks/taskSlice";
-import { selectCategories } from "../tasklistPieces/categories/categorySlice";
+import {
+  categoryErrorCleared,
+  selectCategories,
+} from "../tasklistPieces/categories/categorySlice";
 
 import { Toast } from "primereact/toast";
 import { Toolbar } from "primereact/toolbar";
@@ -67,6 +71,9 @@ const StatusFilter = ({ value: status, onChange }) => {
 };
 
 const Filters = () => {
+  const taskErrorStatus = useSelector((state) => state.tasks.httpErr);
+  const categoryErrorStatus = useSelector((state) => state.categories.httpErr);
+
   const toast = useRef(null);
   const dispatch = useDispatch();
 
@@ -95,8 +102,8 @@ const Filters = () => {
   const allTasks = useSelector((state) => selectTasks(state));
   const onClearCompletedClicked = () => {
     toast.current.show({
-      severity: "info",
-      summary: "Success",
+      severity: "success",
+      summary: "Success!",
       detail: "Completed Tasks Cleared",
       life: 800,
     });
@@ -116,7 +123,16 @@ const Filters = () => {
 
   let disabledButtons = allTasks.length === 0 ? true : false;
 
-  const onStatusChange = (status) => dispatch(statusFilterChanged(status));
+  const onStatusChange = (status) => {
+    dispatch(statusFilterChanged(status));
+
+    if (taskErrorStatus !== "idle") {
+      dispatch(taskErrorCleared("idle"));
+    }
+    if (categoryErrorStatus !== "idle") {
+      dispatch(categoryErrorCleared("idle"));
+    }
+  };
 
   const toolbarButtons = (
     <Fragment>
@@ -137,7 +153,7 @@ const Filters = () => {
     </Fragment>
   );
 
-  const other = (
+  const filterByStatus = (
     <Fragment>
       <StatusFilter value={status} onChange={onStatusChange} />
     </Fragment>
@@ -147,7 +163,7 @@ const Filters = () => {
     <Fragment>
       <Toast ref={toast} />
       <Toolbar left={toolbarButtons} right={toolbarCount} />
-      <Toolbar left={other} style={{ marginBottom: 40 }} />
+      <Toolbar left={filterByStatus} style={{ marginBottom: 40 }} />
     </Fragment>
   );
 };

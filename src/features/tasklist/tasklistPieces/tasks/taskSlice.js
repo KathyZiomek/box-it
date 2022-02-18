@@ -25,7 +25,7 @@ const tasksAdapter = createEntityAdapter();
 
 const initialState = tasksAdapter.getInitialState({
   status: "idle",
-  httpErr: false,
+  error: "idle",
 });
 
 //Thunk functions
@@ -122,6 +122,9 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     tasksDeleted: tasksAdapter.removeAll,
+    taskErrorCleared(state, action) {
+      state.error = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -141,12 +144,10 @@ const tasksSlice = createSlice({
       })
       .addCase(saveNewTask.fulfilled, (state, action) => {
         state.status = "idle";
-        state.httpErr = false;
         tasksAdapter.addOne(state, action.payload);
       })
       .addCase(saveNewTask.rejected, (state, action) => {
         state.status = "idle";
-        state.httpErr = true;
       })
       .addCase(deleteTask.fulfilled, tasksAdapter.removeOne)
       .addCase(updateTask.pending, (state) => {
@@ -155,17 +156,17 @@ const tasksSlice = createSlice({
       .addCase(updateTask.fulfilled, (state, { payload }) => {
         state.status = "idle";
         const { id, ...changes } = payload;
-        state.httpErr = false;
+        state.error = false;
         tasksAdapter.updateOne(state, { id, changes });
       })
       .addCase(updateTask.rejected, (state, action) => {
         state.status = "idle";
-        state.httpErr = true;
+        state.error = true;
       });
   },
 });
 
-export const { tasksDeleted } = tasksSlice.actions;
+export const { tasksDeleted, taskErrorCleared } = tasksSlice.actions;
 
 export default tasksSlice.reducer;
 

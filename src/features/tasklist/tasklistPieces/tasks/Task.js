@@ -14,11 +14,12 @@ import { TaskName } from "./taskPieces/TaskName";
 import { TaskCalendar } from "./taskPieces/TaskCalendar";
 import { TaskCategoryDropDown } from "./taskPieces/TaskCategoryDropDown";
 
+import Modal from "../../../../ui/uiPieces/Modal";
+
 import { ProgressBar } from "primereact/progressbar";
 import { Toast } from "primereact/toast";
-import "primeflex/primeflex.css";
-import Modal from "../../../../ui/uiPieces/Modal";
 import { Card } from "primereact/card";
+import "primeflex/primeflex.css";
 
 const Task = ({ id }) => {
   const filterStatus = useSelector((state) => state.filters.status);
@@ -33,6 +34,7 @@ const Task = ({ id }) => {
     duedate != null && duedate !== "" ? new Date(duedate) : "";
 
   const [status, setStatus] = useState("idle");
+  // const [success, setSuccess] = useState("idle");
   const [dropDownCategory, setDropDownCategory] = useState(category);
   const [newDueDate, setNewDueDate] = useState(originalDueDate);
   const [newTaskName, setNewTaskName] = useState(name);
@@ -123,7 +125,6 @@ const Task = ({ id }) => {
         ...(enteredCategory !== task.category && { category: enteredCategory }),
         ...(enteredStatus !== task.completed && { completed: enteredStatus }),
       };
-      // console.log(updatedTask);
 
       if (
         updatedTask.name == null &&
@@ -138,13 +139,14 @@ const Task = ({ id }) => {
         const response = await dispatch(updateTask(updatedTask));
 
         if (response.type === "tasks/taskUpdated/rejected") {
-          toast.current.show({
-            severity: "error",
-            summary: `Error`,
-            detail: `Update for ${name} failed.`,
-            life: 2000,
-          });
-          setStatus("idle");
+          // console.log("test");
+          // setStatus("idle");
+          // toast.current.show({
+          //   severity: "error",
+          //   summary: `Error`,
+          //   detail: `Update for ${name} failed.`,
+          //   life: 2000,
+          // });
         } else if (response.type === "tasks/taskUpdated/fulfilled") {
           //null
         }

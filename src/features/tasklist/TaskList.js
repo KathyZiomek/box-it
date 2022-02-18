@@ -1,4 +1,4 @@
-import { React } from "react";
+import { React, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import Category from "./tasklistPieces/categories/Category";
@@ -22,14 +22,64 @@ import classes from "./TaskList.module.css";
 import { ProgressBar } from "primereact/progressbar";
 import { Accordion, AccordionTab } from "primereact/accordion";
 import Modal from "../../ui/uiPieces/Modal";
+import InfoToast from "../../ui/uiPieces/InfoToast";
 
 const TaskList = () => {
+  const [success, setSuccess] = useState("idle");
+  const [lastUpdate, setLastUpdate] = useState("");
+  const [message, setMessage] = useState("");
+
   const categoryIds = useSelector(selectCategoryIds);
   const categories = useSelector(selectCategories);
   const filteredTasks = useSelector(selectFilteredTasks);
   const categoryLoadingStatus = useSelector((state) => state.categories.status);
   const taskLoadingStatus = useSelector((state) => state.tasks.status);
   const filterStatus = useSelector((state) => state.filters.status);
+  const taskErrorStatus = useSelector((state) => state.tasks.error);
+  const categoryErrorStatus = useSelector((state) => state.categories.error);
+
+  useEffect(() => {
+    if (categoryLoadingStatus === "pending") {
+      setLastUpdate("category");
+    } else if (taskLoadingStatus === "pending") {
+      setLastUpdate("task");
+    }
+  }, [categoryLoadingStatus, taskLoadingStatus]);
+
+  useEffect(() => {
+    if (lastUpdate === "category") {
+      switch (categoryErrorStatus) {
+        case true:
+          setSuccess(false);
+          setMessage("Update Category Failed");
+          break;
+        case false:
+          setSuccess(true);
+          setMessage("Category Updated");
+          break;
+        default:
+          setSuccess("idle");
+      }
+    } else if (lastUpdate === "task") {
+      switch (taskErrorStatus) {
+        case true:
+          setSuccess(false);
+          setMessage("Update Task Failed");
+          break;
+        case false:
+          setSuccess(true);
+          setMessage("Task Updated");
+          break;
+        default:
+          setSuccess("idle");
+      }
+    }
+  }, [lastUpdate, taskErrorStatus, categoryErrorStatus]);
+
+  let toast =
+    success !== "idle" ? (
+      <InfoToast success={success} message={message} />
+    ) : null;
 
   if (categoryLoadingStatus === "pending" || taskLoadingStatus === "pending") {
     return (
@@ -143,7 +193,12 @@ const TaskList = () => {
       );
     } else {
       //existing tasks and categories
-      return <ul className={classes.noBullets}>{renderedTaskListItems}</ul>;
+      return (
+        <ul className={classes.noBullets}>
+          {toast}
+          {renderedTaskListItems}
+        </ul>
+      );
     }
   }
 };
