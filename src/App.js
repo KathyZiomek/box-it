@@ -1,6 +1,5 @@
 /**The main page of the website - handles the routing of the other pages */
 
-/**TODO: add a user settings page */
 import React from "react";
 import { Suspense } from "react";
 

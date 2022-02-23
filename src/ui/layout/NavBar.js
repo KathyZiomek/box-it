@@ -1,7 +1,4 @@
 /** This file will contain the component for the main Navigation Bar of the website */
-/*TODO: add better styling, add the rest of the pages */
-
-/**TODO: only display this nav bar if a user is signed in */
 
 import { React } from "react";
 import { useSelector } from "react-redux";
