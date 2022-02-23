@@ -40,6 +40,8 @@ const CreateTaskForm = () => {
     setSuccess("idle");
   };
 
+  /**Future TODO: add data validation for new task information */
+
   const submitHandler = async (event) => {
     event.preventDefault();
 
@@ -143,5 +145,3 @@ const CreateTaskForm = () => {
 };
 
 export default CreateTaskForm;
-
-/**TODO: add data validation for new task information */

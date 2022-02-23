@@ -1,7 +1,3 @@
-/**TODO: replace with validation for user registration inputs
- * Currently set to "true" for testing purposes
- */
-
 export const emailValidation = (email) => {
   if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
     return true;

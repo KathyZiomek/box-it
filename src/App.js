@@ -4,8 +4,7 @@ import React from "react";
 import { Suspense } from "react";
 
 import "primereact/resources/themes/bootstrap4-light-blue/theme.css"; //theme
-//TODO: replace with
-// import "primereact/resources/themes/bootstrap4-dark-blue/theme.css";
+//Future TODO: add a toggle between light and dark mode
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css"; //icons
 import "primeflex/primeflex.css";

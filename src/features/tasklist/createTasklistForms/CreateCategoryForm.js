@@ -35,7 +35,7 @@ const CreateCategoryForm = () => {
   };
 
   /**Function that handles when the submit button is clicked */
-  /**TODO: add data validation for new category information */
+  /**Future TODO: add data validation for new category information */
 
   const submitHandler = async (event) => {
     event.preventDefault();
