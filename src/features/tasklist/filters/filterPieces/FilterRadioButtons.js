@@ -34,7 +34,9 @@ export const FilterRadioButtons = (props) => {
         onChange={props.handleClick}
         checked={props.checkedButton}
       />
-      <label htmlFor={props.key}>{labelValue}</label>
+      <label htmlFor={props.key} onClick={props.handleClick}>
+        {labelValue}
+      </label>
     </div>
   );
 };
