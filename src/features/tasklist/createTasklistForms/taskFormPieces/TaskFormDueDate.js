@@ -1,7 +1,7 @@
 import { Calendar } from "primereact/calendar";
 
 export const TaskFormDueDate = (props) => {
-  let startDate = new Date("01-01-2022");
+  let startDate = new Date();
   let endDate = new Date("01-01-2023");
 
   let currentDate =
