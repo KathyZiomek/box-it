@@ -102,10 +102,20 @@ export const deleteCategory = createAsyncThunk(
     const token = ReturnToken(auth);
 
     const initialCategory = { text };
-    const response = await client(
-      `${databaseURL}/users/${uid}/categories/${initialCategory.text}.json?auth=${token}`,
-      { method: "DELETE" }
-    );
+    let response;
+
+    if (initialCategory.text === undefined) {
+      response = await client(
+        `${databaseURL}/users/${uid}/categories.json?auth=${token}`,
+        { method: "DELETE" }
+      );
+    } else if (initialCategory.text !== undefined) {
+      response = await client(
+        `${databaseURL}/users/${uid}/categories/${initialCategory.text}.json?auth=${token}`,
+        { method: "DELETE" }
+      );
+    }
+
     if (response === null) {
       return initialCategory.text;
     } else {
@@ -170,7 +180,17 @@ const categoriesSlice = createSlice({
       .addCase(saveNewCategory.rejected, (state, action) => {
         state.status = "idle";
       })
-      .addCase(deleteCategory.fulfilled, categoriesAdapter.removeOne)
+      .addCase(deleteCategory.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(deleteCategory.fulfilled, (state, action) => {
+        state.status = "idle";
+        categoriesAdapter.removeAll(state);
+      })
+      .addCase(deleteCategory.rejected, (state, action) => {
+        state.status = "idle";
+      })
+      // .addCase(deleteCategory.fulfilled, categoriesAdapter.removeOne)
       .addCase(updateCategory.pending, (state) => {
         state.status = "pending";
       })

@@ -81,10 +81,20 @@ export const deleteTask = createAsyncThunk(
     const token = ReturnToken(auth);
 
     const initialTask = { text };
-    const response = await client(
-      `${databaseURL}/users/${uid}/tasks/${initialTask.text}.json?auth=${token}`,
-      { method: "DELETE" }
-    );
+    let response;
+
+    if (initialTask.text === undefined) {
+      response = await client(
+        `${databaseURL}/users/${uid}/tasks.json?auth=${token}`,
+        { method: "DELETE" }
+      );
+    } else if (initialTask.text !== undefined) {
+      response = await client(
+        `${databaseURL}/users/${uid}/tasks/${initialTask.text}.json?auth=${token}`,
+        { method: "DELETE" }
+      );
+    }
+
     if (response === null) {
       return initialTask.text;
     } else {
@@ -149,7 +159,17 @@ const tasksSlice = createSlice({
       .addCase(saveNewTask.rejected, (state, action) => {
         state.status = "idle";
       })
-      .addCase(deleteTask.fulfilled, tasksAdapter.removeOne)
+      .addCase(deleteTask.pending, (state) => {
+        state.status = "pending";
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.status = "idle";
+        tasksAdapter.removeAll(state);
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.status = "idle";
+      })
+      // .addCase(deleteTask.fulfilled, tasksAdapter.removeOne)
       .addCase(updateTask.pending, (state) => {
         state.status = "pending";
       })

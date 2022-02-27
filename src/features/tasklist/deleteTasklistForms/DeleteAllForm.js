@@ -35,29 +35,45 @@ export const DeleteAllForm = () => {
   const confirmDelete = () => {
     setIsLoading("loading");
 
-    // toast.current.show({
-    //   severity: "info",
-    //   summary: "Success",
-    //   detail: `Deleting All Data...`,
-    //   life: 1500,
-    // });
+    const deleteContent = async () => {
+      const responseCategories = await dispatch(deleteCategory());
+      let resultCategories;
 
-    const deleteContent = () => {
-      tasks.forEach((task) => {
-        dispatch(deleteTask(task.id));
-      });
-      categories.forEach((category) => {
-        dispatch(deleteCategory(category.id));
-      });
+      if (responseCategories.type === "categories/categoryDeleted/rejected") {
+        resultCategories = false;
+      } else if (
+        responseCategories.type === "categories/categoryDeleted/fulfilled"
+      ) {
+        resultCategories = true;
+      }
+
+      const responseTasks = await dispatch(deleteTask());
+      let resultTasks;
+
+      if (responseTasks.type === "tasks/taskDeleted/rejected") {
+        resultTasks = false;
+      } else if (responseTasks.type === "tasks/taskDeleted/fulfilled") {
+        resultTasks = true;
+      }
       setIsLoading(false);
 
-      toast.current.show({
-        severity: "info",
-        summary: "Success",
-        detail: `All Data Deleted!`,
-        life: 1500,
-      });
+      if (resultCategories && resultTasks) {
+        toast.current.show({
+          severity: "info",
+          summary: "Success",
+          detail: `All Data Deleted!`,
+          life: 1500,
+        });
+      } else if (!resultCategories || !resultTasks) {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: `All Data Could Not Be Deleted`,
+          life: 1500,
+        });
+      }
     };
+
     const toastComplete = () => {
       setTimeout(deleteContent, 1500);
     };
