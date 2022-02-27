@@ -164,12 +164,15 @@ const tasksSlice = createSlice({
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.status = "idle";
-        tasksAdapter.removeAll(state);
+        if (action.payload !== undefined) {
+          tasksAdapter.removeOne(state, action.payload);
+        } else {
+          tasksAdapter.removeAll(state);
+        }
       })
       .addCase(deleteTask.rejected, (state, action) => {
         state.status = "idle";
       })
-      // .addCase(deleteTask.fulfilled, tasksAdapter.removeOne)
       .addCase(updateTask.pending, (state) => {
         state.status = "pending";
       })

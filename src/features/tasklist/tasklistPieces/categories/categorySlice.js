@@ -185,12 +185,15 @@ const categoriesSlice = createSlice({
       })
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.status = "idle";
-        categoriesAdapter.removeAll(state);
+        if (action.payload !== undefined) {
+          categoriesAdapter.removeOne(state, action.payload);
+        } else {
+          categoriesAdapter.removeAll(state);
+        }
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.status = "idle";
       })
-      // .addCase(deleteCategory.fulfilled, categoriesAdapter.removeOne)
       .addCase(updateCategory.pending, (state) => {
         state.status = "pending";
       })
