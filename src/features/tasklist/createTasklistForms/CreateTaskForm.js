@@ -1,30 +1,26 @@
 /**This file contains the component that outputs the "Create a Task" form which is output on the CreateTask page */
 
 import React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import { saveNewTask } from "../tasklistPieces/tasks/taskSlice";
-
-import InfoMessage from "../../../ui/uiPieces/InfoMessage";
 
 import { TaskFormName } from "./taskFormPieces/TaskFormName";
 import { TaskFormCategory } from "./taskFormPieces/TaskFormCategory";
 import { TaskFormDueDate } from "./taskFormPieces/TaskFormDueDate";
 import { UIButton } from "../../../ui/uiPieces/UIButton";
 
-import { ProgressBar } from "primereact/progressbar";
-import Modal from "../../../ui/uiPieces/Modal";
-import { Card } from "primereact/card";
+import { Toast } from "primereact/toast";
 
 const CreateTaskForm = () => {
   const [task, setTask] = useState("");
   const [status, setStatus] = useState("idle");
-  const [success, setSuccess] = useState("idle");
   const [duedate, setDueDate] = useState("");
   const [category, setCategory] = useState("Select a Category");
   const [taskWarning, setTaskWarning] = useState(false);
   const [categoryWarning, setCategoryWarning] = useState(false);
+  const toast = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -37,13 +33,18 @@ const CreateTaskForm = () => {
     } else if (categoryWarning === true) {
       setCategoryWarning(false);
     }
-    setSuccess("idle");
   };
 
   /**Future TODO: add data validation for new task information */
 
   const submitHandler = async (event) => {
     event.preventDefault();
+    toast.current.show({
+      severity: "info",
+      detail: "Submitting Task...",
+      life: 400,
+    });
+    setStatus("loading");
 
     const enteredTask = task;
     const enteredCategory = category;
@@ -61,54 +62,66 @@ const CreateTaskForm = () => {
           duedate: enteredDuedate,
         };
 
-        setStatus("loading");
-        const response = await dispatch(saveNewTask(newTask));
+        const submitTask = async () => {
+          const response = await dispatch(saveNewTask(newTask));
 
-        if (response.type === "tasks/saveNewTask/rejected") {
-          setSuccess(false);
-          setStatus("idle");
-        } else if (response.type === "tasks/saveNewTask/fulfilled") {
-          setTask("");
-          setCategory("Select a Category");
-          setDueDate("");
-          setStatus("idle");
-          setSuccess(true);
-          setTaskWarning(false);
-          setCategoryWarning(false);
-        }
+          if (response.type === "tasks/saveNewTask/rejected") {
+            setStatus("idle");
+            toast.current.show({
+              severity: "error",
+              summary: "Error",
+              detail: "Task Could Not Be Added",
+              life: 1000,
+            });
+          } else if (response.type === "tasks/saveNewTask/fulfilled") {
+            setTask("");
+            setCategory("Select a Category");
+            setDueDate("");
+            setStatus("idle");
+            setTaskWarning(false);
+            setCategoryWarning(false);
+            toast.current.show({
+              severity: "success",
+              summary: "Success",
+              detail: "Task Added",
+              life: 1000,
+            });
+          }
+        };
+        const toastComplete = () => {
+          setTimeout(submitTask, 400);
+        };
+
+        toastComplete();
       } else {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Task Could Not Be Added",
+          life: 800,
+        });
         setCategoryWarning(true);
-        setSuccess(false);
         setStatus("idle");
         return;
       }
     } else {
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Could Not Submit Task",
+        life: 800,
+      });
       setTaskWarning(true);
-      setSuccess(false);
       setStatus("idle");
       return;
     }
   };
 
   let isLoading = status === "loading";
-  let loader = isLoading ? (
-    <Modal>
-      <Card title="Adding Task...">
-        <ProgressBar mode="indeterminate" />
-      </Card>
-    </Modal>
-  ) : null;
-  let message = null;
-  if (success === true) {
-    message = <InfoMessage severity="success" summary="Success!" />;
-  } else if (success === false) {
-    message = <InfoMessage severity="error" message={"Submit Failed."} />;
-  } else if (success === "idle") {
-    message = null;
-  }
 
   return (
     <form onSubmit={submitHandler}>
+      <Toast ref={toast} />
       <div className="p-fluid">
         <TaskFormName
           isLoading={isLoading}
@@ -136,9 +149,8 @@ const CreateTaskForm = () => {
           icon="pi pi-check"
           label="Add New Task"
           onClick={handleClick}
+          isLoading={isLoading}
         />
-        {loader}
-        {message}
       </div>
     </form>
   );

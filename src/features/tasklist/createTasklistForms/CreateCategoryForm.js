@@ -37,7 +37,7 @@ const CreateCategoryForm = () => {
     toast.current.show({
       severity: "info",
       detail: "Submitting Category...",
-      life: 500,
+      life: 400,
     });
     setStatus("loading");
 
@@ -78,7 +78,7 @@ const CreateCategoryForm = () => {
         }
       };
       const toastComplete = () => {
-        setTimeout(submitCategory, 500);
+        setTimeout(submitCategory, 400);
       };
 
       toastComplete();
