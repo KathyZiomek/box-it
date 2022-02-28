@@ -23,7 +23,7 @@ const categoriesAdapter = createEntityAdapter();
 
 const initialState = categoriesAdapter.getInitialState({
   status: "idle",
-  error: "idle",
+  updated: "idle",
   deleted: "idle",
 });
 
@@ -155,7 +155,7 @@ const categoriesSlice = createSlice({
   reducers: {
     categoriesDeleted: categoriesAdapter.removeAll,
     categoryErrorCleared(state, action) {
-      state.error = action.payload;
+      state.updated = action.payload;
     },
     categoryDeletedCleared(state, action) {
       state.deleted = action.payload;
@@ -205,13 +205,13 @@ const categoriesSlice = createSlice({
       })
       .addCase(updateCategory.fulfilled, (state, { payload }) => {
         const { id, ...changes } = payload;
-        state.error = false;
+        state.updated = true;
         state.status = "idle";
         categoriesAdapter.updateOne(state, { id, changes });
       })
       .addCase(updateCategory.rejected, (state, action) => {
         state.status = "idle";
-        state.error = true;
+        state.updated = false;
       });
   },
 });

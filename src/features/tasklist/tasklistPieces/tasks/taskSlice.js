@@ -25,7 +25,7 @@ const tasksAdapter = createEntityAdapter();
 
 const initialState = tasksAdapter.getInitialState({
   status: "idle",
-  error: "idle",
+  updated: "idle",
   deleted: "idle",
 });
 
@@ -134,7 +134,7 @@ const tasksSlice = createSlice({
   reducers: {
     tasksDeleted: tasksAdapter.removeAll,
     taskErrorCleared(state, action) {
-      state.error = action.payload;
+      state.updated = action.payload;
     },
     taskDeletedCleared(state, action) {
       state.deleted = action.payload;
@@ -185,12 +185,12 @@ const tasksSlice = createSlice({
       .addCase(updateTask.fulfilled, (state, { payload }) => {
         state.status = "idle";
         const { id, ...changes } = payload;
-        state.error = false;
+        state.updated = true;
         tasksAdapter.updateOne(state, { id, changes });
       })
       .addCase(updateTask.rejected, (state, action) => {
         state.status = "idle";
-        state.error = true;
+        state.updated = false;
       });
   },
 });

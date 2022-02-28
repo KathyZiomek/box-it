@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import {
@@ -40,9 +40,11 @@ const TaskList = () => {
     (state) => state.categories.deleted
   );
   const taskDeletingStatus = useSelector((state) => state.tasks.deleted);
+  const taskUpdatingStatus = useSelector((state) => state.tasks.updated);
+  const categoryUpdatingStatus = useSelector(
+    (state) => state.categories.updated
+  );
   const filterStatus = useSelector((state) => state.filters.status);
-  const taskErrorStatus = useSelector((state) => state.tasks.error);
-  const categoryErrorStatus = useSelector((state) => state.categories.error);
 
   useEffect(() => {
     if (categoryLoadingStatus === "pending") {
@@ -54,15 +56,15 @@ const TaskList = () => {
 
   useEffect(() => {
     if (lastUpdate === "category") {
-      if (categoryErrorStatus !== "idle") {
-        switch (categoryErrorStatus) {
+      if (categoryUpdatingStatus !== "idle") {
+        switch (categoryUpdatingStatus) {
           case true:
-            setSuccess(false);
-            setMessage("Update Category Failed");
-            break;
-          case false:
             setSuccess(true);
             setMessage("Category Updated");
+            break;
+          case false:
+            setSuccess(false);
+            setMessage("Update Category Failed");
             break;
           default:
             setSuccess("idle");
@@ -82,20 +84,20 @@ const TaskList = () => {
         }
       } else if (
         categoryDeletingStatus === "idle" &&
-        categoryErrorStatus === "idle"
+        categoryUpdatingStatus === "idle"
       ) {
         setSuccess("idle");
       }
     } else if (lastUpdate === "task") {
-      if (taskErrorStatus !== "idle") {
-        switch (taskErrorStatus) {
+      if (taskUpdatingStatus !== "idle") {
+        switch (taskUpdatingStatus) {
           case true:
-            setSuccess(false);
-            setMessage("Update Task Failed");
-            break;
-          case false:
             setSuccess(true);
             setMessage("Task Updated");
+            break;
+          case false:
+            setSuccess(false);
+            setMessage("Update Task Failed");
             break;
           default:
             setSuccess("idle");
@@ -113,14 +115,17 @@ const TaskList = () => {
           default:
             setSuccess("idle");
         }
-      } else if (taskDeletingStatus === "idle" && taskErrorStatus === "idle") {
+      } else if (
+        taskDeletingStatus === "idle" &&
+        taskUpdatingStatus === "idle"
+      ) {
         setSuccess("idle");
       }
     }
   }, [
     lastUpdate,
-    taskErrorStatus,
-    categoryErrorStatus,
+    taskUpdatingStatus,
+    categoryUpdatingStatus,
     taskDeletingStatus,
     categoryDeletingStatus,
   ]);
@@ -224,14 +229,24 @@ const TaskList = () => {
       renderedTaskListItems.length === 0 &&
       filterStatus === "active"
     ) {
-      return <NoActiveTasks />;
+      return (
+        <Fragment>
+          {toast}
+          <NoActiveTasks />
+        </Fragment>
+      );
     } else if (
       categoryLoadingStatus === "idle" &&
       taskLoadingStatus === "idle" &&
       renderedTaskListItems.length === 0 &&
       filterStatus === "completed"
     ) {
-      return <NoCompletedTasks />;
+      return (
+        <Fragment>
+          {toast}
+          <NoCompletedTasks />
+        </Fragment>
+      );
     } else if (
       categoryLoadingStatus === "idle" &&
       taskLoadingStatus === "idle" &&
@@ -245,6 +260,7 @@ const TaskList = () => {
             width: "100%",
           }}
         >
+          {toast}
           <NoCategories />
         </Card>
       );
