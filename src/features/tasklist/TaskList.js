@@ -165,6 +165,7 @@ const TaskList = () => {
     const sortedUniqueFilteredCategories = sortArrayById(
       uniqueFilteredCategories
     );
+    console.log(sortedUniqueFilteredCategories);
 
     //since `categories` is an array, we can loop over it
     const renderedTaskListItems = sortedUniqueFilteredCategories.map(

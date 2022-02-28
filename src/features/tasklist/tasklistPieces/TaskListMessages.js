@@ -1,7 +1,10 @@
 import { Fragment } from "react";
 import { Link } from "react-router-dom";
 
+import { UIButton } from "../../../ui/uiPieces/UIButton";
+
 import { Card } from "primereact/card";
+import { Button } from "primereact/button";
 
 //No categories or tasks
 export const NoCategories = () => {
@@ -9,8 +12,20 @@ export const NoCategories = () => {
     <Fragment>
       <p>You do not have any existing tasks or categories.</p>
       <p>
-        To create some categories, go to{" "}
-        <Link to="/create-category">Create a Category</Link>.
+        To create some categories, click here: <br />
+        <Link
+          to="/create-category"
+          style={{ textDecoration: "none", margin: 0, padding: 0 }}
+        >
+          <Button
+            style={{
+              width: "15rem",
+              marginTop: 15,
+            }}
+            icon="pi pi-plus"
+            label="Create a Category"
+          ></Button>
+        </Link>
       </p>
     </Fragment>
   );
@@ -23,11 +38,20 @@ export const EmptyCategory = (color) => {
   return (
     <Card>
       <div style={{ color: categoryColor, padding: "10px", textAlign: "left" }}>
-        <p>This category is empty.</p>
-        <p>
-          To create some tasks, go to{" "}
-          <Link to="/create-task">Create a Task</Link>.
-        </p>
+        This category is empty. To create some tasks, click here:
+        <br />
+        <Link to="/create-task" style={{ textDecoration: "none" }}>
+          <Button
+            style={{
+              border: categoryColor,
+              background: categoryColor,
+              width: "15rem",
+              marginTop: 15,
+            }}
+            icon="pi pi-plus"
+            label="Create a Task"
+          ></Button>
+        </Link>
       </div>
     </Card>
   );

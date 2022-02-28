@@ -19,7 +19,9 @@ export const TaskCheckBoxes = (props) => {
             checked={!status}
             onChange={props.markInProgress}
           />
-          <label htmlFor="complete">In Progress</label>
+          <label htmlFor="complete" onClick={props.markInProgress}>
+            In Progress
+          </label>
         </div>
         <div className="p-field-checkbox">
           <RadioButton
@@ -29,7 +31,9 @@ export const TaskCheckBoxes = (props) => {
             checked={status}
             onChange={props.markComplete}
           />
-          <label htmlFor="complete">Complete</label>
+          <label htmlFor="complete" onClick={props.markComplete}>
+            Complete
+          </label>
         </div>
       </div>
     </div>

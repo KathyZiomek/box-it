@@ -29,7 +29,7 @@ const NavBar = () => {
   const taskList =
     categories.length > 0
       ? {
-          label: "Task List",
+          label: "Tasks & Categories",
           icon: "pi-menu-icon pi pi-fw pi-file",
           items: [
             viewAllTasks,
@@ -45,7 +45,7 @@ const NavBar = () => {
           ],
         }
       : {
-          label: "Task List",
+          label: "Tasks & Categories",
           icon: "pi-menu-icon pi pi-fw pi-file",
           items: [
             viewAllTasks,
