@@ -43,7 +43,6 @@ const Task = ({ id }) => {
     duedate != null && duedate !== "" ? new Date(duedate) : "";
 
   const [status, setStatus] = useState("idle");
-  // const [success, setSuccess] = useState("idle");
   const [dropDownCategory, setDropDownCategory] = useState(category);
   const [newDueDate, setNewDueDate] = useState(originalDueDate);
   const [newTaskName, setNewTaskName] = useState(name);

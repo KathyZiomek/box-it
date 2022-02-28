@@ -137,11 +137,9 @@ const TaskList = () => {
 
   if (categoryLoadingStatus === "pending" || taskLoadingStatus === "pending") {
     return (
-      <Modal>
-        <Card title="Loading...">
-          <ProgressBar mode="indeterminate" />
-        </Card>
-      </Modal>
+      <Card title="Loading...">
+        <ProgressBar mode="indeterminate" />
+      </Card>
     );
   } else {
     /*create a variables to store category ids depending on the current status filter:
