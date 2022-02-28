@@ -75,7 +75,7 @@ export const DeleteAllForm = () => {
     };
 
     const loadingComplete = () => {
-      setTimeout(deleteContent, 1500);
+      setTimeout(deleteContent, 800);
     };
 
     loadingComplete();

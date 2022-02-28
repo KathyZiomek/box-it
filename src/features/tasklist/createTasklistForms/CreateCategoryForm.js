@@ -1,9 +1,7 @@
 /**This file contains the component for the New Category Form that creates the form on CreateCategory.js */
 import React from "react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
-
-import InfoMessage from "../../../ui/uiPieces/InfoMessage";
 
 import { CategoryFormName } from "./categoryFormPieces/CategoryFormName";
 import { CategoryFormColor } from "./categoryFormPieces/CategoryFormColor";
@@ -11,34 +9,37 @@ import { CategoryFormColor } from "./categoryFormPieces/CategoryFormColor";
 import { saveNewCategory } from "../tasklistPieces/categories/categorySlice";
 
 import { UIButton } from "../../../ui/uiPieces/UIButton";
-import { ProgressBar } from "primereact/progressbar";
-import Modal from "../../../ui/uiPieces/Modal";
-import { Card } from "primereact/card";
+
+import { Toast } from "primereact/toast";
 
 const CreateCategoryForm = () => {
   const [newCategory, setNewCategory] = useState("");
   const [status, setStatus] = useState("idle");
-  const [success, setSuccess] = useState("idle");
   const [color, setColor] = useState("#1976D2");
   const [categoryWarning, setCategoryWarning] = useState(false);
   const dispatch = useDispatch();
+  const toast = useRef(null);
 
   const handleClick = () => {
     if (categoryWarning === true) {
       setCategoryWarning(false);
     }
-    setSuccess("idle");
   };
 
   const handleColorChange = (e) => {
     setColor(e.target.value);
   };
 
-  /**Function that handles when the submit button is clicked */
   /**Future TODO: add data validation for new category information */
 
-  const submitHandler = async (event) => {
+  const submitHandler = (event) => {
     event.preventDefault();
+    toast.current.show({
+      severity: "info",
+      detail: "Submitting Category...",
+      life: 500,
+    });
+    setStatus("loading");
 
     const enteredCategory = newCategory;
     const enteredColor = color;
@@ -52,22 +53,43 @@ const CreateCategoryForm = () => {
         color: trimmedColor,
       };
 
-      setStatus("loading");
-      const response = await dispatch(saveNewCategory(newCategory));
+      const submitCategory = async () => {
+        const response = await dispatch(saveNewCategory(newCategory));
 
-      if (response.type === "categories/saveNewCategory/rejected") {
-        setSuccess(false);
-        setStatus("idle");
-      } else if (response.type === "categories/saveNewCategory/fulfilled") {
-        setNewCategory("");
-        setColor("#1976D2");
-        setStatus("idle");
-        setSuccess(true);
-        setCategoryWarning(false);
-      }
+        if (response.type === "categories/saveNewCategory/rejected") {
+          setStatus("idle");
+          toast.current.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Category Could Not Be Added",
+            life: 1000,
+          });
+        } else if (response.type === "categories/saveNewCategory/fulfilled") {
+          setNewCategory("");
+          setColor("#1976D2");
+          setStatus("idle");
+          setCategoryWarning(false);
+          toast.current.show({
+            severity: "success",
+            summary: "Success",
+            detail: "Category Added",
+            life: 1000,
+          });
+        }
+      };
+      const toastComplete = () => {
+        setTimeout(submitCategory, 500);
+      };
+
+      toastComplete();
     } else {
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Could Not Submit Category",
+        life: 800,
+      });
       setCategoryWarning(true);
-      setSuccess(false);
       setStatus("idle");
       return;
     }
@@ -75,25 +97,10 @@ const CreateCategoryForm = () => {
 
   let isLoading = status === "loading";
   let placeholder = isLoading ? "" : "Enter category name here...";
-  let loader = isLoading ? (
-    <Modal>
-      <Card title="Adding Category...">
-        <ProgressBar mode="indeterminate" />
-      </Card>
-    </Modal>
-  ) : null;
-
-  let message = null;
-  if (success === true) {
-    message = <InfoMessage severity="success" summary="Success!" />;
-  } else if (success === false) {
-    message = <InfoMessage severity="error" message={"Submit Failed."} />;
-  } else if (success === "idle") {
-    message = null;
-  }
 
   return (
     <form onSubmit={submitHandler}>
+      <Toast ref={toast} />
       <div className="p-fluid">
         <CategoryFormName
           placeholder={placeholder}
@@ -108,15 +115,15 @@ const CreateCategoryForm = () => {
           handleClick={handleClick}
           handleColorChange={handleColorChange}
           setColor={setColor}
+          isLoading={isLoading}
         />
         <UIButton
           width="15rem"
           icon="pi pi-check"
           label="Add New Category"
           onClick={handleClick}
+          isLoading={isLoading}
         />
-        {loader}
-        {message}
       </div>
     </form>
   );

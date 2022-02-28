@@ -20,12 +20,8 @@ import { TaskName } from "./taskPieces/TaskName";
 import { TaskCalendar } from "./taskPieces/TaskCalendar";
 import { TaskCategoryDropDown } from "./taskPieces/TaskCategoryDropDown";
 
-import Modal from "../../../../ui/uiPieces/Modal";
-
 import { confirmDialog } from "primereact/confirmdialog";
-import { ProgressBar } from "primereact/progressbar";
 import { Toast } from "primereact/toast";
-import { Card } from "primereact/card";
 import "primeflex/primeflex.css";
 
 const Task = ({ id }) => {
@@ -183,13 +179,6 @@ const Task = ({ id }) => {
   };
 
   let isLoading = status === "loading";
-  let loader = isLoading ? (
-    <Modal>
-      <Card title="Loading...">
-        <ProgressBar mode="indeterminate" />
-      </Card>
-    </Modal>
-  ) : null;
 
   let taskAppearance = !isEditing ? (
     <Fragment>
@@ -246,7 +235,6 @@ const Task = ({ id }) => {
     <div style={{ color: categoryColor }}>
       <Toast ref={toast} />
       {taskAppearance}
-      {loader}
     </div>
   );
 };

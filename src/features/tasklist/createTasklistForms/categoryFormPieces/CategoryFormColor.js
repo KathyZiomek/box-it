@@ -9,6 +9,7 @@ export const CategoryFormColor = (props) => {
         id="categoryColor"
         value={props.color}
         onClick={props.handleClick}
+        disabled={props.isLoading}
         onChange={props.handleColorChange}
       />
     </div>

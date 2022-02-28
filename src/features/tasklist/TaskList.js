@@ -16,7 +16,6 @@ import {
   NoActiveTasks,
   NoCompletedTasks,
 } from "./tasklistPieces/TaskListMessages";
-import Modal from "../../ui/uiPieces/Modal";
 import InfoToast from "../../ui/uiPieces/InfoToast";
 import { sortArrayById, sortArrayByName } from "../../common/Sorting";
 
