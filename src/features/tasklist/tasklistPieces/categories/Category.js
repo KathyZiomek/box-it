@@ -5,6 +5,8 @@ import {
   deleteCategory,
   selectCategoryById,
   updateCategory,
+  categoryErrorCleared,
+  categoryDeletedCleared,
 } from "./categorySlice";
 import { deleteTask, selectTasks } from "../tasks/taskSlice";
 
@@ -24,6 +26,10 @@ import Modal from "../../../../ui/uiPieces/Modal";
 import { Card } from "primereact/card";
 
 const Category = ({ id }) => {
+  const categoryErrorStatus = useSelector((state) => state.categories.error);
+  const categoryDeletedStatus = useSelector(
+    (state) => state.categories.deleted
+  );
   const filterStatus = useSelector((state) => state.filters.status);
   const allTasks = useSelector((state) => selectTasks(state));
   const category = useSelector((state) => selectCategoryById(state, id));
@@ -57,11 +63,14 @@ const Category = ({ id }) => {
     toast.current.show({
       severity: "info",
       summary: "Success",
-      detail: `"${category.name}" Category Deleted`,
-      life: 1500,
+      detail: `Deleting Category...`,
+      life: 1000,
     });
 
     const deleteContent = () => {
+      if (categoryErrorStatus !== "idle") {
+        dispatch(categoryErrorCleared("idle"));
+      }
       allTasks.forEach((task) => {
         if (task.category === category.id) {
           dispatch(deleteTask(task.id));
@@ -70,7 +79,7 @@ const Category = ({ id }) => {
       dispatch(deleteCategory(category.id));
     };
     const toastComplete = () => {
-      setTimeout(deleteContent, 1500);
+      setTimeout(deleteContent, 1000);
     };
 
     toastComplete();
@@ -78,8 +87,7 @@ const Category = ({ id }) => {
 
   const onDelete = () => {
     confirmDialog({
-      message:
-        "Deleting a category box will also delete any tasks under that category. Are you sure you want to continue?",
+      message: `Deleting a category also deletes all of its tasks. Are you sure you want to continue?`,
       header: "Warning",
       icon: "pi pi-exclamation-triangle",
       accept: () => confirmDelete(),
@@ -120,6 +128,9 @@ const Category = ({ id }) => {
 
   const updateHandler = (event) => {
     event.preventDefault();
+    if (categoryDeletedStatus !== "idle") {
+      dispatch(categoryDeletedCleared("idle"));
+    }
 
     const enteredCategory = newCategoryName;
     const enteredColor = newCategoryColor;

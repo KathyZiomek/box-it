@@ -24,6 +24,7 @@ const categoriesAdapter = createEntityAdapter();
 const initialState = categoriesAdapter.getInitialState({
   status: "idle",
   error: "idle",
+  deleted: "idle",
 });
 
 export const fetchCategories = createAsyncThunk(
@@ -156,6 +157,9 @@ const categoriesSlice = createSlice({
     categoryErrorCleared(state, action) {
       state.error = action.payload;
     },
+    categoryDeletedCleared(state, action) {
+      state.deleted = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -185,6 +189,7 @@ const categoriesSlice = createSlice({
       })
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.status = "idle";
+        state.deleted = true;
         if (action.payload !== undefined) {
           categoriesAdapter.removeOne(state, action.payload);
         } else {
@@ -193,6 +198,7 @@ const categoriesSlice = createSlice({
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.status = "idle";
+        state.deleted = false;
       })
       .addCase(updateCategory.pending, (state) => {
         state.status = "pending";
@@ -210,8 +216,11 @@ const categoriesSlice = createSlice({
   },
 });
 
-export const { categoriesDeleted, categoryErrorCleared } =
-  categoriesSlice.actions;
+export const {
+  categoriesDeleted,
+  categoryErrorCleared,
+  categoryDeletedCleared,
+} = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;
 

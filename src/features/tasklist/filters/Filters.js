@@ -7,10 +7,12 @@ import {
   selectTasks,
   updateTask,
   taskErrorCleared,
+  taskDeletedCleared,
 } from "../tasklistPieces/tasks/taskSlice";
 import {
   categoryErrorCleared,
   selectCategories,
+  categoryDeletedCleared,
 } from "../tasklistPieces/categories/categorySlice";
 
 import { Toast } from "primereact/toast";
@@ -71,8 +73,12 @@ const StatusFilter = ({ value: status, onChange }) => {
 };
 
 const Filters = () => {
-  const taskErrorStatus = useSelector((state) => state.tasks.httpErr);
-  const categoryErrorStatus = useSelector((state) => state.categories.httpErr);
+  const taskErrorStatus = useSelector((state) => state.tasks.error);
+  const taskDeletedStatus = useSelector((state) => state.tasks.deleted);
+  const categoryErrorStatus = useSelector((state) => state.categories.error);
+  const categoryDeletedStatus = useSelector(
+    (state) => state.categories.deleted
+  );
 
   const toast = useRef(null);
   const dispatch = useDispatch();
@@ -131,6 +137,12 @@ const Filters = () => {
     }
     if (categoryErrorStatus !== "idle") {
       dispatch(categoryErrorCleared("idle"));
+    }
+    if (taskDeletedStatus !== "idle") {
+      dispatch(taskDeletedCleared("idle"));
+    }
+    if (categoryDeletedStatus !== "idle") {
+      dispatch(categoryDeletedCleared("idle"));
     }
   };
 

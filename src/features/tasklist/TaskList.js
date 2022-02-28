@@ -36,6 +36,10 @@ const TaskList = () => {
   const filteredTasks = useSelector(selectFilteredTasks);
   const categoryLoadingStatus = useSelector((state) => state.categories.status);
   const taskLoadingStatus = useSelector((state) => state.tasks.status);
+  const categoryDeletingStatus = useSelector(
+    (state) => state.categories.deleted
+  );
+  const taskDeletingStatus = useSelector((state) => state.tasks.deleted);
   const filterStatus = useSelector((state) => state.filters.status);
   const taskErrorStatus = useSelector((state) => state.tasks.error);
   const categoryErrorStatus = useSelector((state) => state.categories.error);
@@ -50,33 +54,76 @@ const TaskList = () => {
 
   useEffect(() => {
     if (lastUpdate === "category") {
-      switch (categoryErrorStatus) {
-        case true:
-          setSuccess(false);
-          setMessage("Update Category Failed");
-          break;
-        case false:
-          setSuccess(true);
-          setMessage("Category Updated");
-          break;
-        default:
-          setSuccess("idle");
+      if (categoryErrorStatus !== "idle") {
+        switch (categoryErrorStatus) {
+          case true:
+            setSuccess(false);
+            setMessage("Update Category Failed");
+            break;
+          case false:
+            setSuccess(true);
+            setMessage("Category Updated");
+            break;
+          default:
+            setSuccess("idle");
+        }
+      } else if (categoryDeletingStatus !== "idle") {
+        switch (categoryDeletingStatus) {
+          case true:
+            setSuccess(true);
+            setMessage("Category Deleted");
+            break;
+          case false:
+            setSuccess(false);
+            setMessage("Category Could Not Be Deleted");
+            break;
+          default:
+            setSuccess("idle");
+        }
+      } else if (
+        categoryDeletingStatus === "idle" &&
+        categoryErrorStatus === "idle"
+      ) {
+        setSuccess("idle");
       }
     } else if (lastUpdate === "task") {
-      switch (taskErrorStatus) {
-        case true:
-          setSuccess(false);
-          setMessage("Update Task Failed");
-          break;
-        case false:
-          setSuccess(true);
-          setMessage("Task Updated");
-          break;
-        default:
-          setSuccess("idle");
+      if (taskErrorStatus !== "idle") {
+        switch (taskErrorStatus) {
+          case true:
+            setSuccess(false);
+            setMessage("Update Task Failed");
+            break;
+          case false:
+            setSuccess(true);
+            setMessage("Task Updated");
+            break;
+          default:
+            setSuccess("idle");
+        }
+      } else if (taskDeletingStatus !== "idle") {
+        switch (taskDeletingStatus) {
+          case true:
+            setSuccess(true);
+            setMessage("Task Deleted");
+            break;
+          case false:
+            setSuccess(false);
+            setMessage("Task Could Not Be Deleted");
+            break;
+          default:
+            setSuccess("idle");
+        }
+      } else if (taskDeletingStatus === "idle" && taskErrorStatus === "idle") {
+        setSuccess("idle");
       }
     }
-  }, [lastUpdate, taskErrorStatus, categoryErrorStatus]);
+  }, [
+    lastUpdate,
+    taskErrorStatus,
+    categoryErrorStatus,
+    taskDeletingStatus,
+    categoryDeletingStatus,
+  ]);
 
   let toast =
     success !== "idle" ? (

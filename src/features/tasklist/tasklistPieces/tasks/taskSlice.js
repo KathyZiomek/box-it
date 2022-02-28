@@ -26,6 +26,7 @@ const tasksAdapter = createEntityAdapter();
 const initialState = tasksAdapter.getInitialState({
   status: "idle",
   error: "idle",
+  deleted: "idle",
 });
 
 //Thunk functions
@@ -135,6 +136,9 @@ const tasksSlice = createSlice({
     taskErrorCleared(state, action) {
       state.error = action.payload;
     },
+    taskDeletedCleared(state, action) {
+      state.deleted = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -164,6 +168,7 @@ const tasksSlice = createSlice({
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.status = "idle";
+        state.deleted = true;
         if (action.payload !== undefined) {
           tasksAdapter.removeOne(state, action.payload);
         } else {
@@ -172,6 +177,7 @@ const tasksSlice = createSlice({
       })
       .addCase(deleteTask.rejected, (state, action) => {
         state.status = "idle";
+        state.deleted = false;
       })
       .addCase(updateTask.pending, (state) => {
         state.status = "pending";
@@ -189,7 +195,8 @@ const tasksSlice = createSlice({
   },
 });
 
-export const { tasksDeleted, taskErrorCleared } = tasksSlice.actions;
+export const { tasksDeleted, taskErrorCleared, taskDeletedCleared } =
+  tasksSlice.actions;
 
 export default tasksSlice.reducer;
 

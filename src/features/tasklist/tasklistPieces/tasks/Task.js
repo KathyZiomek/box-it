@@ -2,7 +2,13 @@
 import { React, useState, useRef, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { deleteTask, selectTaskById, updateTask } from "./taskSlice";
+import {
+  deleteTask,
+  selectTaskById,
+  updateTask,
+  taskErrorCleared,
+  taskDeletedCleared,
+} from "./taskSlice";
 import { selectCategoryById } from "../categories/categorySlice";
 
 import { checkDates } from "./taskPieces/DateConversion";
@@ -16,12 +22,15 @@ import { TaskCategoryDropDown } from "./taskPieces/TaskCategoryDropDown";
 
 import Modal from "../../../../ui/uiPieces/Modal";
 
+import { confirmDialog } from "primereact/confirmdialog";
 import { ProgressBar } from "primereact/progressbar";
 import { Toast } from "primereact/toast";
 import { Card } from "primereact/card";
 import "primeflex/primeflex.css";
 
 const Task = ({ id }) => {
+  const taskErrorStatus = useSelector((state) => state.tasks.error);
+  const taskDeletedStatus = useSelector((state) => state.tasks.deleted);
   const filterStatus = useSelector((state) => state.filters.status);
   const task = useSelector((state) => selectTaskById(state, id));
 
@@ -53,23 +62,42 @@ const Task = ({ id }) => {
     setEditing(false);
   }
 
-  const onDelete = () => {
-    setStatus("loading");
+  const cancelDelete = () => {
+    toast.current.show({
+      severity: "info",
+      summary: "Delete Canceled",
+      life: 1500,
+    });
+  };
+
+  const confirmDelete = () => {
     toast.current.show({
       severity: "info",
       summary: "Success",
-      detail: "Task Deleted",
-      life: 800,
+      detail: "Deleting Task...",
+      life: 1000,
     });
 
     const deleteContent = () => {
+      if (taskErrorStatus !== "idle") {
+        dispatch(taskErrorCleared("idle"));
+      }
       dispatch(deleteTask(task.id));
-      setStatus("idle");
     };
     const toastComplete = () => {
-      setTimeout(deleteContent, 500);
+      setTimeout(deleteContent, 1000);
     };
     toastComplete();
+  };
+
+  const confirm = () => {
+    confirmDialog({
+      message: "Are you sure you want to delete this task?",
+      header: "Warning",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => confirmDelete(),
+      reject: () => cancelDelete(),
+    });
   };
 
   const handleClick = () => {
@@ -103,6 +131,9 @@ const Task = ({ id }) => {
 
   const updateHandler = (event) => {
     event.preventDefault();
+    if (taskDeletedStatus !== "idle") {
+      dispatch(taskDeletedCleared("idle"));
+    }
 
     const enteredTask = newTaskName;
     const enteredCategory = dropDownCategory;
@@ -167,7 +198,7 @@ const Task = ({ id }) => {
       <NotEditingButtons
         categoryColor={categoryColor}
         onEdit={onEdit}
-        onDelete={onDelete}
+        onDelete={confirm}
       />
     </Fragment>
   ) : (

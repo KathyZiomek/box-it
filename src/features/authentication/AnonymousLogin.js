@@ -42,7 +42,7 @@ export const AnonymousLogin = (props) => {
     <div className="p-field">
       <Button
         onClick={anonymousLoginHandler}
-        label="Don't want to Register for now? Login Anonymously."
+        label="Don't want to Register for now? Try a Demo!"
         className="p-button-link"
       ></Button>
     </div>

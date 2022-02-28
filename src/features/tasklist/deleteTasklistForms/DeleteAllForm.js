@@ -68,38 +68,11 @@ export const DeleteAllForm = () => {
         toast.current.show({
           severity: "error",
           summary: "Error",
-          detail: `All Data Could Not Be Deleted`,
+          detail: `Data Could Not Be Deleted`,
           life: 1500,
         });
       }
     };
-
-    // const deleteCategories = async () => {
-    //   const response = await dispatch(deleteCategory());
-    //   let result;
-
-    //   if (response.type === "categories/categoryDeleted/rejected") {
-    //     result = false;
-    //   } else if (response.type === "categories/categoryDeleted/fulfilled") {
-    //     result = true;
-    //   }
-    //   console.log(result);
-    //   return result;
-    // };
-
-    // const deleteTasks = async () => {
-    //   const response = await dispatch(deleteTask());
-    //   let result;
-
-    //   if (response.type === "tasks/taskDeleted/rejected") {
-    //     result = false;
-    //   } else if (response.type === "tasks/taskDeleted/fulfilled") {
-    //     result = true;
-    //   }
-    //   setIsLoading(false);
-    //   console.log(result);
-    //   return result;
-    // };
 
     const loadingComplete = () => {
       setTimeout(deleteContent, 1500);
