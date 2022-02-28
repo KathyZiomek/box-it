@@ -5,7 +5,7 @@ import {
   deleteCategory,
   selectCategoryById,
   updateCategory,
-  categoryErrorCleared,
+  categoryUpdatedCleared,
   categoryDeletedCleared,
 } from "./categorySlice";
 import { deleteTask, selectTasks } from "../tasks/taskSlice";
@@ -69,7 +69,7 @@ const Category = ({ id }) => {
 
     const deleteContent = () => {
       if (categoryErrorStatus !== "idle") {
-        dispatch(categoryErrorCleared("idle"));
+        dispatch(categoryUpdatedCleared("idle"));
       }
       allTasks.forEach((task) => {
         if (task.category === category.id) {

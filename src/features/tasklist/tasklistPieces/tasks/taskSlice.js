@@ -133,7 +133,7 @@ const tasksSlice = createSlice({
   initialState,
   reducers: {
     tasksDeleted: tasksAdapter.removeAll,
-    taskErrorCleared(state, action) {
+    taskUpdatedCleared(state, action) {
       state.updated = action.payload;
     },
     taskDeletedCleared(state, action) {
@@ -195,7 +195,7 @@ const tasksSlice = createSlice({
   },
 });
 
-export const { tasksDeleted, taskErrorCleared, taskDeletedCleared } =
+export const { tasksDeleted, taskUpdatedCleared, taskDeletedCleared } =
   tasksSlice.actions;
 
 export default tasksSlice.reducer;

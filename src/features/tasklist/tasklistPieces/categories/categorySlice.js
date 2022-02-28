@@ -154,7 +154,7 @@ const categoriesSlice = createSlice({
   initialState,
   reducers: {
     categoriesDeleted: categoriesAdapter.removeAll,
-    categoryErrorCleared(state, action) {
+    categoryUpdatedCleared(state, action) {
       state.updated = action.payload;
     },
     categoryDeletedCleared(state, action) {
@@ -218,7 +218,7 @@ const categoriesSlice = createSlice({
 
 export const {
   categoriesDeleted,
-  categoryErrorCleared,
+  categoryUpdatedCleared,
   categoryDeletedCleared,
 } = categoriesSlice.actions;
 

@@ -6,11 +6,11 @@ import {
   deleteTask,
   selectTasks,
   updateTask,
-  taskErrorCleared,
+  taskUpdatedCleared,
   taskDeletedCleared,
 } from "../tasklistPieces/tasks/taskSlice";
 import {
-  categoryErrorCleared,
+  categoryUpdatedCleared,
   selectCategories,
   categoryDeletedCleared,
 } from "../tasklistPieces/categories/categorySlice";
@@ -133,10 +133,10 @@ const Filters = () => {
     dispatch(statusFilterChanged(status));
 
     if (taskErrorStatus !== "idle") {
-      dispatch(taskErrorCleared("idle"));
+      dispatch(taskUpdatedCleared("idle"));
     }
     if (categoryErrorStatus !== "idle") {
-      dispatch(categoryErrorCleared("idle"));
+      dispatch(categoryUpdatedCleared("idle"));
     }
     if (taskDeletedStatus !== "idle") {
       dispatch(taskDeletedCleared("idle"));
