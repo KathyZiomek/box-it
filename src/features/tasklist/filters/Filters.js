@@ -158,7 +158,7 @@ const Filters = () => {
     allTasks.length === 0 || tasksRemaining.length === 0 ? true : false;
   let disabledClearButton =
     allTasks.length === 0 ||
-    (tasksRemaining.length !== 0 && allTasks.length !== tasksRemaining.length)
+    (tasksRemaining.length !== 0 && allTasks.length === tasksRemaining.length)
       ? true
       : false;
 
