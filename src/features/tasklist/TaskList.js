@@ -162,10 +162,10 @@ const TaskList = () => {
       uniqueFilteredCategories = [...new Set(filteredCategories)];
     }
 
+    /**FUTURE TODO: change how categories are sorted - sort by name instead of ID */
     const sortedUniqueFilteredCategories = sortArrayById(
       uniqueFilteredCategories
     );
-    console.log(sortedUniqueFilteredCategories);
 
     //since `categories` is an array, we can loop over it
     const renderedTaskListItems = sortedUniqueFilteredCategories.map(

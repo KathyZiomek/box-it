@@ -67,7 +67,7 @@ const Login = () => {
         .catch((error) => {
           setStatus("idle");
           const errorCode = error.code;
-          console.log(errorCode);
+          // console.log(errorCode);
           if (errorCode.includes("password") && errorCode.includes("email")) {
             setPasswordWarning(true);
             setEmailWarning(true);

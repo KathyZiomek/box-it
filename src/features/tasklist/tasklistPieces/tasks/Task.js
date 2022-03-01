@@ -70,7 +70,7 @@ const Task = ({ id }) => {
       severity: "info",
       summary: "Success",
       detail: "Deleting Task...",
-      life: 1000,
+      life: 500,
     });
 
     const deleteContent = () => {
@@ -80,7 +80,7 @@ const Task = ({ id }) => {
       dispatch(deleteTask(task.id));
     };
     const toastComplete = () => {
-      setTimeout(deleteContent, 1000);
+      setTimeout(deleteContent, 600);
     };
     toastComplete();
   };

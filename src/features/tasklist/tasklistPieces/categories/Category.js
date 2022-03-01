@@ -61,7 +61,7 @@ const Category = ({ id }) => {
       severity: "info",
       summary: "Success",
       detail: `Deleting Category...`,
-      life: 1000,
+      life: 500,
     });
 
     const deleteContent = () => {
@@ -76,7 +76,7 @@ const Category = ({ id }) => {
       dispatch(deleteCategory(category.id));
     };
     const toastComplete = () => {
-      setTimeout(deleteContent, 1000);
+      setTimeout(deleteContent, 600);
     };
 
     toastComplete();

@@ -42,7 +42,7 @@ const CreateTaskForm = () => {
     toast.current.show({
       severity: "info",
       detail: "Submitting Task...",
-      life: 400,
+      life: 300,
     });
     setStatus("loading");
 
@@ -108,7 +108,7 @@ const CreateTaskForm = () => {
       toast.current.show({
         severity: "error",
         summary: "Error",
-        detail: "Could Not Submit Task",
+        detail: "Task Could Not Be Added",
         life: 800,
       });
       setTaskWarning(true);

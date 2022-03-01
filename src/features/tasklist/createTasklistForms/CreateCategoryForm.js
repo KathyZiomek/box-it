@@ -37,7 +37,7 @@ const CreateCategoryForm = () => {
     toast.current.show({
       severity: "info",
       detail: "Submitting Category...",
-      life: 400,
+      life: 300,
     });
     setStatus("loading");
 
@@ -86,7 +86,7 @@ const CreateCategoryForm = () => {
       toast.current.show({
         severity: "error",
         summary: "Error",
-        detail: "Could Not Submit Category",
+        detail: "Category Could Not Be Added",
         life: 800,
       });
       setCategoryWarning(true);

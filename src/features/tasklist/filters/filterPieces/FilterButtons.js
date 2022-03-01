@@ -7,7 +7,7 @@ export const LeftFilterButton = (props) => {
       icon="pi pi-check"
       label="Mark All Completed"
       onClick={props.onMarkCompletedClicked}
-      disabled={props.disabledButtons}
+      disabled={props.disabledCompletedButton}
     />
   );
 };
@@ -18,7 +18,7 @@ export const RightFilterButton = (props) => {
       label="Clear Completed"
       icon="pi pi-times"
       onClick={props.onClearCompletedClicked}
-      disabled={props.disabledButtons}
+      disabled={props.disabledClearButton}
     />
   );
 };

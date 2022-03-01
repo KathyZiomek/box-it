@@ -59,7 +59,7 @@ export const DeleteAllForm = () => {
 
       if (resultCategories && resultTasks) {
         toast.current.show({
-          severity: "info",
+          severity: "success",
           summary: "Success",
           detail: `All Data Deleted!`,
           life: 1500,

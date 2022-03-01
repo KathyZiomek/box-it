@@ -74,6 +74,19 @@ const NavBar = () => {
 
   const items = [home, taskList, user];
 
+  const image = (
+    <img
+      alt="logo"
+      src="favicon.ico"
+      onError={(e) =>
+        (e.target.src =
+          "https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png")
+      }
+      height="60"
+      className="mr-2"
+    ></img>
+  );
+
   const start = <h3>Box It</h3>;
 
   return (
@@ -81,7 +94,7 @@ const NavBar = () => {
       <nav>
         <div>
           <div className="card">
-            <Menubar model={items} start={start} />
+            <Menubar model={items} start={start} end={image} />
           </div>
         </div>
       </nav>

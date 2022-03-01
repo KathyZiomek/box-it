@@ -15,8 +15,6 @@ import {
   categoryDeletedCleared,
 } from "../tasklistPieces/categories/categorySlice";
 
-import { Toast } from "primereact/toast";
-import { Toolbar } from "primereact/toolbar";
 import {
   LeftFilterButton,
   RightFilterButton,
@@ -26,6 +24,10 @@ import {
   FilterRadioButtons,
   FilterRadioButtonsStyled,
 } from "./filterPieces/FilterRadioButtons";
+
+import { Toast } from "primereact/toast";
+import { Toolbar } from "primereact/toolbar";
+import { confirmDialog } from "primereact/confirmdialog";
 
 const StatusFilter = ({ value: status, onChange }) => {
   const dispatch = useDispatch();
@@ -79,9 +81,7 @@ const Filters = () => {
   const categoryDeletedStatus = useSelector(
     (state) => state.categories.deleted
   );
-
-  const toast = useRef(null);
-  const dispatch = useDispatch();
+  const allTasks = useSelector((state) => selectTasks(state));
 
   const tasksRemaining = useSelector((state) => {
     const uncompletedTasks = selectTasks(state).filter(
@@ -89,12 +89,20 @@ const Filters = () => {
     );
     return uncompletedTasks;
   });
+  const toast = useRef(null);
+  const dispatch = useDispatch();
 
   const { status } = useSelector((state) => state.filters);
 
   const onMarkCompletedClicked = () => {
     //identify tasks that are not currently marked as completed
     //dispatch the action to update their "completed" value in firebase
+    if (taskDeletedStatus !== "idle") {
+      dispatch(taskDeletedCleared("idle"));
+    }
+    if (categoryDeletedStatus !== "idle") {
+      dispatch(categoryDeletedCleared("idle"));
+    }
     tasksRemaining.forEach((task) => {
       let updatedTask = {
         id: task.id,
@@ -104,17 +112,26 @@ const Filters = () => {
     });
   };
 
-  //get all current tasks
-  const allTasks = useSelector((state) => selectTasks(state));
-  const onClearCompletedClicked = () => {
+  const cancelDelete = () => {
     toast.current.show({
-      severity: "success",
-      summary: "Success!",
-      detail: "Completed Tasks Cleared",
-      life: 800,
+      severity: "info",
+      summary: "Delete Canceled",
+      life: 1500,
+    });
+  };
+
+  const confirmDelete = () => {
+    toast.current.show({
+      severity: "info",
+      summary: "Success",
+      detail: "Deleting Tasks...",
+      life: 500,
     });
 
     const deleteContent = () => {
+      if (taskErrorStatus !== "idle") {
+        dispatch(taskUpdatedCleared("idle"));
+      }
       allTasks.forEach((task) => {
         if (task.completed === true) {
           dispatch(deleteTask(task.id));
@@ -122,12 +139,28 @@ const Filters = () => {
       });
     };
     const toastComplete = () => {
-      setTimeout(deleteContent, 500);
+      setTimeout(deleteContent, 600);
     };
     toastComplete();
   };
 
-  let disabledButtons = allTasks.length === 0 ? true : false;
+  const confirm = () => {
+    confirmDialog({
+      message: "Are you sure you want to delete all completed tasks?",
+      header: "Warning",
+      icon: "pi pi-exclamation-triangle",
+      accept: () => confirmDelete(),
+      reject: () => cancelDelete(),
+    });
+  };
+
+  let disabledCompletedButton =
+    allTasks.length === 0 || tasksRemaining.length === 0 ? true : false;
+  let disabledClearButton =
+    allTasks.length === 0 ||
+    (tasksRemaining.length !== 0 && allTasks.length !== tasksRemaining.length)
+      ? true
+      : false;
 
   const onStatusChange = (status) => {
     dispatch(statusFilterChanged(status));
@@ -150,11 +183,11 @@ const Filters = () => {
     <Fragment>
       <LeftFilterButton
         onMarkCompletedClicked={onMarkCompletedClicked}
-        disabledButtons={disabledButtons}
+        disabledCompletedButton={disabledCompletedButton}
       />
       <RightFilterButton
-        disabledButtons={disabledButtons}
-        onClearCompletedClicked={onClearCompletedClicked}
+        onClearCompletedClicked={confirm}
+        disabledClearButton={disabledClearButton}
       />
     </Fragment>
   );
