@@ -22,6 +22,7 @@ export const FilterRadioButtons = (props) => {
       className="p-field-radiobutton"
       key={props.value}
       id={props.value}
+      disabled={props.disabledRadioButton}
       style={{ marginLeft: 10, marginRight: 10, marginTop: 0, marginBottom: 0 }}
     >
       <RadioButton
@@ -34,7 +35,11 @@ export const FilterRadioButtons = (props) => {
         onChange={props.handleClick}
         checked={props.checkedButton}
       />
-      <label htmlFor={props.key} onClick={props.handleClick}>
+      <label
+        type="text"
+        htmlFor={props.key}
+        onClick={!props.disabledRadioButton ? props.handleClick : null}
+      >
         {labelValue}
       </label>
     </div>
