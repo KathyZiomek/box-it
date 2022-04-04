@@ -7,3 +7,13 @@ Box It is a task list manager web application that gives users a large amount of
 - Website: [Box It](https://box-it-b5c6c.web.app/)
 
 This is a portfolio project created with React.
+
+## Technologies Used
+
+- [React](https://reactjs.org/)
+- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
+- [React Redux](https://react-redux.js.org/)
+- [Redux-Toolkit](https://redux-toolkit.js.org/)
+- [Firebase](https://firebase.google.com/)
+- [PrimeReact](https://www.primefaces.org/primereact/)
