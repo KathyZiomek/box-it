@@ -15,3 +15,33 @@ Box It is a task list manager web application that gives users a large amount of
 - [Redux-Toolkit](https://redux-toolkit.js.org/)
 - [Firebase](https://firebase.google.com/)
 - [PrimeReact](https://www.primefaces.org/primereact/)
+
+## Features
+
+### Login and Signup
+
+### Homepage
+
+### Create a Task
+
+### Create a Category
+
+### Delete All Saved Tasks and Categories
+
+### Viewing All Tasks
+
+#### Filtering
+
+#### Making Changes to Multiple Tasks at Once
+
+#### Editing Tasks
+
+#### Editing Categories
+
+## Future Features
+
+- Create the "User Settings" page, allowing users to make changes to their accounts, and allowing demo users to connect their instance to a permanent account.
+
+- Implement a calendar page, so that users can track their due dates visually.
+
+- Allow users to track "on-going" tasks - tasks which do not have a set due date, but are re-occurring.
