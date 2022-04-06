@@ -20,7 +20,7 @@ Box It is a task list manager web application that gives users a large amount of
 
 ### Login and Signup
 
-![plot](.media/01_landing_page.png)
+![plot](./media/01_landing_page.png)
 
 ### Homepage
 
