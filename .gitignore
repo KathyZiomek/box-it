@@ -27,6 +27,3 @@ yarn-error.log*
 
 # debugging files
 **/src/features/tasklist/tasklistPieces/tasks/taskvariables.txt
-
-# media folder
-**/media
