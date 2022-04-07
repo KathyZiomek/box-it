@@ -24,21 +24,19 @@ Box It is a task list manager web application that gives users a large amount of
 
 ### Login and Signup
 
-<p>A user is able to either  </p>
+<p>A user can create an account, or log in using an existing account. For users who want to try out the website first, there is an option to try a demo of the website without creating an account.</p>
 
-<p align="center">
+<!-- <p align="center">
   <img src="./media/01_landing_page.PNG" height="75%" width="75%" alt="Landing Page"/>
-</p>
+</p> -->
 
-<p align="center">
-  <img src="./media/02_login.PNG" height="75%" width="75%" alt="Login Screen"/>
-</p>
-
-<p align="center">
-  <img src="./media/03_signup.PNG" height="75%" width="75%" alt="Sign Up Screen"/>
-</p>
+|                 Login                 |                 Sign Up                  |
+| :-----------------------------------: | :--------------------------------------: |
+| ![Login Screen](./media/02_login.PNG) | ![Sign Up Screen](./media/03_signup.PNG) |
 
 ### Create a Category
+
+<p>Users can create a category that will be used to keep tasks organized and color-coordinated.</p>
 
 <p align="center">
   <img src="./media/04_create_category.PNG" height="75%" width="75%" alt="Create a Category Page"/>
@@ -46,11 +44,15 @@ Box It is a task list manager web application that gives users a large amount of
 
 ### Create a Task
 
+<p>Users can create unlimited tasks, sorting them into categories, and optionally assigning a due date to the task.</p>
+
 <p align="center">
   <img src="./media/05_create_task.PNG" height="75%" width="75%" alt="Create a Task Page"/>
 </p>
 
 ### Delete All Saved Tasks and Categories
+
+<p>Users have the option to quickly delete all of their saved tasks and categories instead of deleting one by one.</p>
 
 <p align="center">
   <img src="./media/06_delete_all.PNG" height="75%" width="75%" alt="Delete All Page"/>
@@ -58,19 +60,31 @@ Box It is a task list manager web application that gives users a large amount of
 
 ### Viewing All Tasks
 
+<p>Users can see all of their tasks and categories displayed at once on the Tasklist page. Here, they are able to filter tasks by completion status, change the completion status of all tasks at once, make edits to tasks and categories, and delete individual tasks and categories.</p>
+
 <p align="center">
   <img src="./media/07_task_list_page.PNG" height="100%" width="100%" alt="Tasklist Page"/>
 </p>
 
 #### Editing Categories
 
-<p align="center">
+<p>Users can edit and delete categories from the Tasklist page</p>
+
+|            Viewing a Cateogry            |
+| :--------------------------------------: |
+| ![Login Screen](./media/08_category.PNG) |
+
+|                Editing a Category                |
+| :----------------------------------------------: |
+| ![Login Screen](./media/09_category_editing.PNG) |
+
+<!-- <p align="center">
   <img src="./media/08_category.PNG" height="75%" width="75%" alt="View Category Information"/>
 </p>
 
 <p align="center">
   <img src="./media/09_category_editing.PNG" height="75%" width="75%" alt="Editing Category"/>
-</p>
+</p> -->
 
 #### Editing Tasks
 
