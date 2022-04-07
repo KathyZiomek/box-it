@@ -1,7 +1,6 @@
 <p align="center">
-  <img src="./public/favicon.ico" alt="Box It Logo"/>
+  <img src="./public/favicon.ico" height="25%" width="25%" alt="Box It Logo"/>
 </p>
-![plot](./public/favicon.ico)
 
 # Box It
 
@@ -10,6 +9,8 @@ Box It is a task list manager web application that gives users a large amount of
 - Website: [Box It](https://box-it-b5c6c.web.app/)
 
 ## Technologies Used
+
+<hr/>
 
 - [React](https://reactjs.org/)
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -21,47 +22,108 @@ Box It is a task list manager web application that gives users a large amount of
 
 ## Features
 
+<hr/>
+<br/>
+
 ### Login and Signup
 
-![plot](./media/01_landing_page.PNG)
-![plot](./media/02_login.PNG)
-![plot](./media/03_signup.PNG)
+<hr/>
+
+<p align="center">
+  <img src="./media/01_landing_page.PNG" height="75%" width="75%" alt="Landing Page"/>
+</p>
+
+<p align="center">
+  <img src="./media/02_login.PNG" height="75%" width="75%" alt="Login Screen"/>
+</p>
+
+<p align="center">
+  <img src="./media/03_signup.PNG" height="75%" width="75%" alt="Sign Up Screen"/>
+</p>
 
 ### Create a Category
 
-![plot](./media/04_create_category.PNG)
+<hr/>
+
+<p align="center">
+  <img src="./media/04_create_category.PNG" height="75%" width="75%" alt="Create a Category Page"/>
+</p>
 
 ### Create a Task
 
-![plot](./media/05_create_task.PNG)
+<hr/>
+
+<p align="center">
+  <img src="./media/05_create_task.PNG" height="75%" width="75%" alt="Create a Task Page"/>
+</p>
 
 ### Delete All Saved Tasks and Categories
 
-![plot](./media/06_delete_all.PNG)
+<hr/>
+
+<p align="center">
+  <img src="./media/06_delete_all.PNG" height="75%" width="75%" alt="Delete All Page"/>
+</p>
 
 ### Viewing All Tasks
 
-![plot](./media/07_task_list_page.PNG)
+<hr/>
+
+<p align="center">
+  <img src="./media/07_task_list_page.PNG" height="100%" width="100%" alt="Tasklist Page"/>
+</p>
 
 #### Editing Categories
 
-![plot](./media/08_category.PNG)
-![plot](./media/09_category_editing.PNG)
+<hr/>
+
+<p align="center">
+  <img src="./media/08_category.PNG" height="75%" width="75%" alt="View Category Information"/>
+</p>
+
+<p align="center">
+  <img src="./media/09_category_editing.PNG" height="75%" width="75%" alt="Editing Category"/>
+</p>
 
 #### Editing Tasks
 
-![plot](./media/10_task.PNG)
-![plot](./media/11_task_editing.PNG)
-![plot](./media/12_task_no_duedate.PNG
+<hr/>
+
+<p align="center">
+  <img src="./media/10_task.PNG" height="75%" width="75%" alt="View Task Information - With Due Date"/>
+</p>
+
+<p align="center">
+  <img src="./media/11_task_no_duedate.PNG" height="75%" width="75%" alt="View Task Information - Without Due Date"/>
+</p>
+
+<p align="center">
+  <img src="./media/12_task_editing.PNG" height="75%" width="75%" alt="Editing Task"/>
+</p>
 
 #### Filtering
 
-![plot](./media/13_no_active_tasks.PNG)
-![plot](./media/14_no_completed_tasks.PNG)
-![plot](./media/15_empty_category.PNG)
-![plot](./media/16_no_tasks_categories.PNG)
+<hr/>
+
+<p align="center">
+  <img src="./media/13_no_active_tasks.PNG" height="75%" width="75%" alt="Filtering - No Active Tasks"/>
+</p>
+
+<p align="center">
+  <img src="./media/14_no_completed_tasks.PNG" height="75%" width="75%" alt="Filtering - No Completed Tasks"/>
+</p>
+
+<p align="center">
+  <img src="./media/15_no_tasks_categories.PNG" height="75%" width="75%" alt="Filtering - No Tasks or Categories"/>
+</p>
+
+<p align="center">
+  <img src="./media/16_empty_category.PNG" height="75%" width="75%" alt="Category With No Tasks"/>
+</p>
 
 ## Future Features
+
+<hr/>
 
 - Create the "User Settings" page, allowing users to make changes to their accounts, and allowing demo users to connect their instance to a permanent account.
 
