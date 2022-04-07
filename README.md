@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="./public/favicon.ico" alt="Box It Logo"/>
+</p>
 ![plot](./public/favicon.ico)
 
 # Box It
@@ -40,16 +43,23 @@ Box It is a task list manager web application that gives users a large amount of
 
 ![plot](./media/07_task_list_page.PNG)
 
-#### Filtering
-
-#### Making Changes to Multiple Tasks at Once
-
 #### Editing Categories
 
 ![plot](./media/08_category.PNG)
-![plot](./media/08_category_editing.PNG)
+![plot](./media/09_category_editing.PNG)
 
 #### Editing Tasks
+
+![plot](./media/10_task.PNG)
+![plot](./media/11_task_editing.PNG)
+![plot](./media/12_task_no_duedate.PNG
+
+#### Filtering
+
+![plot](./media/13_no_active_tasks.PNG)
+![plot](./media/14_no_completed_tasks.PNG)
+![plot](./media/15_empty_category.PNG)
+![plot](./media/16_no_tasks_categories.PNG)
 
 ## Future Features
 
