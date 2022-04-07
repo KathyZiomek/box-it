@@ -10,8 +10,6 @@ Box It is a task list manager web application that gives users a large amount of
 
 ## Technologies Used
 
-<hr/>
-
 - [React](https://reactjs.org/)
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
@@ -23,11 +21,10 @@ Box It is a task list manager web application that gives users a large amount of
 ## Features
 
 <hr/>
-<br/>
 
 ### Login and Signup
 
-<hr/>
+<p>A user is able to either  </p>
 
 <p align="center">
   <img src="./media/01_landing_page.PNG" height="75%" width="75%" alt="Landing Page"/>
@@ -43,15 +40,11 @@ Box It is a task list manager web application that gives users a large amount of
 
 ### Create a Category
 
-<hr/>
-
 <p align="center">
   <img src="./media/04_create_category.PNG" height="75%" width="75%" alt="Create a Category Page"/>
 </p>
 
 ### Create a Task
-
-<hr/>
 
 <p align="center">
   <img src="./media/05_create_task.PNG" height="75%" width="75%" alt="Create a Task Page"/>
@@ -59,23 +52,17 @@ Box It is a task list manager web application that gives users a large amount of
 
 ### Delete All Saved Tasks and Categories
 
-<hr/>
-
 <p align="center">
   <img src="./media/06_delete_all.PNG" height="75%" width="75%" alt="Delete All Page"/>
 </p>
 
 ### Viewing All Tasks
 
-<hr/>
-
 <p align="center">
   <img src="./media/07_task_list_page.PNG" height="100%" width="100%" alt="Tasklist Page"/>
 </p>
 
 #### Editing Categories
-
-<hr/>
 
 <p align="center">
   <img src="./media/08_category.PNG" height="75%" width="75%" alt="View Category Information"/>
@@ -86,8 +73,6 @@ Box It is a task list manager web application that gives users a large amount of
 </p>
 
 #### Editing Tasks
-
-<hr/>
 
 <p align="center">
   <img src="./media/10_task.PNG" height="75%" width="75%" alt="View Task Information - With Due Date"/>
@@ -102,8 +87,6 @@ Box It is a task list manager web application that gives users a large amount of
 </p>
 
 #### Filtering
-
-<hr/>
 
 <p align="center">
   <img src="./media/13_no_active_tasks.PNG" height="75%" width="75%" alt="Filtering - No Active Tasks"/>
@@ -122,8 +105,6 @@ Box It is a task list manager web application that gives users a large amount of
 </p>
 
 ## Future Features
-
-<hr/>
 
 - Create the "User Settings" page, allowing users to make changes to their accounts, and allowing demo users to connect their instance to a permanent account.
 
