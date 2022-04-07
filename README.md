@@ -68,15 +68,15 @@ Box It is a task list manager web application that gives users a large amount of
 
 #### Editing Categories
 
-<p>Users can edit and delete categories from the Tasklist page</p>
+<p>Users can edit and delete categories from the Tasklist page.</p>
 
-|            Viewing a Cateogry            |
-| :--------------------------------------: |
-| ![Login Screen](./media/08_category.PNG) |
+|               Viewing a Cateogry               |
+| :--------------------------------------------: |
+| ![Viewing a Category](./media/08_category.PNG) |
 
-|                Editing a Category                |
-| :----------------------------------------------: |
-| ![Login Screen](./media/09_category_editing.PNG) |
+|                   Editing a Category                   |
+| :----------------------------------------------------: |
+| ![Editing a Category](./media/09_category_editing.PNG) |
 
 <!-- <p align="center">
   <img src="./media/08_category.PNG" height="75%" width="75%" alt="View Category Information"/>
@@ -88,35 +88,68 @@ Box It is a task list manager web application that gives users a large amount of
 
 #### Editing Tasks
 
+<p>Users can edit and delete tasks from the Tasklist page.</p>
+
+|                   Viewing a Task (Due Date)                   |
+| :-----------------------------------------------------------: |
+| ![View Task Information - With Due Date](./media/10_task.PNG) |
+
+|                        Viewing a Task (No Due Date)                         |
+| :-------------------------------------------------------------------------: |
+| ![View Task Information - Without Due Date](./media/11_task_no_duedate.PNG) |
+
+|                 Editing a Task                 |
+| :--------------------------------------------: |
+| ![Editing a Task](./media/12_task_editing.PNG) |
+
+<!--
 <p align="center">
   <img src="./media/10_task.PNG" height="75%" width="75%" alt="View Task Information - With Due Date"/>
-</p>
-
+</p> -->
+<!--
 <p align="center">
   <img src="./media/11_task_no_duedate.PNG" height="75%" width="75%" alt="View Task Information - Without Due Date"/>
-</p>
+</p> -->
 
-<p align="center">
+<!-- <p align="center">
   <img src="./media/12_task_editing.PNG" height="75%" width="75%" alt="Editing Task"/>
-</p>
+</p> -->
 
 #### Filtering
 
-<p align="center">
+<p>Users can use the filters to change which tasks are displayed, and also make changes to the completion status of many tasks at once.</p>
+
+|                  Filtering (No Active Tasks)                   |
+| :------------------------------------------------------------: |
+| ![Filtering - No Active Tasks](./media/13_no_active_tasks.PNG) |
+
+|                    Filtering (No Completed Tasks)                    |
+| :------------------------------------------------------------------: |
+| ![Filtering - No Completed Tasks](./media/14_no_completed_tasks.PNG) |
+
+|                    Filtering (No Tasks or Categories)                     |
+| :-----------------------------------------------------------------------: |
+| ![Filtering - No Tasks or Categories](./media/15_no_tasks_categories.PNG) |
+
+|             Viewing a Category with No Tasks             |
+| :------------------------------------------------------: |
+| ![Category With No Tasks](./media/16_empty_category.PNG) |
+
+<!-- <p align="center">
   <img src="./media/13_no_active_tasks.PNG" height="75%" width="75%" alt="Filtering - No Active Tasks"/>
-</p>
+</p> -->
 
-<p align="center">
+<!-- <p align="center">
   <img src="./media/14_no_completed_tasks.PNG" height="75%" width="75%" alt="Filtering - No Completed Tasks"/>
-</p>
+</p> -->
 
-<p align="center">
+<!-- <p align="center">
   <img src="./media/15_no_tasks_categories.PNG" height="75%" width="75%" alt="Filtering - No Tasks or Categories"/>
-</p>
-
+</p> -->
+<!--
 <p align="center">
   <img src="./media/16_empty_category.PNG" height="75%" width="75%" alt="Category With No Tasks"/>
-</p>
+</p> -->
 
 ## Future Features
 
