@@ -21,24 +21,35 @@ Box It is a task list manager web application that gives users a large amount of
 ### Login and Signup
 
 ![plot](./media/01_landing_page.PNG)
-
-### Homepage
-
-### Create a Task
+![plot](./media/02_login.PNG)
+![plot](./media/03_signup.PNG)
 
 ### Create a Category
 
+![plot](./media/04_create_category.PNG)
+
+### Create a Task
+
+![plot](./media/05_create_task.PNG)
+
 ### Delete All Saved Tasks and Categories
 
+![plot](./media/06_delete_all.PNG)
+
 ### Viewing All Tasks
+
+![plot](./media/07_task_list_page.PNG)
 
 #### Filtering
 
 #### Making Changes to Multiple Tasks at Once
 
-#### Editing Tasks
-
 #### Editing Categories
+
+![plot](./media/08_category.PNG)
+![plot](./media/08_category_editing.PNG)
+
+#### Editing Tasks
 
 ## Future Features
 
