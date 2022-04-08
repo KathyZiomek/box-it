@@ -4,7 +4,7 @@
 
 # Box It
 
-Box It is a task list manager web application that gives users a large amount of customization and control over how their task list is displayed and organized. Users can create color-coordinated categories in order to group their tasks, and make unlimited changes to the names, colors, due dates, and completion status of tasks and categories.
+[Box It](https://box-it-b5c6c.web.app/) is a task list manager web application that gives users a large amount of customization and control over how their task list is displayed and organized. Users can create color-coordinated categories to group their tasks. Users can also make unlimited changes to the names, colors, due dates, and completion status of tasks and categories.
 
 - Website: [Box It](https://box-it-b5c6c.web.app/)
 
@@ -20,15 +20,9 @@ Box It is a task list manager web application that gives users a large amount of
 
 ## Features
 
-<hr/>
-
 ### Login and Signup
 
 <p>A user can create an account, or log in using an existing account. For users who want to try out the website first, there is an option to try a demo of the website without creating an account.</p>
-
-<!-- <p align="center">
-  <img src="./media/01_landing_page.PNG" height="75%" width="75%" alt="Landing Page"/>
-</p> -->
 
 |                 Login                 |                 Sign Up                  |
 | :-----------------------------------: | :--------------------------------------: |
@@ -36,7 +30,7 @@ Box It is a task list manager web application that gives users a large amount of
 
 ### Create a Category
 
-<p>Users can create a category that will be used to keep tasks organized and color-coordinated.</p>
+<p>Users can create a category that will be used to color-coordinate and organize tasks.</p>
 
 <p align="center">
   <img src="./media/04_create_category.PNG" height="75%" width="75%" alt="Create a Category Page"/>
@@ -44,7 +38,7 @@ Box It is a task list manager web application that gives users a large amount of
 
 ### Create a Task
 
-<p>Users can create unlimited tasks, sorting them into categories, and optionally assigning a due date to the task.</p>
+<p>Users can create unlimited tasks, sort them into categories, and optionally assign a due date to the task.</p>
 
 <p align="center">
   <img src="./media/05_create_task.PNG" height="75%" width="75%" alt="Create a Task Page"/>
@@ -52,7 +46,7 @@ Box It is a task list manager web application that gives users a large amount of
 
 ### Delete All Saved Tasks and Categories
 
-<p>Users have the option to quickly delete all of their saved tasks and categories instead of deleting one by one.</p>
+<p>Users have the option to delete all of their saved tasks and categories with the click of a single button.</p>
 
 <p align="center">
   <img src="./media/06_delete_all.PNG" height="75%" width="75%" alt="Delete All Page"/>
@@ -60,7 +54,7 @@ Box It is a task list manager web application that gives users a large amount of
 
 ### Viewing All Tasks
 
-<p>Users can see all of their tasks and categories displayed at once on the Tasklist page. Here, they are able to filter tasks by completion status, change the completion status of all tasks at once, make edits to tasks and categories, and delete individual tasks and categories.</p>
+<p>Users can see all of their tasks and categories displayed at once on the Tasklist page. Here, they are able to filter tasks by completion status, change the completion status of all tasks at once, make edits to tasks and categories, and delete tasks and categories.</p>
 
 <p align="center">
   <img src="./media/07_task_list_page.PNG" height="100%" width="100%" alt="Tasklist Page"/>
@@ -78,14 +72,6 @@ Box It is a task list manager web application that gives users a large amount of
 | :----------------------------------------------------: |
 | ![Editing a Category](./media/09_category_editing.PNG) |
 
-<!-- <p align="center">
-  <img src="./media/08_category.PNG" height="75%" width="75%" alt="View Category Information"/>
-</p>
-
-<p align="center">
-  <img src="./media/09_category_editing.PNG" height="75%" width="75%" alt="Editing Category"/>
-</p> -->
-
 #### Editing Tasks
 
 <p>Users can edit and delete tasks from the Tasklist page.</p>
@@ -102,22 +88,9 @@ Box It is a task list manager web application that gives users a large amount of
 | :--------------------------------------------: |
 | ![Editing a Task](./media/12_task_editing.PNG) |
 
-<!--
-<p align="center">
-  <img src="./media/10_task.PNG" height="75%" width="75%" alt="View Task Information - With Due Date"/>
-</p> -->
-<!--
-<p align="center">
-  <img src="./media/11_task_no_duedate.PNG" height="75%" width="75%" alt="View Task Information - Without Due Date"/>
-</p> -->
-
-<!-- <p align="center">
-  <img src="./media/12_task_editing.PNG" height="75%" width="75%" alt="Editing Task"/>
-</p> -->
-
 #### Filtering
 
-<p>Users can use the filters to change which tasks are displayed, and also make changes to the completion status of many tasks at once.</p>
+<p>Users can use the filters to change which tasks are displayed, and also make changes to the completion status of all tasks at once.</p>
 
 |                  Filtering (No Active Tasks)                   |
 | :------------------------------------------------------------: |
@@ -135,26 +108,10 @@ Box It is a task list manager web application that gives users a large amount of
 | :------------------------------------------------------: |
 | ![Category With No Tasks](./media/16_empty_category.PNG) |
 
-<!-- <p align="center">
-  <img src="./media/13_no_active_tasks.PNG" height="75%" width="75%" alt="Filtering - No Active Tasks"/>
-</p> -->
-
-<!-- <p align="center">
-  <img src="./media/14_no_completed_tasks.PNG" height="75%" width="75%" alt="Filtering - No Completed Tasks"/>
-</p> -->
-
-<!-- <p align="center">
-  <img src="./media/15_no_tasks_categories.PNG" height="75%" width="75%" alt="Filtering - No Tasks or Categories"/>
-</p> -->
-<!--
-<p align="center">
-  <img src="./media/16_empty_category.PNG" height="75%" width="75%" alt="Category With No Tasks"/>
-</p> -->
-
 ## Future Features
 
-- Create the "User Settings" page, allowing users to make changes to their accounts, and allowing demo users to connect their instance to a permanent account.
+- Create the "User Settings" page, giving users the ability to make changes to their accounts. This would also allow demo users to create a permanent account while saving the information entered during their session.
 
-- Implement a calendar page, so that users can track their due dates visually.
+- Create a calendar page, so that users can track their due dates visually.
 
-- Allow users to track "on-going" tasks - tasks which do not have a set due date, but are re-occurring.
+- Allow users to track "on-going" tasks - these would be tasks which do not have a set due date, but are re-occurring.
