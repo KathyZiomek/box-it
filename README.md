@@ -12,7 +12,7 @@
 
 - [React](https://reactjs.org/)
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-- [Redux-Toolkit](https://redux-toolkit.js.org/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Firebase](https://firebase.google.com/)
 - [PrimeReact](https://www.primefaces.org/primereact/)
 - [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
