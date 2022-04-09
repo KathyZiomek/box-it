@@ -12,11 +12,10 @@
 
 - [React](https://reactjs.org/)
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
-- [React Redux](https://react-redux.js.org/)
 - [Redux-Toolkit](https://redux-toolkit.js.org/)
 - [Firebase](https://firebase.google.com/)
 - [PrimeReact](https://www.primefaces.org/primereact/)
+- [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)
 
 ## Features
 
