@@ -6,7 +6,8 @@
 
 [Box It](https://box-it-b5c6c.web.app/) is a task list manager web application that gives users a large amount of customization and control over how their task list is displayed and organized. Users can create color-coordinated categories to group their tasks. Users can also make unlimited changes to the names, colors, due dates, and completion status of tasks and categories.
 
-- Website: [Box It](https://box-it-b5c6c.web.app/)
+- [Box It Website](https://box-it-b5c6c.web.app/)
+- [Demo](https://youtu.be/u3l2jDN5ZnE)
 
 ## Technologies Used
 
