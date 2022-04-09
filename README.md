@@ -63,7 +63,7 @@
 
 <p>Users can edit and delete categories from the Tasklist page.</p>
 
-|               Viewing a Cateogry               |
+|               Viewing a Category               |
 | :--------------------------------------------: |
 | ![Viewing a Category](./media/08_category.PNG) |
 
